@@ -11,5 +11,9 @@
     "src/plugin",
     "test",
     "tests"
-  ]
+  ],
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "vue": "^2.1.10"
+  }
 }
