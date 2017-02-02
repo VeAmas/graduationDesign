@@ -1,0 +1,15 @@
+{
+  "name": "e-parking",
+  "description": "",
+  "main": "index.js",
+  "license": "ISC",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "src/plugin",
+    "test",
+    "tests"
+  ]
+}
