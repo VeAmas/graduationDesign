@@ -1,0 +1,87 @@
+$menuItemPadding: 20px; 
+$borderWidth: 4px;
+
+#nav{
+	.container{
+		position: absolute;
+		top: 45px;
+		bottom: 0;
+		left: 0;
+		width: 200px;
+		padding: 0;
+		font-size: 14px;
+		.menu{
+			margin-top: 60px;			
+			li{
+				width: 100%;
+				box-sizing:border-box;
+				transition: background-color 0.2s;
+				&.active{
+					border-left-style: solid;
+					border-left-width: $borderWidth;
+					&>.item{
+						padding-left: $menuItemPadding - $borderWidth;
+					}
+					&.level1 ul{
+						margin-left: - $borderWidth;
+					}
+				}
+				span{
+					display: inline-block;
+					vertical-align: text-bottom;
+					height: 50px;
+					line-height: 50px;
+				}
+				.arrow{
+					float: right;
+					margin-right: $menuItemPadding;
+					transition: transform 0.2s;
+				}
+				&.expanded .arrow{
+					transform: rotate(90deg);
+				}
+				.item{
+					cursor: pointer;
+					padding-left: $menuItemPadding;
+					position: relative;
+					overflow: hidden;
+				}
+				.ink{
+					background-color: #fff;
+					border-radius: 100%;
+					opacity: 0.5;
+					transform: scale(0);
+					animation: ripple 0.8s;
+				}
+			}
+			.level1{
+				ul{
+					transition: height 0.2s;
+					overflow: hidden;
+				}
+			}
+			.level2{
+			}
+		}
+		hr{
+			margin: $menuItemPadding;
+		}
+		.version{
+			position: absolute;
+			bottom: 20px;
+			left: 20px;
+			font-size: 14px;
+		}
+		.icon{
+			vertical-align: text-bottom;
+			font-size: 18px;
+			padding-right: $menuItemPadding / 2;
+		}
+	}
+	@keyframes ripple{
+		100%{
+			opacity: 0;
+			transform: scale(2)
+		}
+	}
+}

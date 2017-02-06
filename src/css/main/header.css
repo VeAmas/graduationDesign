@@ -1,0 +1,115 @@
+#header {
+  width: 100%;
+}
+
+#header .container {
+  width: 100%;
+  height: 45px;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+#header .container .left {
+  float: left;
+}
+
+#header .container .left .logo {
+  width: 120px;
+  height: 45px;
+  background-color: #f10;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+#header .container .right {
+  float: right;
+}
+
+#header .container .right div {
+  display: inline-block;
+  vertical-align: middle;
+  height: 45px;
+  line-height: 42.75px;
+  cursor: pointer;
+  padding: 0 20px;
+  font-size: 16px;
+}
+
+#header .container .right .enterprise-name {
+  display: inline-block;
+  vertical-align: middle;
+  padding: 0 5px;
+}
+
+#header .container .right .user {
+  position: relative;
+  transition: background-color 0.2s;
+}
+
+#header .container .right .user:hover .sub-menu {
+  height: 150px;
+  bottom: auto;
+}
+
+#header .container .right .user:hover .arrow {
+  top: 5px;
+}
+
+#header .container .right .user .avatar {
+  padding: 0px;
+  display: inline-block;
+  vertical-align: top;
+  line-height: 40.5px;
+  height: 36px;
+}
+
+#header .container .right .user .avatar img {
+  height: 36px;
+  width: 36px;
+}
+
+#header .container .right .user .arrow {
+  font-size: 14px;
+  position: relative;
+  transition: top 0.2s;
+  top: 0px;
+}
+
+#header .container .right .user .sub-menu {
+  padding: 0;
+  width: 200px;
+  display: block;
+  position: absolute;
+  transition: height 0.2s;
+  right: 0px;
+  top: 45px;
+  z-index: 0;
+  height: 0;
+  overflow: hidden;
+  cursor: auto;
+  box-sizing: border-box;
+}
+
+#header .container .right .user .sub-menu li {
+  font-size: 14px;
+  line-height: 14px;
+  padding: 0 15px;
+  margin-top: 8px;
+}
+
+#header .container .right .user .sub-menu li span {
+  float: right;
+}
+
+#header .container .right .user .sub-menu li .btn {
+  background-color: transparent;
+  border-color: inherit;
+  height: 22px;
+  line-height: 20px;
+  padding: 0;
+}
+
+#header .container .right .user .sub-menu li .btn:hover {
+  color: inherit;
+}

@@ -9,9 +9,9 @@ var notify = require('gulp-notify');
 var runSequence = require('run-sequence');
 
 var paths = {
-    js: "./src/js/*.js",
+    js: "./src/**/*.js",
     pages: "./src/**/*.html",
-    sass: "./src/sass/*.scss"
+    sass: "./src/**/*.scss"
 };
 
 gulp.task('styles',function () {

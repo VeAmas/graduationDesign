@@ -1,0 +1,62 @@
+$fontGray: #8a8f97;
+$fontWhite: #e4e5e6;
+
+$hover: #3a434b;
+$highLight: #4b5158;
+$level1: #27343e;
+
+$darkBlue: #1e262c; 
+$orange: #f56c2d;
+
+// *{color:$fontWhite;}
+
+#nav{
+	.container{
+		background-color: $darkBlue;
+		.menu{
+			li{
+				background-color: $darkBlue;
+				color: $fontGray;
+				&:hover{
+					background-color: $hover;
+				}
+				&.active{
+					background-color: $highLight;
+					color: $fontWhite;
+					border-left-color: $orange;
+					&.expanded{
+						background-color: $level1;
+					}
+				}
+			}
+		}
+		hr{
+			border-color: $highLight;
+		}
+		.version{
+			color: $fontWhite;
+		}
+		.icon{
+			color: $orange;
+		}
+	}
+}
+
+#header{
+	.container{
+		background-color: $darkBlue;
+		border-bottom:3px solid $orange;
+		.enterprise-name{
+			color: $fontWhite;
+		}
+		.user{
+			color: $fontWhite;
+			&:hover{
+				background-color: $hover;
+			}
+			.sub-menu{
+				background-color: $darkBlue;
+			}
+		}
+	}
+}
