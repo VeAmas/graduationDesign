@@ -156,11 +156,5 @@ Vue.component('epNav',{
 var root = new Vue({
     el: "#root",
     data:{
-    	showModal:false
-    },
-    methods:{
-    	abc(){
-    		console.log('ABC');
-    	}
     }
 });

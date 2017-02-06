@@ -4,58 +4,24 @@
 	<meta charset="UTF-8">
 	<title>Document</title>
 	<link rel="stylesheet" href="plugin/bootstrap/dist/css/bootstrap.css">
-	<link rel="stylesheet" href="css/common/common.css">
-	<link rel="stylesheet" href="css/common/color.css">
-	<link rel="stylesheet" href="css/main/header.css">
+	<link rel="stylesheet" href="css/sass/common/common.css">
+	<link rel="stylesheet" href="css/sass/common/color.css">
+	<link rel="stylesheet" href="css/sass/main/header.css">
 	<link rel="stylesheet" href="css/components/nav/nav.css">
 	<link rel="stylesheet" href="css/components/modal/modal.css">
+	<!-- <link rel="stylesheet" href="css/component/header/header.css"> -->
 </head>
 <body>
 	<div id="root">
-		<section id="header">
-			<div class="container">
-				<div class="left">
-					<div class="logo">
-						
-					</div>
-				</div>
-				<div class="right">				
-					<div class="enterprise-name">
-						杭州市公交管理有限公司
-					</div>
-					<div class="user">
-						<div class="avatar"><img src="img/avatar-default.png"></div>
-						<span>陈恒涛</span>
-						<span class="glyphicon glyphicon-menu-down arrow"></span>
-						<div class="sub-menu">
-							<ul>
-								<li>姓名：<span>陈恒涛</span></li>
-								<li>职位：<span>管理员</span></li>
-								<li>联系电话：<span>15988141526</span></li>
-								<li>密码：<span><a href="#">修改</a></span></li>
-								<li>头像：<span><a href="">修改</a></span></li>
-								<li><button class="btn btn-block">登出</button></li>
-							</ul>
-						</div>
-					</div>
-				</div>
-			</div>
-		</section>
+		<ep-header id="header"></ep-header>
 		<ep-nav id='nav'></ep-nav>
 
-		<modal v-show = "showModal">
-			<div class="modal-header">
-				<h4 class="modal-title" id="mySmallModalLabel">Small modal</h4>
-			</div>
-			<div class="modal-body">
-				<button @click="abc"></button>
-			</div>
-			<modal-footer></modal-footer>
-		</modal>
+		
 	</div>		
 	<script src="plugin/vue/dist/vue.js"></script>
 	<script src="plugin/jquery/dist/jquery.js"></script>
 	<script src="components/modal/modal.js"></script>
+	<script src="components/header/header.js"></script>
 	<script src="components/nav/nav.js"></script>
 </body>
 </html>
