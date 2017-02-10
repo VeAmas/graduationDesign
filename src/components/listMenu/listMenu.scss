@@ -1,0 +1,39 @@
+.list-menu{
+	font-size: 14px;
+	height:100%;
+	position: relative;
+	.name{
+	}
+	ul{
+		position: absolute;
+		left: 0;
+		right: 0;
+		top: 35px;
+		bottom: 0;
+		overflow: scroll;
+		cursor: pointer;
+		li{
+			height: 30px;
+			width: 100%;
+			margin-bottom: 2px;
+			div{
+				border-radius:5px;
+				height: 100%;
+				line-height: 30px;
+				padding:0 10px;
+				transition: color,background-color 0.4s;
+				.glyphicon {
+					transition: opacity 0.4s;
+					opacity: 0;
+					float: right;
+					line-height: 30px;
+				}
+			}
+			.active{
+				.glyphicon {
+					opacity: 1;
+				}
+			}
+		}
+	}
+}

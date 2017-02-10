@@ -5,13 +5,15 @@ Vue.component('epNav',{
 			<ul class="menu">
 				<li class="level1" v-for="menu in menus" :class="{expanded:menu.expanded,active:menu.active}">
 					<div class="item" @click="toggle(menu),activate(menu)">
+						<router-link :to="menu.link" class="plain link"></router-link>
 						<span class="icon glyphicon" :class="menu.icon"></span>
-						<span v-text="menu.data"></span> 
+						<span v-text="menu.data"></span>
 						<span v-if="menu.children" class="arrow glyphicon glyphicon-menu-right" aria-hidden="true"></span>
-					</div>					
+					</div>
 					<ul v-if="menu.children" :style="menu.style">
 						<li class="level2" v-for="subMenu in menu.children" :class="{active:subMenu.active}">
 							<div class="item" @click="activate(subMenu,menu)">
+								<router-link :to="subMenu.link" class="plain link"></router-link>
 								<span class="indent1 icon glyphicon" :class="subMenu.icon"></span>
 								<span v-text="subMenu.data"></span>
 							</div>
@@ -99,11 +101,11 @@ Vue.component('epNav',{
 			children:[{
 				data:"车辆信息",
 				icon:"glyphicon-heart",
-				link:""
+				link:"/vehicle/stat"
 			},{
 				data:"保养编排",
 				icon:"glyphicon-star",
-				link:""
+				link:"/vehicle/assign"
 			}]
 		},{
 			data:"泊位管理",
@@ -126,7 +128,7 @@ Vue.component('epNav',{
 		},{
 			data:"用户管理",
 			icon:"glyphicon-th",
-			link:"",
+			link:"/user",
 			children:null
 		},{
 			data:"日志管理",
@@ -151,10 +153,3 @@ Vue.component('epNav',{
 	}
 });
 
-
-
-var root = new Vue({
-    el: "#root",
-    data:{
-    }
-});

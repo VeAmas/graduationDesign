@@ -42,9 +42,18 @@ $borderWidth: 4px;
 				}
 				.item{
 					cursor: pointer;
+					display: block;
 					padding-left: $menuItemPadding;
 					position: relative;
 					overflow: hidden;
+					.link{
+						display: block;
+						width: 100%;
+						height: 100%;
+						position: absolute;
+						left: 0;
+						background-color: transparent;
+					}
 				}
 				.ink{
 					background-color: #fff;

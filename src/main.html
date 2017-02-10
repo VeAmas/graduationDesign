@@ -4,24 +4,44 @@
 	<meta charset="UTF-8">
 	<title>Document</title>
 	<link rel="stylesheet" href="plugin/bootstrap/dist/css/bootstrap.css">
+	<link rel="stylesheet" href="plugin/datetimepicker/jquery.datetimepicker.css">
 	<link rel="stylesheet" href="css/sass/common/common.css">
 	<link rel="stylesheet" href="css/sass/common/color.css">
-	<link rel="stylesheet" href="css/sass/main/header.css">
+	<link rel="stylesheet" href="css/sass/main/main.css">
+	<link rel="stylesheet" href="css/components/header/header.css">
 	<link rel="stylesheet" href="css/components/nav/nav.css">
 	<link rel="stylesheet" href="css/components/modal/modal.css">
-	<!-- <link rel="stylesheet" href="css/component/header/header.css"> -->
+	<link rel="stylesheet" href="css/components/listMenu/listMenu.css">
+	<link rel="stylesheet" href="css/components/vehicle/stat/stat.css">
+	<link rel="stylesheet" href="css/components/user/user.css">
+
 </head>
 <body>
 	<div id="root">
 		<ep-header id="header"></ep-header>
 		<ep-nav id='nav'></ep-nav>
-
-		
+		<div id="view" class = "content-bg">
+			<router-view></router-view>
+		</div>
 	</div>		
 	<script src="plugin/vue/dist/vue.js"></script>
+	<script src="plugin/vue-router/dist/vue-router.js"></script>
+	<script src="plugin/vee-validate/dist/vee-validate.js"></script>
 	<script src="plugin/jquery/dist/jquery.js"></script>
+	<script src="plugin/jquery.nicescroll/dist/jquery.nicescroll.min.js"></script>
+	<script src="plugin/datetimepicker/build/jquery.datetimepicker.full.js"></script>
+
 	<script src="components/modal/modal.js"></script>
 	<script src="components/header/header.js"></script>
 	<script src="components/nav/nav.js"></script>
+	<script src="components/listMenu/listMenu.js"></script>
+	<script src="components/datetimePicker/datetimePicker.js"></script>
+
+	<script src="components/vehicle/stat/stat.js"></script>
+	<script src="components/user/user.js"></script>
+
+	<script src="js/router.js"></script>
+	<script src="js/common.js"></script>
 </body>
 </html>
+

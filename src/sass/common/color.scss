@@ -1,14 +1,22 @@
 $fontGray: #8a8f97;
 $fontWhite: #e4e5e6;
+$fontRegular: #565d62;
+$fontDarkGray:#888e95;
 
 $hover: #3a434b;
 $highLight: #4b5158;
 $level1: #27343e;
+$mask: rgba(0,0,0,0.2);
 
 $darkBlue: #1e262c; 
+$lightOrange: #f96;
 $orange: #f56c2d;
 
 // *{color:$fontWhite;}
+
+.content-bg{
+	background-color: #edf1f2;
+}
 
 #nav{
 	.container{
@@ -58,5 +66,88 @@ $orange: #f56c2d;
 				background-color: $darkBlue;
 			}
 		}
+	}
+}
+
+.list-menu{
+	div{
+		color:$fontDarkGray;x
+		.glyphicon{
+			color: $orange;
+		}
+	}
+	ul div:hover{
+			background-color: $mask;
+			color:  $fontRegular;
+		}
+	.active{
+		color: $fontRegular;
+		background-color: $mask;
+	}
+}
+
+.panel{
+	background-color: #FFF;
+	.panel-head{
+		background-color: $darkBlue;
+		color: $fontWhite;
+		border-bottom: 3px solid $orange;
+	}
+}
+
+.modal{
+	.modal-dialog{
+		.modal-content{
+			background-color: $darkBlue;
+			color: $fontWhite;
+			.modal-header{
+				border-bottom-color:$highLight;
+			}
+			.modal-footer{
+				border-top-color:$highLight;
+			}
+			button{
+				transition: background-color 0.2s;
+			}
+			.ok{
+				background-color: $orange;
+				&:hover{
+					color: $fontWhite;
+					background-color: $lightOrange;
+				}
+			}
+			.cancle{
+				background-color: $darkBlue;
+				border-color:$fontWhite;
+				&:hover{
+					color: $fontWhite;
+					background-color: $hover;
+				}
+			}
+		}
+	}
+	.high-light{
+		color: $orange;
+	}
+}
+
+.xdsoft_datetimepicker{
+	background-color: $darkBlue !important;
+	div,th,td{
+		background-color: $darkBlue !important;
+	}
+	&.xdsoft_dark .xdsoft_calendar td.xdsoft_date:hover div, 
+	&.xdsoft_dark .xdsoft_calendar td.xdsoft_date:hover{
+		background-color: $lightOrange !important;
+	}
+	&.xdsoft_dark .xdsoft_timepicker .xdsoft_time_box>div>div.xdsoft_time:hover{
+		background-color: $lightOrange !important;
+		
+	}
+	table{
+		background-color: $hover;
+	}
+	td.xdsoft_current, th.xdsoft_current, div.xdsoft_current, .xdsoft_current div{
+		background-color: $orange !important;
 	}
 }

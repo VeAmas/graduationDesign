@@ -20,6 +20,30 @@ a{
 	text-indent: 2em;
 }
 
-.plane{
+.plain, .plain:hover, .plain:visited, .plain:link, .plain.active{
+	color: inherit;
 	text-decoration: none;
+}
+
+.panel{
+	height:100%;
+	position: relative;
+	.panel-head{
+		position: absolute;
+		width: 100%;
+		height: 35px;
+		line-height: 35px;
+		padding-left: 5px;
+		box-sizing: border-box;
+		font-weight: bold;		
+	}
+	.panel-body{
+		border-top: 35px transparent solid;
+		padding: 0;
+		height: 100%;
+	}
+}
+
+.operate{
+	padding:0 5px;
 }
