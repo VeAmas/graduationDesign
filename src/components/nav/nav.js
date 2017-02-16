@@ -133,7 +133,7 @@ Vue.component('epNav',{
 		},{
 			data:"日志管理",
 			icon:"glyphicon-th-list",
-			link:"",
+			link:"/log",
 			children:null
 		}];
 		for(var i = 0;i<menus.length;i++){

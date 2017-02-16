@@ -5,5 +5,8 @@ var router = new VueRouter({
 	},{
 		path:"/user",
 		component:user
+	},{
+		path:"/log",
+		component:log
 	}]
 });

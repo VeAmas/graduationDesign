@@ -13,6 +13,10 @@ a{
 	cursor:pointer;
 }
 
+.fr{
+	float:right;
+}
+
 .indent1{
 	text-indent: 1em;
 }
@@ -42,8 +46,67 @@ a{
 		padding: 0;
 		height: 100%;
 	}
+	.panel-footer{
+		padding: 0;
+		height: 40px;
+		overflow: hidden;
+		position: relative;
+		.pagination{
+			position: absolute;
+			top: -15px;
+			right: 10px;
+		}
+	
+	}
 }
 
 .operate{
 	padding:0 5px;
+}
+
+.form-inline{
+	display: inline-block;
+	label{
+		margin-right: 10px;
+	}
+	select , input{
+		min-width: 120px;
+		height: 22px;
+		line-height: 22px;
+		border-width:1px;
+	}
+	button{
+		width: 100px;
+		border:none;
+		height: 22px;
+		outline: none;
+		transition: background-color 0.2s;
+	}
+}
+
+.panel-head{
+	.form-inline{
+		float: right;
+		height: 100%;
+		padding-right: 10px;
+		line-height: 20px;
+		button{
+			height: 20px;
+			width: 30px;
+			overflow: hidden;
+			white-space:nowrap;
+			padding-right: 10px;
+			font-size: 12px;
+			margin-top: 6px;
+			line-height: 14px;
+			border-radius: 3px;
+			transition: width 0.5s;
+			&:hover{
+				width: 100px;
+			}
+			span{
+				padding:0 6px 0 3px;
+			}
+		}
+	}
 }

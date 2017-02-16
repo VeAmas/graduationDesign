@@ -42,6 +42,10 @@ const vehicle_stat = {
 					        </tr>
 					      </tbody>
 				    	</table>
+				    	
+					</div>
+					<div class="panel-footer">
+						<div id="vehicle-stat-pagination"></div>
 					</div>
 				</div>
 			</div>
@@ -230,6 +234,17 @@ const vehicle_stat = {
 	mounted(){
 		$(this.$el).find(".panel-body").niceScroll({
 			grabcursorenabled: false
+		});
+		function handlePaginationClick(new_page_index, pagination_container) {
+			console.log(new_page_index,pagination_container)
+		    return false;
+		}
+		$("#vehicle-stat-pagination").pagination(1500, {
+	        items_per_page:20,
+	        prev_text:"上一页",
+	        next_text:"下一页",
+	        num_display_entries:7,
+	        callback:handlePaginationClick
 		});
 		var _this_ = this;
 		window.setTimeout(function(){

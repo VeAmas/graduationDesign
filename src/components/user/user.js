@@ -3,13 +3,37 @@ const user = {
 	<section id="user">
 		<div class="top">
 			<div class="panel">
-
+				<div class="form-inline">
+					<label for="">用户类型</label>
+					<select name="" id="">
+						<option v-for="item in common.userType" :value="item" v-text="item"></option>
+					</select>
+				</div>
+				<div class="form-inline">
+					<label for="">用户姓名</label>
+					<input type="text" />
+				</div>
+				<div class="form-inline">
+					<label for="">用户性别</label>
+					<select name="" id="">
+						<option v-for="item in common.gender" :value="item" v-text="item"></option>
+					</select>
+				</div>
+				<div class="form-inline fr">
+					<button>筛选</button>
+				</div>
 			</div>
 		</div>
 		<div class="bottom">
 			<div class="panel">
 				<div class="panel-head">
 					用户列表
+					<div class="form-inline">
+						<button><span class="glyphicon glyphicon-list-alt"></span>&nbsp;导入用户</button>
+					</div>
+					<div class="form-inline">
+						<button @click="userAdd.toModal()"><span class="glyphicon glyphicon-user"></span>&nbsp;添加用户</button>
+					</div>
 				</div>
 				<div class="panel-body">
 					<table class="table table-striped table-hover">
@@ -44,6 +68,9 @@ const user = {
 				        </tr>
 				      </tbody>
 			    	</table>
+				</div>
+				<div class="panel-footer">
+					<div id="user-pagination"></div>
 				</div>
 			</div>
 		</div>
@@ -104,7 +131,7 @@ const user = {
 				<button class="btn cancle" @click="userCheck.clear()">关闭</button>
 			</div>
 		</modal>
-		<modal v-if = "userModify.isShow" id="user_check">
+		<modal v-if = "userModify.isShow" id="user_modify">
 			<div class="modal-header">
 				<h4 class="modal-title">修改用户</h4>
 			</div>
@@ -154,7 +181,7 @@ const user = {
 						</td>				
 					</tr>
 					<tr>
-						<td></td>
+						<td class="photo-submit"><input type="text" /><button>提交</button></td>
 						<td>出生日期</td>
 						<td colspan="2">
 							<datetime-picker :data="userModify.obj.birth"></datetime-picker>
@@ -194,6 +221,87 @@ const user = {
 				<button class="btn cancle" @click="userDelete.clear()">取消</button>
 			</div>
 		</modal>
+		<modal v-if = "userAdd.isShow" id="user_add">
+			<div class="modal-header">
+				<h4 class="modal-title">添加用户</h4>
+			</div>
+			<div class="modal-body">
+				<table>
+					<tr>
+						<td rowspan="6" class="photo">
+							<img :src="userAdd.obj.photo" />
+						</td>
+						<td>性别</td>
+						<td>
+							<select v-model="userAdd.obj.gender">
+								<option v-for="item in common.gender" :value="item" v-text="item"></option>
+							</select>
+						</td>						
+					</tr>
+					<tr>
+						<td>年龄</td>
+						<td>
+							<input type="text" v-model="userAdd.obj.age"/>
+						</td>		
+					</tr>
+					<tr>
+						<td>姓名</td>
+						<td>
+							<input type="text" v-model="userAdd.obj.name"/>
+						</td>			
+					</tr>
+					<tr>			
+						<td>用户类型</td>
+						<td>
+							<select v-model="userAdd.obj.userType">
+								<option v-for="item in common.userType" :value="item" v-text="item"></option>
+							</select>
+						</td>	
+					</tr>
+					<tr>
+						<td>身份证号码</td>
+						<td>
+							<input type="text" v-model="userAdd.obj.ID"/>
+						</td>				
+					</tr>
+					<tr>
+						<td>地址</td>
+						<td>
+							<input type="text" v-model="userAdd.obj.address"/>
+						</td>				
+					</tr>
+					<tr>
+						<td class="photo-submit"><input type="text" /><button>提交</button></td>
+						<td>出生日期</td>
+						<td colspan="2">
+							<datetime-picker :data="userAdd.obj.birth"></datetime-picker>
+						</td>		
+					</tr>
+					<tr>
+						<td>联系电话</td>
+						<td colspan="2">
+							<input type="text" v-model="userAdd.obj.cellPhone"/>
+						</td>						
+					</tr>
+						<td>邮箱地址</td>
+						<td colspan="2">
+							<input type="text" v-model="userAdd.obj.email"/>
+						</td>	
+					<tr>
+					</tr>
+					<tr>
+						<td>入职时间</td>
+						<td colspan="2">
+							<datetime-picker :data="userAdd.obj.startDate"></datetime-picker>
+						</td>						
+					</tr>	
+				</table>
+			</div>
+			<div class="modal-footer">
+				<button class="btn ok" @click="userAdd.clear()">确认</button>
+				<button class="btn cancle" @click="userAdd.clear()">取消</button>
+			</div>
+		</modal>
 	</section>
 	`,
 	data(){
@@ -206,6 +314,9 @@ const user = {
 				isShow:false
 			},
 			userModify:{
+				isShow:false
+			},
+			userAdd:{
 				isShow:false
 			}
 		};
@@ -238,13 +349,36 @@ const user = {
 			this.isShow = false;
 		};
 		
+
+		this.userAdd.obj = {};
+		this.userAdd.toModal = function () {
+			this.obj = {};
+			this.isShow = true;
+		};
+		this.userAdd.clear=function () {
+			this.isShow = false;
+		};
 	},
 	mounted(){
+		$(this.$el).find(".panel-body").niceScroll({
+			grabcursorenabled: false
+		});
+		function handlePaginationClick(new_page_index, pagination_container) {
+			console.log(new_page_index,pagination_container)
+		    return false;
+		}
+		$("#user-pagination").pagination(1500, {
+	        items_per_page:20,
+	        prev_text:"上一页",
+	        next_text:"下一页",
+	        num_display_entries:7,
+	        callback:handlePaginationClick
+		});
 		var _this_ = this;
 		window.setTimeout(function() {
 			_this_.userList = [{
 				userId:"13005",
-				userType:"",
+				userType:"司机",
 				name:"张晓丽",
 				age:"32",
 				photo:"img/avatar-default.png",
@@ -255,9 +389,12 @@ const user = {
 				cellPhone:"",
 				email:"",
 				startDate:"",
-				curVehicle:"",
+				curVehicle:"浙A·12345",
 				lastRecordTime:""
 			}];
+			for(var i = 0;i<100;i++){
+				_this_.userList.push(_this_.userList[0]);
+			}
 		}, 1000);
 	},
 	methods:{}

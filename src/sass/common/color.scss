@@ -93,6 +93,26 @@ $orange: #f56c2d;
 		color: $fontWhite;
 		border-bottom: 3px solid $orange;
 	}
+	.panel-footer{
+		border-top:3px solid $orange;
+		background-color: $darkBlue;
+	}
+}
+
+.form-inline{
+	label{
+		
+	}
+	select , input{
+		border-color: $darkBlue;
+	}
+	button{
+		background-color: $orange;
+		color: #fff;
+		&:hover{
+			background-color: $lightOrange;
+		}
+	}
 }
 
 .modal{
@@ -149,5 +169,34 @@ $orange: #f56c2d;
 	}
 	td.xdsoft_current, th.xdsoft_current, div.xdsoft_current, .xdsoft_current div{
 		background-color: $orange !important;
+	}
+}
+
+.pagination {
+    a {
+		border: solid 1px $fontWhite;
+		background-color: transparent;
+		color: $fontWhite;
+	}
+	a, span{
+		transition: background-color,color 0.2s;
+		&:hover{
+			background-color: $lightOrange;
+			color: $darkBlue;
+		}
+	}
+	.current {
+	    background: $orange;
+	    color: #fff;
+		border: solid 1px #AAE;
+		&:hover{
+			background-color: $orange;
+	    	color: #fff;
+		}
+		&.prev, &.next{
+			color:#999;
+			border-color:#999;
+			background: $highLight;
+		}
 	}
 }

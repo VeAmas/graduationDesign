@@ -18,6 +18,8 @@
     "vue-router": "^2.2.0",
     "jquery.nicescroll": "nicescroll#^3.6.8",
     "datetimepicker": "^2.5.4",
-    "vee-validate": "1.0.0-beta.11"
+    "vee-validate": "1.0.0-beta.11",
+    "jquery-pagination": "^2.2.1",
+    "three.js": "^0.84.0"
   }
 }

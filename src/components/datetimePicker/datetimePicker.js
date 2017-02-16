@@ -1,7 +1,8 @@
 Vue.component('datetime-picker',{
 	template:`
-		<div>
+		<div class="datetime-picker">
 			<input type="text" v-model="data"/>
+			<span class="glyphicon glyphicon-calendar"></span>
 		</div>
 	`,
 	props:{
