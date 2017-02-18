@@ -5,11 +5,42 @@
 	<title>Document</title>
 </head>
 <body>
-
-	<div id="canvas" style="height: 600px;width: 1000px;"></div>
-	
+	<div id="root">
+		<div id="canvas" style="height: 600px;width: 1000px;"></div>
+		<button @click="changeStat('none')">none</button>
+		size:<input type="text" v-model="scene.setting.user.brushSize.width">x<input type="text" v-model="scene.setting.user.brushSize.height">
+		<button @click="changeStat('floorHover')">floorHover</button>
+		<button @click="selectModel('temp'),changeStat('modelHover')">立方体</button>
+	</div>
 	<script src = "../../plugin/three.js/three.js"></script>
 	<script src = "lib/OrbitControls.js"></script>
+	<script src = "../../plugin/vue/dist/vue.js"></script>
+	<script src = "../../plugin/jquery/dist/jquery.js"></script>
 	<script src = "init.js"></script>
+	<script>
+		var root = new Vue({
+			el:"#root",
+			data:{
+				scene:null
+			},
+			methods:{
+				changeStat(s){
+					this.scene.state.changeStateTo(s);
+				},
+				selectModel(m){
+					this.scene.model.cur.geo = this.scene.model[m].geo.clone();
+					this.scene.model.cur.mat = this.scene.model[m].mat.clone();					
+				}
+			},
+			created(){
+				this.scene = new Scene();
+			},
+			mounted(){
+				this.scene = new Scene();
+				this.scene.init();
+			}
+		});
+	</script>
+
 </body>
 </html>
