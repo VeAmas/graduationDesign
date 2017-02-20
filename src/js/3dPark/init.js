@@ -58,14 +58,53 @@ var Scene = function () {
         }
     };
 
+    this.timer = {
+        clickTimer:{
+            flag:false,
+            x:null,
+            z:null
+        },
+    };
+
     this.handler = {
         onMouseMove(e){
             scope.mouse.x =  ((e.clientX-scope.canvas.offsetLeft) / scope.canvas.offsetWidth) * 2 - 1;
             scope.mouse.y = -((e.clientY-scope.canvas.offsetTop) / scope.canvas.offsetHeight) * 2 + 1;
-            // console.log(scope.mouse)
+        },
+        onMousedown(e){
+            scope.timer.clickTimer.flag = true;
+            scope.timer.clickTimer.x = e.clientX;
+            scope.timer.clickTimer.z = e.clientY;
+            if(scope.timer.clickTimer.timeout>0){
+                clearTimeout(scope.timer.clickTimer.timeout);
+            }
+            scope.timer.clickTimer.timeout = setTimeout(function() {
+                scope.timer.clickTimer.timeout = 0;
+                scope.timer.clickTimer.flag = false;
+            }, 100);
+        },
+        onMouseup(e){
+            if(e.button === 0){
+                var x = e.clientX;
+                var z = e.clientY;
+                var d = (x-scope.timer.clickTimer.x)*(x-scope.timer.clickTimer.x)+(z-scope.timer.clickTimer.z)*(z-scope.timer.clickTimer.z);
+                if(scope.timer.clickTimer.flag && d < 20){
+                    if(scope.state.leftClickMethod){ 
+                        scope.state.leftClickMethod();
+                    }
+                }                
+            }
+            else if(e.button === 2){
+                var t = scope.setting.user.brushSize.width;
+                scope.setting.user.brushSize.width = scope.setting.user.brushSize.height;
+                scope.setting.user.brushSize.height = t;
+                //右键操作
+            }
         },
         initAllHandler(){
             scope.canvas.children[0].addEventListener('mousemove', this.onMouseMove, false);
+            scope.canvas.children[0].addEventListener('mousedown', this.onMousedown, false);
+            scope.canvas.children[0].addEventListener('mouseup', this.onMouseup, false);
         }
     };
 
@@ -102,6 +141,7 @@ var Scene = function () {
 
     this.state = {
         curState:null,
+        leftClickMethod:null,
         getCurState(){},
         changeStateTo(s){
             var _this_ = this;
@@ -116,7 +156,8 @@ var Scene = function () {
                     break;
                 case "modelHover": 
                     scope.raycaster.targetSet("floor");
-                    scope.model.cur.mesh = new THREE.Mesh(scope.model.cur.geo,scope.model.cur.mat);
+                    this.leftClickMethod = this.fn.addObject;
+                    scope.model.cur.mesh = new THREE.Mesh(scope.model.cur.geo.clone(),scope.model.cur.mat.clone());
                     scope.model.cur.mesh.position.y = 99999;
                     scope.model.cur.mesh.material.transparent = true;
                     scope.model.cur.mesh.material.opacity = 0.5;
@@ -131,9 +172,30 @@ var Scene = function () {
                     scope.canvas.onmousemove = null;
                     scope.canvas.onmousedown = null;
                     scope.canvas.onmouseup = null;
+                    this.clickMethod = null;
             }
         },
         fn:{
+            addObject(){
+                if(scope.raycaster.intersect){
+                    var target = scope.raycaster.intersect.object;
+                    var result = scope.state.fn.getSquare(target.floor.coord.x,target.floor.coord.z);
+                    if(!result.valid){
+                        return;
+                    }
+                    scope.state.fn.setToOccupied(target.floor.coord.x,target.floor.coord.z);
+                    scope.recover.allColor();
+
+                    //添加到物品队列
+                    //
+
+                    var mesh  = new THREE.Mesh(scope.model.cur.geo.clone(),scope.model.cur.mat.clone());
+                    mesh.position.copy(scope.model.cur.mesh.position);
+                    scope.scene.add(mesh);
+                    scope.state.changeStateTo("");
+
+                }
+            },
             clearStat(){
                 if(scope.model.cur.mesh){
                     scope.scene.remove(scope.model.cur.mesh);
@@ -167,14 +229,24 @@ var Scene = function () {
                 for(var i = 0 ;i < x1-x0+1;i++){
                     for(var j = 0 ;j< z1-z0+1;j++,counter++){
                         arr[counter] = scope.meshs.floors[x0+i][z0+j].mesh;
+                        if(arr[counter].occupied){
+                            flag = false;
+                        }
                     }
                 }
                 return {
                     valid:flag,
                     arr:arr
                 };
-                
             },
+
+            setToOccupied(x,z){
+                var arr = this.getSquare(x,z).arr;
+                arr.forEach(function (i) {
+                    i.occupied = true;
+                });
+            },
+
             floorHover(){
                 //recover
                 scope.recover.allColor();
