@@ -29,6 +29,13 @@ var Scene = function () {
             }
         }
     };
+    this.pass = {
+        composer: null,
+        effectFXAA: null,
+        outlinePass: null,
+        renderPass: null
+    };
+
     this.meshs = {
         floors:[],
     };
@@ -39,7 +46,7 @@ var Scene = function () {
         },
         temp:{
             geo:new THREE.CubeGeometry(8,8,8),
-            mat:new THREE.MeshBasicMaterial({color:new THREE.Color("#123456")})
+            mat:new THREE.MeshLambertMaterial({color:new THREE.Color("#123456")})
         }
     };
 
@@ -81,7 +88,7 @@ var Scene = function () {
             scope.timer.clickTimer.timeout = setTimeout(function() {
                 scope.timer.clickTimer.timeout = 0;
                 scope.timer.clickTimer.flag = false;
-            }, 100);
+            }, 200);
         },
         onMouseup(e){
             if(e.button === 0){
@@ -89,10 +96,14 @@ var Scene = function () {
                 var z = e.clientY;
                 var d = (x-scope.timer.clickTimer.x)*(x-scope.timer.clickTimer.x)+(z-scope.timer.clickTimer.z)*(z-scope.timer.clickTimer.z);
                 if(scope.timer.clickTimer.flag && d < 20){
+                        // console.log("click")
                     if(scope.state.leftClickMethod){ 
                         scope.state.leftClickMethod();
                     }
-                }                
+                }
+                else{
+                    // console.log("d:"+d);
+                }               
             }
             else if(e.button === 2){
                 var t = scope.setting.user.brushSize.width;
@@ -148,6 +159,11 @@ var Scene = function () {
             this.curState = s;
             this.fn.clearStat();
             switch(s){
+                case "selectObject" :
+                    scope.canvas.onmousemove = null;
+                    scope.raycaster.targetSet('cube');
+                    this.leftClickMethod = this.fn.selectObject;
+                    break;
                 case "floorHover": 
                     scope.raycaster.targetSet("floor");
                     scope.canvas.onmousemove = function () {
@@ -176,6 +192,13 @@ var Scene = function () {
             }
         },
         fn:{
+            selectObject(){
+                if(scope.raycaster.intersect){
+                    var target = scope.raycaster.intersect.object;
+                    scope.pass.outlinePass.selectedObjects = [];
+                    scope.pass.outlinePass.selectedObjects.push(target);
+                }
+            },
             addObject(){
                 if(scope.raycaster.intersect){
                     var target = scope.raycaster.intersect.object;
@@ -188,9 +211,14 @@ var Scene = function () {
 
                     //添加到物品队列
                     //
-
-                    var mesh  = new THREE.Mesh(scope.model.cur.geo.clone(),scope.model.cur.mat.clone());
+                    var mat = scope.model.cur.mat.clone();
+                    mat.roughness = 1;
+                    mat.metalness = 0;
+                    var mesh  = new THREE.Mesh(scope.model.cur.geo.clone(),mat);
                     mesh.position.copy(scope.model.cur.mesh.position);
+                    mesh.targetType = ['cube'];
+                    mesh.receiveShadow = true;
+                    mesh.castShadow = true;
                     scope.scene.add(mesh);
                     scope.state.changeStateTo("");
 
@@ -325,32 +353,48 @@ var Scene = function () {
         var directionalLight = new THREE.DirectionalLight(0xffffff,0.5);
         directionalLight.position.set(200,80,50);
         this.scene.add(directionalLight);
+                
     };
     this.initRenderer = function(){
-        this.renderer = new THREE.WebGLRenderer();
+        this.renderer = new THREE.WebGLRenderer({ antialias: false });
+        this.renderer.shadowMap.enabled = true;
         this.renderer.setSize( this.canvas.clientWidth, this.canvas.clientHeight );    
-        this.renderer.setClearColor(0xeeeeee);                                         
-        this.canvas.appendChild(this.renderer.domElement);      
+        this.renderer.setClearColor(0xeeeeee);       
+        this.renderer.setPixelRatio( 1 );                                  
+        this.canvas.appendChild(this.renderer.domElement); 
+
+        this.pass.composer = new THREE.EffectComposer( this.renderer );     
+        this.pass.renderPass = new THREE.RenderPass( this.scene, this.camera );
+        this.pass.outlinePass = new THREE.OutlinePass( new THREE.Vector2( this.canvas.clientWidth, this.canvas.clientHeight ), this.scene, this.camera);
+        this.pass.effectFXAA = new THREE.ShaderPass(THREE.FXAAShader);
+        this.pass.effectFXAA.uniforms.resolution.value.set(1 / this.canvas.clientWidth, 1 / this.canvas.clientHeight );
+        this.pass.effectFXAA.renderToScreen = true;
+        this.pass.composer.addPass( this.pass.renderPass );
+        this.pass.composer.addPass( this.pass.outlinePass );
+        this.pass.composer.addPass( this.pass.effectFXAA );
+
     };
     this.initController = function(){
         this.controller = new THREE.OrbitControls(this.camera,this.canvas);              
         this.controller.target.set(this.setting.user.matrix.width / 2 * this.setting.system.matrix.size ,0, this.setting.user.matrix.height / 2 * this.setting.system.matrix.size);
+                        this.controller.enableDamping = true;
+                this.controller.dampingFactor = 0.25;
     };
     this.initRaycaster = function(){
         this.mouse = new THREE.Vector2();
         this.raycaster.object = new THREE.Raycaster();
     };
     this.reRender = function(){
-
         scope.render();
         requestAnimationFrame(scope.reRender);
-
-
 
     };
     this.render = function(){ 
         this.raycaster.intersectGet();
-        this.renderer.render(this.scene, this.camera);                         
+        this.renderer.autoClear = true;
+        this.renderer.setClearColor( 0xfff0f0 );
+        this.renderer.setClearAlpha( 0.5 );
+        this.pass.composer.render();                       
         this.controller.update();                                              
     };
     this.init = function(){

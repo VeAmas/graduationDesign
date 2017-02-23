@@ -425,7 +425,7 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 	function handleMouseDownPan( event ) {
 
-		//console.log( 'handleMouseDownPan' );
+		// console.log( 'handleMouseDownPan' );
 
 		panStart.set( event.clientX, event.clientY );
 
@@ -481,11 +481,15 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 	function handleMouseMovePan( event ) {
 
-		//console.log( 'handleMouseMovePan' );
+		// console.log( 'handleMouseMovePan' );
 
 		panEnd.set( event.clientX, event.clientY );
 
 		panDelta.subVectors( panEnd, panStart );
+
+		if(panDelta.y<0 && scope.object.position.y < 0){
+			return;
+		}
 
 		pan( panDelta.x, panDelta.y );
 

@@ -11,9 +11,16 @@
 		size:<input type="text" v-model="scene.setting.user.brushSize.width">x<input type="text" v-model="scene.setting.user.brushSize.height">
 		<button @click="changeStat('floorHover')">floorHover</button>
 		<button @click="selectModel('temp'),changeStat('modelHover')">立方体</button>
+		<button @click="changeStat('selectObject')">selectObject</button>
 	</div>
 	<script src = "../../plugin/three.js/three.js"></script>
 	<script src = "lib/OrbitControls.js"></script>
+	<script src = "lib/CopyShader.js"></script>
+	<script src = "lib/EffectComposer.js"></script>
+	<script src = "lib/RenderPass.js"></script>
+	<script src = "lib/ShaderPass.js"></script>
+	<script src = "lib/OutlinePass.js"></script>
+	<script src = "lib/FXAAShader.js"></script>
 	<script src = "../../plugin/vue/dist/vue.js"></script>
 	<script src = "../../plugin/jquery/dist/jquery.js"></script>
 	<script src = "init.js"></script>
