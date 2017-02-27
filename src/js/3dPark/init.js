@@ -170,7 +170,10 @@ var Scene = function () {
                        _this_.fn.floorHover(); 
                     };
                     break;
-                case "modelHover": 
+                case "modelHover":
+                    // 
+                    //去除outline
+                    //
                     scope.raycaster.targetSet("floor");
                     this.leftClickMethod = this.fn.addObject;
                     scope.model.cur.mesh = new THREE.Mesh(scope.model.cur.geo.clone(),scope.model.cur.mat.clone());
@@ -192,11 +195,28 @@ var Scene = function () {
             }
         },
         fn:{
+            deleteObject(){
+                if(!!scope.model.cur.mesh){
+                    scope.scene.remove(scope.model.cur.mesh);
+                    scope.state.fn.setToFree(scope.model.cur.mesh.occupiedArray);
+                    //
+                    //从物品队列删除
+                    //
+                }
+            },
             selectObject(){
                 if(scope.raycaster.intersect){
                     var target = scope.raycaster.intersect.object;
                     scope.pass.outlinePass.selectedObjects = [];
                     scope.pass.outlinePass.selectedObjects.push(target);
+                    scope.model.cur.mesh = target;
+                    //
+                    //弹出菜单
+                    root.setMenuState('selected');
+                    //
+                }else{
+                    scope.pass.outlinePass.selectedObjects = [];    
+                    scope.model.cur.mesh = null;                
                 }
             },
             addObject(){
@@ -206,9 +226,11 @@ var Scene = function () {
                     if(!result.valid){
                         return;
                     }
-                    scope.state.fn.setToOccupied(target.floor.coord.x,target.floor.coord.z);
+                    var arr = scope.state.fn.getSquare(target.floor.coord.x,target.floor.coord.z).arr;
+                    scope.state.fn.setToOccupied(arr);
                     scope.recover.allColor();
-
+                    //
+                    //设置物品参数
                     //添加到物品队列
                     //
                     var mat = scope.model.cur.mat.clone();
@@ -217,10 +239,13 @@ var Scene = function () {
                     var mesh  = new THREE.Mesh(scope.model.cur.geo.clone(),mat);
                     mesh.position.copy(scope.model.cur.mesh.position);
                     mesh.targetType = ['cube'];
-                    mesh.receiveShadow = true;
                     mesh.castShadow = true;
+                    mesh.receiveShadow = true;
+                    mesh.occupiedArray = arr;
                     scope.scene.add(mesh);
-                    scope.state.changeStateTo("");
+                    scope.state.changeStateTo("selectObject");
+
+                    root.setMenuState('normal');
 
                 }
             },
@@ -228,6 +253,7 @@ var Scene = function () {
                 if(scope.model.cur.mesh){
                     scope.scene.remove(scope.model.cur.mesh);
                     scope.model.cur.mesh = null;
+                    scope.recover.allColor();
                 }
             },
             getSquare(x,z){
@@ -267,14 +293,16 @@ var Scene = function () {
                     arr:arr
                 };
             },
-
-            setToOccupied(x,z){
-                var arr = this.getSquare(x,z).arr;
-                arr.forEach(function (i) {
+            setToFree(arr){
+                 arr.forEach(i => {
+                    i.occupied = false;
+                });
+             },
+            setToOccupied(arr){
+                arr.forEach(i => {
                     i.occupied = true;
                 });
             },
-
             floorHover(){
                 //recover
                 scope.recover.allColor();
@@ -313,18 +341,83 @@ var Scene = function () {
 
     this.initScene = function(){
         this.scene = new THREE.Scene(); 
+        this.sceneCube = new THREE.Scene();
+
+        var light = new THREE.SpotLight(0xffffff,1);
+        light.position.x =100;
+        light.position.y =100;
+        light.position.z =-100;
+        light.castShadow = true;
+        this.scene.add( light );
+        light.shadowMapWidth = light.shadowMapHeight = 4096;    //阴影大小
+
+        var urls = [ "img/posx.jpg", "img/negx.jpg", "img/posy.jpg", "img/negy.jpg", "img/posz.jpg", "img/negz.jpg" ];
+        var textureCube = new THREE.CubeTextureLoader().load( urls );
+        textureCube.format = THREE.RGBFormat;
+        textureCube.mapping = THREE.CubeReflectionMapping;
+
+        var cubeShader = THREE.ShaderLib.cube;
+        var cubeMaterial = new THREE.ShaderMaterial( {
+            fragmentShader: cubeShader.fragmentShader,
+            vertexShader: cubeShader.vertexShader,
+            uniforms: cubeShader.uniforms,
+            depthWrite: false,
+            side: THREE.BackSide
+        } );
+        cubeMaterial.uniforms.tCube.value = textureCube;
+
+        cubeMesh = new THREE.Mesh( new THREE.BoxGeometry( 100, 100, 100 ), cubeMaterial );
+        this.sceneCube.add( cubeMesh );
+
+
+
+        var directions  = [ "img/posx.jpg", "img/negx.jpg", "img/posy.jpg", "img/negy.jpg", "img/posz.jpg", "img/negz.jpg" ];
+        var skyGeometry = new THREE.CubeGeometry( 500, 500, 500 );   
+        
+        var materialArray = [];
+        for (var i = 0; i < 6; i++)
+            materialArray.push( new THREE.MeshBasicMaterial({
+                map: THREE.ImageUtils.loadTexture( directions[i]  ),
+                side: THREE.BackSide
+            }));
+        var skyMaterial = new THREE.MeshFaceMaterial( materialArray );
+        var skyBox = new THREE.Mesh( skyGeometry, skyMaterial );
+        this.scene.add( skyBox );
+
+
+        // var vertexShader = document.getElementById( 'vertexShader' ).textContent;
+        // var fragmentShader = document.getElementById( 'fragmentShader' ).textContent;
+        // var uniforms = {
+        //     topColor:    { type: "c", value: new THREE.Color( 0x0077ff ) },
+        //     bottomColor: { type: "c", value: new THREE.Color( 0xffffff ) },
+        //     offset:      { type: "f", value: 400 },
+        //     exponent:    { type: "f", value: 0.6 }
+        // };
+        // uniforms.topColor.value.copy( light.color );
+        // var skyGeo = new THREE.SphereGeometry( 4000, 32, 15 );
+        // var skyMat = new THREE.ShaderMaterial( {
+        //     uniforms: uniforms,
+        //     vertexShader: vertexShader,
+        //     fragmentShader: fragmentShader,
+        //     side: THREE.BackSide
+        // } );
+        // var sky = new THREE.Mesh( skyGeo, skyMat );
+        // this.scene.add( sky );
 
         this.meshs.floors = [];
         for(var i = 0; i < this.setting.user.matrix.width;i++){
             this.meshs.floors[i] = [];
             for(var j = 0; j < this.setting.user.matrix.height; j++){
                 var geo =  new THREE.PlaneBufferGeometry(this.setting.system.matrix.size,this.setting.system.matrix.size);
-                var mat = new THREE.MeshBasicMaterial({color:new THREE.Color(this.setting.system.color.floor)});
+                var mat = new THREE.MeshLambertMaterial({color:new THREE.Color(this.setting.system.color.floor)});
                 var mesh = new THREE.Mesh(geo,mat);
+                mat.side = THREE.DoubleSide;
                 mesh.position.x = i * this.setting.system.matrix.size + this.setting.system.matrix.size / 2;
                 mesh.position.z = j * this.setting.system.matrix.size + this.setting.system.matrix.size / 2;
                 mesh.rotation.x = -0.5*Math.PI;
                 mesh.targetType = ["floor"];
+                mesh.receiveShadow = true;
+                mesh.castShadow = true;
                 this.scene.add(mesh);
                 mesh.floor = {
                     mesh:mesh,
@@ -340,45 +433,63 @@ var Scene = function () {
                 }
             }
         }
+
     };
     this.initCamera = function(){
         this.camera = new THREE.PerspectiveCamera(45, this.canvas.clientWidth/this.canvas.clientHeight, 0.01, 1000);
         this.scene.add(this.camera); 
         this.camera.position.set(this.setting.user.matrix.width / 2 * this.setting.system.matrix.size ,100, this.setting.user.matrix.height / 2 * this.setting.system.matrix.size +0.1);
+        this.cameraCube = new THREE.PerspectiveCamera( 70, this.canvas.clientWidth/this.canvas.clientHeight, 1, 100000 );
     };
     this.initLight = function(){
-        var ambientLight = new THREE.AmbientLight(0xffffff,0.5);                
-        this.scene.add(ambientLight);
-        
-        var directionalLight = new THREE.DirectionalLight(0xffffff,0.5);
-        directionalLight.position.set(200,80,50);
-        this.scene.add(directionalLight);
+
                 
     };
     this.initRenderer = function(){
-        this.renderer = new THREE.WebGLRenderer({ antialias: false });
+        this.renderer = new THREE.WebGLRenderer({ antialias: true });
+        this.renderer.setPixelRatio( window.devicePixelRatio );
         this.renderer.shadowMap.enabled = true;
         this.renderer.setSize( this.canvas.clientWidth, this.canvas.clientHeight );    
-        this.renderer.setClearColor(0xeeeeee);       
-        this.renderer.setPixelRatio( 1 );                                  
+        this.renderer.gammaInput = true;
+        this.renderer.gammaOutput = true;
+
+        this.renderer.autoClear = false;
+        this.renderer.setFaceCulling( THREE.CullFaceNone );
         this.canvas.appendChild(this.renderer.domElement); 
 
         this.pass.composer = new THREE.EffectComposer( this.renderer );     
         this.pass.renderPass = new THREE.RenderPass( this.scene, this.camera );
+        // this.pass.renderPass.renderToScreen = true
+        // this.pass.renderPass.clear = false
+        // this.pass.renderPass.clearDepth = true
         this.pass.outlinePass = new THREE.OutlinePass( new THREE.Vector2( this.canvas.clientWidth, this.canvas.clientHeight ), this.scene, this.camera);
+        // this.pass.outlinePass.renderToScreen = true
+        // this.pass.outlinePass.clear = false
+        // this.pass.outlinePass.clearDepth = true
         this.pass.effectFXAA = new THREE.ShaderPass(THREE.FXAAShader);
         this.pass.effectFXAA.uniforms.resolution.value.set(1 / this.canvas.clientWidth, 1 / this.canvas.clientHeight );
         this.pass.effectFXAA.renderToScreen = true;
-        this.pass.composer.addPass( this.pass.renderPass );
+        // this.pass.effectFXAA.clear = false
+        // this.pass.effectFXAA.clearDepth = true
+
+        // this.pass.cubeRenderPass = new THREE.RenderPass( this.sceneCube, this.cameraCube ); 
+        // this.pass.cubeRenderPass.renderToScreen = true
+        // this.pass.cubeRenderPass.clear = false
+        // this.pass.cubeRenderPass.clearDepth = true
         this.pass.composer.addPass( this.pass.outlinePass );
         this.pass.composer.addPass( this.pass.effectFXAA );
+        // this.pass.composer.addPass( this.pass.cubeRenderPass );
+        this.pass.composer.addPass( this.pass.renderPass );
+
+
+        // this.pass.composer1 = new THREE.EffectComposer( this.renderer );  
 
     };
     this.initController = function(){
         this.controller = new THREE.OrbitControls(this.camera,this.canvas);              
         this.controller.target.set(this.setting.user.matrix.width / 2 * this.setting.system.matrix.size ,0, this.setting.user.matrix.height / 2 * this.setting.system.matrix.size);
-                        this.controller.enableDamping = true;
-                this.controller.dampingFactor = 0.25;
+        this.controller.enableDamping = true;
+        this.controller.dampingFactor = 0.25;
     };
     this.initRaycaster = function(){
         this.mouse = new THREE.Vector2();
@@ -391,10 +502,14 @@ var Scene = function () {
     };
     this.render = function(){ 
         this.raycaster.intersectGet();
-        this.renderer.autoClear = true;
+        this.cameraCube.rotation.copy( this.camera.rotation );
+        // this.renderer.autoClear = true;
         this.renderer.setClearColor( 0xfff0f0 );
-        this.renderer.setClearAlpha( 0.5 );
-        this.pass.composer.render();                       
+        this.renderer.setClearAlpha( 0.5 );    
+        // this.renderer.render(scope.scene, scope.camera);    
+        // this.renderer.render(scope.sceneCube, scope.cameraCube);  
+        // this.pass.composer1.render();       
+        this.pass.composer.render();             
         this.controller.update();                                              
     };
     this.init = function(){

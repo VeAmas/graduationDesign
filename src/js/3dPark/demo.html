@@ -7,11 +7,27 @@
 <body>
 	<div id="root">
 		<div id="canvas" style="height: 600px;width: 1000px;"></div>
+		<div id="leftPanel">
+			<div class="addObject" v-if='state.addObject'>
+				<button @click="selectModel('temp'),changeStat('modelHover')">立方体</button>
+			</div>
+		</div>
+		<div id="bottomPanel">
+			<div class="normal" v-if='state.normal'>
+				<button @click="selectModel('temp'),changeStat('modelHover'),setMenuState('addObject')">添加物品</button>		
+			</div>
+			<div class="addObject" v-if='state.addObject'>		
+				<button @click="changeStat('selectObject'),setMenuState('normal')">取消</button>
+			</div>
+			<div class="selected" v-if='state.selected'>
+				<button @click="scene.state.fn.deleteObject(),setMenuState('normal')">删除</button>
+				<button>移动</button>
+				<button @click="changeStat('selectObject'),setMenuState('normal')">取消</button>
+			</div>
+		</div>
 		<button @click="changeStat('none')">none</button>
 		size:<input type="text" v-model="scene.setting.user.brushSize.width">x<input type="text" v-model="scene.setting.user.brushSize.height">
 		<button @click="changeStat('floorHover')">floorHover</button>
-		<button @click="selectModel('temp'),changeStat('modelHover')">立方体</button>
-		<button @click="changeStat('selectObject')">selectObject</button>
 	</div>
 	<script src = "../../plugin/three.js/three.js"></script>
 	<script src = "lib/OrbitControls.js"></script>
@@ -24,11 +40,36 @@
 	<script src = "../../plugin/vue/dist/vue.js"></script>
 	<script src = "../../plugin/jquery/dist/jquery.js"></script>
 	<script src = "init.js"></script>
+	<script type="x-shader/x-vertex" id="vertexShader">
+		varying vec3 vWorldPosition;
+		void main() {
+			vec4 worldPosition = modelMatrix * vec4( position, 1.0 );
+			vWorldPosition = worldPosition.xyz;
+			gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+		}
+	</script>
+
+	<script type="x-shader/x-fragment" id="fragmentShader">
+		uniform vec3 topColor;
+		uniform vec3 bottomColor;
+		uniform float offset;
+		uniform float exponent;
+		varying vec3 vWorldPosition;
+		void main() {
+			float h = normalize( vWorldPosition + offset ).y;
+			gl_FragColor = vec4( mix( bottomColor, topColor, max( pow( max( h, 0.0 ), exponent ), 0.0 ) ), 1.0 );
+		}
+	</script>
 	<script>
 		var root = new Vue({
 			el:"#root",
 			data:{
-				scene:null
+				scene:null,
+				state:{
+					addObject:false,
+					normal:true,
+					selected:false
+				}
 			},
 			methods:{
 				changeStat(s){
@@ -37,6 +78,12 @@
 				selectModel(m){
 					this.scene.model.cur.geo = this.scene.model[m].geo.clone();
 					this.scene.model.cur.mat = this.scene.model[m].mat.clone();					
+				},
+				setMenuState(s){
+					for(var i in this.state){
+						this.state[i] = false;
+					}
+					this.state[s] = true;
 				}
 			},
 			created(){
