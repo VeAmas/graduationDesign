@@ -9,8 +9,8 @@ var Scene = function () {
     this.setting = {
         user:{
             matrix:{
-                width: 10,
-                height:10
+                width: 20,
+                height:20
             },
             brushSize:{
                 width:1,
@@ -19,7 +19,7 @@ var Scene = function () {
         },
         system:{
             matrix:{
-                size:5,
+                size:4,
 
             },
             color:{
@@ -45,23 +45,35 @@ var Scene = function () {
 
         },
         temp:{
-            geo:new THREE.CubeGeometry(8,8,8),
+            geo:new THREE.CubeGeometry(4,4,4),
             mat:new THREE.MeshLambertMaterial({color:new THREE.Color("#123456")})
         }
     };
 
     this.recover = {
-        list:[],
+        colorList:[],
+        opacityList:[],
         allColor(){
-            this.list.forEach(function (i) {
+            this.colorList.forEach(function (i) {
                 i.material.color.set(i.recoverColor); 
                 i.recoverColor = null;
             });
-            this.list = [];
+            this.colorList = [];
+        },
+        allOpacity(){
+            this.opacityList.forEach(function (i) {
+                i.material.opacity=i.recoverOpacity; 
+                i.recoverOpacity = null;
+            });
+            this.opacityList = [];            
         },
         pushColor(t){
-            this.list.push(t);
+            this.colorList.push(t);
             t.recoverColor = t.material.color.getHex();
+        },
+        pushOpacity(t){
+            this.opacityList.push(t);
+            t.recoverOpacity = t.material.opacity;
         }
     };
 
@@ -229,6 +241,7 @@ var Scene = function () {
                     var arr = scope.state.fn.getSquare(target.floor.coord.x,target.floor.coord.z).arr;
                     scope.state.fn.setToOccupied(arr);
                     scope.recover.allColor();
+                    scope.recover.allOpacity();
                     //
                     //设置物品参数
                     //添加到物品队列
@@ -254,6 +267,7 @@ var Scene = function () {
                     scope.scene.remove(scope.model.cur.mesh);
                     scope.model.cur.mesh = null;
                     scope.recover.allColor();
+                    scope.recover.allOpacity();
                 }
             },
             getSquare(x,z){
@@ -306,12 +320,15 @@ var Scene = function () {
             floorHover(){
                 //recover
                 scope.recover.allColor();
+                scope.recover.allOpacity();
 
                 if(scope.raycaster.intersect){
                     var target = scope.raycaster.intersect.object;
                     var result = this.getSquare(target.floor.coord.x,target.floor.coord.z);
                     for(var i = 0;i<result.arr.length;i++){
                         scope.recover.pushColor(result.arr[i]);
+                        scope.recover.pushOpacity(result.arr[i]);
+                        result.arr[i].material.opacity = 1;
                         if(result.valid){
                             result.arr[i].material.color.set(scope.setting.system.color.safe);
                         }
@@ -332,7 +349,7 @@ var Scene = function () {
                     var z1 = z0 + parseInt(scope.setting.user.brushSize.height) - 1;
                     scope.model.cur.mesh.position.set(
                         (x0 + 1 + x1) / 2 * scope.setting.system.matrix.size,
-                        5,
+                        2,
                         (z0 + 1 + z1) / 2 * scope.setting.system.matrix.size);
                 }
             }
@@ -344,9 +361,9 @@ var Scene = function () {
         this.sceneCube = new THREE.Scene();
 
         var light = new THREE.SpotLight(0xffffff,1);
-        light.position.x =100;
+        light.position.x =-10;
         light.position.y =100;
-        light.position.z =-100;
+        light.position.z =100;
         light.castShadow = true;
         this.scene.add( light );
         light.shadowMapWidth = light.shadowMapHeight = 4096;    //阴影大小
@@ -375,49 +392,39 @@ var Scene = function () {
         var skyGeometry = new THREE.CubeGeometry( 500, 500, 500 );   
         
         var materialArray = [];
-        for (var i = 0; i < 6; i++)
+        for (var i = 0; i < 6; i++){
             materialArray.push( new THREE.MeshBasicMaterial({
                 map: THREE.ImageUtils.loadTexture( directions[i]  ),
                 side: THREE.BackSide
             }));
+        }
         var skyMaterial = new THREE.MeshFaceMaterial( materialArray );
         var skyBox = new THREE.Mesh( skyGeometry, skyMaterial );
         this.scene.add( skyBox );
 
-
-        // var vertexShader = document.getElementById( 'vertexShader' ).textContent;
-        // var fragmentShader = document.getElementById( 'fragmentShader' ).textContent;
-        // var uniforms = {
-        //     topColor:    { type: "c", value: new THREE.Color( 0x0077ff ) },
-        //     bottomColor: { type: "c", value: new THREE.Color( 0xffffff ) },
-        //     offset:      { type: "f", value: 400 },
-        //     exponent:    { type: "f", value: 0.6 }
-        // };
-        // uniforms.topColor.value.copy( light.color );
-        // var skyGeo = new THREE.SphereGeometry( 4000, 32, 15 );
-        // var skyMat = new THREE.ShaderMaterial( {
-        //     uniforms: uniforms,
-        //     vertexShader: vertexShader,
-        //     fragmentShader: fragmentShader,
-        //     side: THREE.BackSide
-        // } );
-        // var sky = new THREE.Mesh( skyGeo, skyMat );
-        // this.scene.add( sky );
+        var groundGeo = new THREE.PlaneBufferGeometry(1000,1000);
+        var groundMat = new THREE.MeshLambertMaterial({color:new THREE.Color(this.setting.system.color.floor)});
+        var ground = new THREE.Mesh(groundGeo,groundMat);
+        ground.rotation.x = -0.5*Math.PI;
+        ground.position.y = 0;
+        ground.receiveShadow = true;
+        this.scene.add(ground);
 
         this.meshs.floors = [];
-        for(var i = 0; i < this.setting.user.matrix.width;i++){
+        for(i = 0; i < this.setting.user.matrix.width;i++){
             this.meshs.floors[i] = [];
             for(var j = 0; j < this.setting.user.matrix.height; j++){
                 var geo =  new THREE.PlaneBufferGeometry(this.setting.system.matrix.size,this.setting.system.matrix.size);
                 var mat = new THREE.MeshLambertMaterial({color:new THREE.Color(this.setting.system.color.floor)});
                 var mesh = new THREE.Mesh(geo,mat);
                 mat.side = THREE.DoubleSide;
+                mat.transparent =  true;
+                mat.opacity = 0;
                 mesh.position.x = i * this.setting.system.matrix.size + this.setting.system.matrix.size / 2;
                 mesh.position.z = j * this.setting.system.matrix.size + this.setting.system.matrix.size / 2;
+                mesh.position.y = 0.1;
                 mesh.rotation.x = -0.5*Math.PI;
                 mesh.targetType = ["floor"];
-                mesh.receiveShadow = true;
-                mesh.castShadow = true;
                 this.scene.add(mesh);
                 mesh.floor = {
                     mesh:mesh,
@@ -459,37 +466,23 @@ var Scene = function () {
 
         this.pass.composer = new THREE.EffectComposer( this.renderer );     
         this.pass.renderPass = new THREE.RenderPass( this.scene, this.camera );
-        // this.pass.renderPass.renderToScreen = true
-        // this.pass.renderPass.clear = false
-        // this.pass.renderPass.clearDepth = true
         this.pass.outlinePass = new THREE.OutlinePass( new THREE.Vector2( this.canvas.clientWidth, this.canvas.clientHeight ), this.scene, this.camera);
-        // this.pass.outlinePass.renderToScreen = true
-        // this.pass.outlinePass.clear = false
-        // this.pass.outlinePass.clearDepth = true
+
         this.pass.effectFXAA = new THREE.ShaderPass(THREE.FXAAShader);
         this.pass.effectFXAA.uniforms.resolution.value.set(1 / this.canvas.clientWidth, 1 / this.canvas.clientHeight );
         this.pass.effectFXAA.renderToScreen = true;
-        // this.pass.effectFXAA.clear = false
-        // this.pass.effectFXAA.clearDepth = true
 
-        // this.pass.cubeRenderPass = new THREE.RenderPass( this.sceneCube, this.cameraCube ); 
-        // this.pass.cubeRenderPass.renderToScreen = true
-        // this.pass.cubeRenderPass.clear = false
-        // this.pass.cubeRenderPass.clearDepth = true
         this.pass.composer.addPass( this.pass.outlinePass );
         this.pass.composer.addPass( this.pass.effectFXAA );
-        // this.pass.composer.addPass( this.pass.cubeRenderPass );
         this.pass.composer.addPass( this.pass.renderPass );
 
-
-        // this.pass.composer1 = new THREE.EffectComposer( this.renderer );  
 
     };
     this.initController = function(){
         this.controller = new THREE.OrbitControls(this.camera,this.canvas);              
         this.controller.target.set(this.setting.user.matrix.width / 2 * this.setting.system.matrix.size ,0, this.setting.user.matrix.height / 2 * this.setting.system.matrix.size);
-        this.controller.enableDamping = true;
-        this.controller.dampingFactor = 0.25;
+        // this.controller.enableDamping = true;
+        // this.controller.dampingFactor = 0.25;
     };
     this.initRaycaster = function(){
         this.mouse = new THREE.Vector2();
@@ -506,9 +499,6 @@ var Scene = function () {
         // this.renderer.autoClear = true;
         this.renderer.setClearColor( 0xfff0f0 );
         this.renderer.setClearAlpha( 0.5 );    
-        // this.renderer.render(scope.scene, scope.camera);    
-        // this.renderer.render(scope.sceneCube, scope.cameraCube);  
-        // this.pass.composer1.render();       
         this.pass.composer.render();             
         this.controller.update();                                              
     };

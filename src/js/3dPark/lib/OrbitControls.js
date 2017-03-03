@@ -127,6 +127,9 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 		return function update () {
 
+			// if(scope.object.position.y < 5 ){
+			// 	scope.object.position.y = 5;
+			// }
 			var position = scope.object.position;
 
 			offset.copy( position ).sub( scope.target );
@@ -151,6 +154,9 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 			// restrict phi to be between desired limits
 			spherical.phi = Math.max( scope.minPolarAngle, Math.min( scope.maxPolarAngle, spherical.phi ) );
+			if ( spherical.phi > Math.PI / 2.1 ){
+				spherical.phi = Math.PI / 2.1;
+			}
 
 			spherical.makeSafe();
 
@@ -444,10 +450,7 @@ THREE.OrbitControls = function ( object, domElement ) {
 		rotateLeft( 2 * Math.PI * rotateDelta.x / element.clientWidth * scope.rotateSpeed );
 
 		// rotating up and down along whole screen attempts to go 360, but limited to 180
-		var offsetY =  2 * Math.PI * rotateDelta.y / element.clientHeight * scope.rotateSpeed;
-		if(scope.object.position.y > scope.maxY || scope.object.position.y<=scope.maxY && offsetY>0){
-			rotateUp(offsetY);
-		}
+		rotateUp( 2 * Math.PI * rotateDelta.y / element.clientHeight * scope.rotateSpeed );
 
 		rotateStart.copy( rotateEnd );
 
@@ -487,7 +490,9 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 		panDelta.subVectors( panEnd, panStart );
 
-		if(panDelta.y<0 && scope.object.position.y < 0){
+		console.log(panDelta.y)
+
+		if(panDelta.y<0 && scope.object.position.y < 5){
 			return;
 		}
 
