@@ -9,8 +9,8 @@ var Scene = function () {
     this.setting = {
         user:{
             matrix:{
-                width: 20,
-                height:20
+                width: 15,
+                height:15
             },
             brushSize:{
                 width:1,
@@ -207,6 +207,14 @@ var Scene = function () {
             }
         },
         fn:{
+            modifyObject(){                
+                if(!!scope.model.cur.mesh){
+                    scope.scene.remove(scope.model.cur.mesh);
+                    scope.state.fn.setToFree(scope.model.cur.mesh.occupiedArray);
+                    scope.state.changeStateTo('modelHover');
+                    scope.model.modify = scope.model.cur;
+                }
+            },
             deleteObject(){
                 if(!!scope.model.cur.mesh){
                     scope.scene.remove(scope.model.cur.mesh);

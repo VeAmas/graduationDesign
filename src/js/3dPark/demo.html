@@ -21,7 +21,7 @@
 			</div>
 			<div class="selected" v-if='state.selected'>
 				<button @click="scene.state.fn.deleteObject(),setMenuState('normal')">删除</button>
-				<button>移动</button>
+				<button @click="scene.state.fn.modifyObject(),setMenuState('addObject')">移动</button>
 				<button @click="changeStat('selectObject'),setMenuState('normal')">取消</button>
 			</div>
 		</div>
