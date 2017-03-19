@@ -154,8 +154,10 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 			// restrict phi to be between desired limits
 			spherical.phi = Math.max( scope.minPolarAngle, Math.min( scope.maxPolarAngle, spherical.phi ) );
-			if ( spherical.phi > Math.PI / 2.1 ){
-				spherical.phi = Math.PI / 2.1;
+			
+			if ( Math.cos( spherical.phi ) * spherical.radius + scope.target.y < 1 ){
+				// console.log('l')
+				spherical.phi = Math.acos( ( 1 - scope.target.y ) / spherical.radius )
 			}
 
 			spherical.makeSafe();
@@ -490,7 +492,7 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 		panDelta.subVectors( panEnd, panStart );
 
-		console.log(panDelta.y)
+		// console.log(panDelta.y)
 
 		if(panDelta.y<0 && scope.object.position.y < 5){
 			return;

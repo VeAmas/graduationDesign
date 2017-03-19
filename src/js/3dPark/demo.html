@@ -20,13 +20,13 @@
 				<button @click="changeStat('selectObject'),setMenuState('normal')">取消</button>
 			</div>
 			<div class="selected" v-if='state.selected'>
-				<button @click="scene.state.fn.deleteObject(),setMenuState('normal')">删除</button>
-				<button @click="scene.state.fn.modifyObject(),setMenuState('addObject')">移动</button>
+				<button @click="scene().state.fn.deleteObject(),setMenuState('normal')">删除</button>
+				<button @click="scene().state.fn.modifyObject(),setMenuState('addObject')">移动</button>
 				<button @click="changeStat('selectObject'),setMenuState('normal')">取消</button>
 			</div>
 		</div>
 		<button @click="changeStat('none')">none</button>
-		size:<input type="text" v-model="scene.setting.user.brushSize.width">x<input type="text" v-model="scene.setting.user.brushSize.height">
+		<!-- size:<input type="text" v-model="scene.setting.user.brushSize.width">x<input type="text" v-model="scene.setting.user.brushSize.height"> -->
 		<button @click="changeStat('floorHover')">floorHover</button>
 	</div>
 	<script src = "../../plugin/three.js/three.js"></script>
@@ -54,27 +54,29 @@
 			},
 			methods:{
 				changeStat(s){
-					this.scene.state.changeStateTo(s);
+					scene.state.changeStateTo(s);
 				},
 				selectModel(m){
-					this.scene.model.cur.geo = this.scene.model[m].geo.clone();
-					this.scene.model.cur.mat = this.scene.model[m].mat.clone();					
+					scene.model.cur.geo = scene.model[m].geo.clone();
+					scene.model.cur.mat = scene.model[m].mat.clone();					
 				},
 				setMenuState(s){
 					for(var i in this.state){
 						this.state[i] = false;
 					}
 					this.state[s] = true;
+				},
+				scene(){
+					return scene;
 				}
 			},
 			created(){
-				this.scene = new Scene();
 			},
 			mounted(){
-				this.scene = new Scene();
-				this.scene.init();
 			}
 		});
+		var scene = new Scene();
+		scene.init()
 	</script>
 
 </body>

@@ -9,8 +9,8 @@ var Scene = function () {
     this.setting = {
         user:{
             matrix:{
-                width: 15,
-                height:15
+                width: 20,
+                height:20
             },
             brushSize:{
                 width:1,
