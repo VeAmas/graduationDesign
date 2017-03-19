@@ -418,6 +418,29 @@ var Scene = function () {
         ground.receiveShadow = true;
         this.scene.add(ground);
 
+        var dashLineGeo = new THREE.Geometry();
+
+        var w = scope.setting.user.matrix.width * scope.setting.system.matrix.size;
+        var h = scope.setting.user.matrix.height * scope.setting.system.matrix.size;
+        dashLineGeo.vertices.push(
+                    new THREE.Vector3(0,0.5,0),
+                    new THREE.Vector3(0,0.5,h),
+                    new THREE.Vector3(w,0.5,h),
+                    new THREE.Vector3(w,0.5,0),
+                    new THREE.Vector3(0,0.5,0),
+                    new THREE.Vector3(w,0.5,0),
+                    new THREE.Vector3(0,0.5,h),
+                    new THREE.Vector3(w,0.5,h)
+                 );
+        dashLineGeo.computeLineDistances();
+
+        var dashLine = new THREE.LineSegments( dashLineGeo, new THREE.LineDashedMaterial( {
+            color: 0xffaa00, 
+            dashSize: scope.setting.system.matrix.size / 2, 
+            gapSize: scope.setting.system.matrix.size / 4
+        } ) );
+        scope.scene.add(dashLine);
+
         this.meshs.floors = [];
         for(i = 0; i < this.setting.user.matrix.width;i++){
             this.meshs.floors[i] = [];
