@@ -10,6 +10,7 @@
 		<div id="leftPanel">
 			<div class="addObject" v-if='state.addObject'>
 				<button @click="selectModel('temp'),changeStat('modelHover')">立方体</button>
+				<button @click="selectModel('red'),changeStat('modelHover')">长方体</button>
 			</div>
 		</div>
 		<div id="bottomPanel">
@@ -22,7 +23,6 @@
 			<div class="selected" v-if='state.selected'>
 				<button @click="scene().state.fn.deleteObject(),setMenuState('normal')">删除</button>
 				<button @click="scene().state.fn.modifyObject(),setMenuState('addObject')">移动</button>
-				<button @click="changeStat('selectObject'),setMenuState('normal')">取消</button>
 			</div>
 		</div>
 		<button @click="changeStat('none')">none</button>
@@ -45,7 +45,6 @@
 		var root = new Vue({
 			el:"#root",
 			data:{
-				scene:null,
 				state:{
 					addObject:false,
 					normal:true,
@@ -58,7 +57,9 @@
 				},
 				selectModel(m){
 					scene.model.cur.geo = scene.model[m].geo.clone();
-					scene.model.cur.mat = scene.model[m].mat.clone();					
+					scene.model.cur.mat = scene.model[m].mat.clone();
+					scene.model.cur.size = scene.model[m].size;			
+					scene.model.cur.option = scene.model[m].option;
 				},
 				setMenuState(s){
 					for(var i in this.state){
@@ -76,7 +77,7 @@
 			}
 		});
 		var scene = new Scene();
-		scene.init()
+		scene.init();
 	</script>
 
 </body>

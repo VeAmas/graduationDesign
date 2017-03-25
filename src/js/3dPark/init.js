@@ -46,7 +46,16 @@ var Scene = function () {
         },
         temp:{
             geo:new THREE.CubeGeometry(4,4,4),
-            mat:new THREE.MeshLambertMaterial({color:new THREE.Color("#123456")})
+            mat:new THREE.MeshLambertMaterial({color:new THREE.Color("#123456")}),
+            size: [1, 1]
+        },
+        red: {
+            geo:new THREE.CubeGeometry(12,4,4),
+            mat:new THREE.MeshLambertMaterial({color:new THREE.Color("#123456")}),
+            size: [3, 1],
+            option () {
+                return prompt('sdf');
+            }
         }
     };
 
@@ -85,6 +94,124 @@ var Scene = function () {
         },
     };
 
+    this.animate = {
+        aniNum: 0,
+        list: [],
+        run () {
+            var removeList = [];
+            for(var i = 0; i < this.aniNum; i++){
+                var item = this.list[i];
+                item.timer += 17;
+                if(item.timer > item.duration) {
+                    item.timer = item.duration;
+                }
+                for(var j in item.map){
+                    var variable = item.map[j].variable;
+                    var value = item.map[j].value;
+                    if ('fn' in item.map[j]) {
+                        if(item._this){
+                            variable[value] = item.map[j].fn.call(item._this, item.timer / item.duration);
+                        }
+                        else{
+                            variable[value] = item.map[j].fn(item.timer / item.duration);
+                        }
+                    } else {
+                        variable[value] = item.map[j].des.from + (item.map[j].des.to - item.map[j].des.from) * item.timer / item.duration;
+                    }
+                }
+                if(item.timer >=  item.duration){
+                    item.cb && item.cb.call(item._this ? item._this : window, null);
+                    removeList.push(item.id);
+                }
+            }
+            for(i in removeList){
+                this.remove(removeList[i]);       
+            }
+        },
+        register (map, duration, cb, _this) {
+            var newMap = [];
+            var id = new Date().valueOf();
+
+            for(var i in map){
+                if(Array.isArray(map[i])){
+                    var set = map[i];
+                    if(this._pushAnimation(newMap, set[0], set[1], set[2])){
+                        continue;
+                    }
+                    console.error('no function or complete description contained when registering a new animation!');
+                    return false;
+                }
+                else{
+                    var name = this._analyseObjPath(i);
+                    if(!name){
+                        return false;
+                    }
+                    if(this._pushAnimation(newMap, name[0], name[1], map[i])){
+                        continue;
+                    }
+                    console.error('no function or complete description contained when registering a new animation!');
+                    return false;
+                }
+            }
+            
+            this.list.push({map: newMap, duration, timer: 0, cb, _this, id});
+            this.aniNum++;
+            return id;
+        },
+        remove (id) {
+            var _this = this;
+            this.list.forEach(function (v, i) {
+                if(v.id === id){
+                    _this.list.splice(i,1);
+                    _this.aniNum--;
+                    return false;
+                } 
+            });
+        },
+        _pushAnimation(array, variable, value, other){
+            if(typeof other === 'function'){
+                array.push({
+                    variable,
+                    value,
+                    fn: other
+                });
+                return true;
+            }
+            else if(typeof other === 'object'){
+                if('from' in other && 'to' in other){
+                    array.push({
+                        variable ,
+                        value ,
+                        des: other
+                    });
+                    return true;
+                }
+            }
+        },
+        _analyseObjPath(path){
+            try{
+                path = path.match(/([^\.]*?\.)|([^\.]*$)/g);
+                path = path.map(function(v){return v.replace('.','')});
+                path.length--;
+                if (path[0] === 'scope') {
+                    path.shift();
+                }
+                var variable = scope;
+                for(var i = 0; i<path.length - 1; i++){
+                    variable = variable[path[i]];
+                    if(!variable){
+                        throw new Error('no such variable called '+path[i]+'!')
+                    }
+                }
+                return [variable, path[path.length - 1]];
+            }
+            catch(e){
+                console.error(e);
+                return false;
+            }
+        }
+    };
+
     this.handler = {
         onMouseMove(e){
             scope.mouse.x =  ((e.clientX-scope.canvas.offsetLeft) / scope.canvas.offsetWidth) * 2 - 1;
@@ -121,6 +248,7 @@ var Scene = function () {
                 var t = scope.setting.user.brushSize.width;
                 scope.setting.user.brushSize.width = scope.setting.user.brushSize.height;
                 scope.setting.user.brushSize.height = t;
+                scope.model.cur.mesh && (scope.model.cur.mesh.rotation.y += Math.PI / 2);
                 //右键操作
             }
         },
@@ -183,15 +311,15 @@ var Scene = function () {
                     };
                     break;
                 case "modelHover":
-                    // 
-                    //去除outline
-                    //
                     scope.raycaster.targetSet("floor");
                     this.leftClickMethod = this.fn.addObject;
+                    scope.setting.user.brushSize.width = scope.model.cur.size[0];
+                    scope.setting.user.brushSize.height = scope.model.cur.size[1];
                     scope.model.cur.mesh = new THREE.Mesh(scope.model.cur.geo.clone(),scope.model.cur.mat.clone());
                     scope.model.cur.mesh.position.y = 99999;
                     scope.model.cur.mesh.material.transparent = true;
                     scope.model.cur.mesh.material.opacity = 0.5;
+                    scope.model.cur.mesh.size = scope.model.cur.size;
                     scope.scene.add(scope.model.cur.mesh);
                     scope.canvas.onmousemove = function () {
                        _this_.fn.floorHover(); 
@@ -211,14 +339,18 @@ var Scene = function () {
                 if(!!scope.model.cur.mesh){
                     scope.scene.remove(scope.model.cur.mesh);
                     scope.state.fn.setToFree(scope.model.cur.mesh.occupiedArray);
-                    scope.state.changeStateTo('modelHover');
                     scope.model.modify = scope.model.cur;
+                    var data = scope.model.modify.mesh.data;
+                    scope.state.changeStateTo('modelHover');
+                    scope.model.modify.mesh.data = data;
+                    scope.pass.outlinePass.selectedObjects = [];  
                 }
             },
             deleteObject(){
                 if(!!scope.model.cur.mesh){
                     scope.scene.remove(scope.model.cur.mesh);
                     scope.state.fn.setToFree(scope.model.cur.mesh.occupiedArray);
+                    scope.pass.outlinePass.selectedObjects = [];  
                     //
                     //从物品队列删除
                     //
@@ -230,13 +362,21 @@ var Scene = function () {
                     scope.pass.outlinePass.selectedObjects = [];
                     scope.pass.outlinePass.selectedObjects.push(target);
                     scope.model.cur.mesh = target;
+                    scope.model.cur.geo = target.geometry;
+                    scope.model.cur.mat = target.material;
+                    scope.model.cur.size = target.size;
+
+                    target.focus();
+                    // scope.scene.remove(scope.dashLine);
                     //
                     //弹出菜单
                     root.setMenuState('selected');
                     //
                 }else{
                     scope.pass.outlinePass.selectedObjects = [];    
-                    scope.model.cur.mesh = null;                
+                    scope.model.cur.mesh = null;   
+                    // scope.scene.add(scope.dashLine);
+                    root.setMenuState('normal');             
                 }
             },
             addObject(){
@@ -263,11 +403,20 @@ var Scene = function () {
                     mesh.castShadow = true;
                     mesh.receiveShadow = true;
                     mesh.occupiedArray = arr;
+                    mesh.rotation.copy(scope.model.cur.mesh.rotation);
+                    mesh.size = scope.model.cur.mesh.size;
+                    if(scope.model.modify){
+                        mesh.data = scope.model.modify.mesh.data;
+                    }
+                    else if(scope.model.cur.option){
+                        mesh.data = scope.model.cur.option()
+                        // prompt
+                    }
                     scope.scene.add(mesh);
+                    scope.model.modify = null;
                     scope.state.changeStateTo("selectObject");
 
                     root.setMenuState('normal');
-
                 }
             },
             clearStat(){
@@ -440,6 +589,7 @@ var Scene = function () {
             gapSize: scope.setting.system.matrix.size / 4
         } ) );
         scope.scene.add(dashLine);
+        scope.dashLine = dashLine;
 
         this.meshs.floors = [];
         for(i = 0; i < this.setting.user.matrix.width;i++){
@@ -478,10 +628,6 @@ var Scene = function () {
         this.scene.add(this.camera); 
         this.camera.position.set(this.setting.user.matrix.width / 2 * this.setting.system.matrix.size ,100, this.setting.user.matrix.height / 2 * this.setting.system.matrix.size +0.1);
         this.cameraCube = new THREE.PerspectiveCamera( 70, this.canvas.clientWidth/this.canvas.clientHeight, 1, 100000 );
-    };
-    this.initLight = function(){
-
-                
     };
     this.initRenderer = function(){
         this.renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -524,22 +670,48 @@ var Scene = function () {
         requestAnimationFrame(scope.reRender);
 
     };
+    this.initHook = function(){
+        THREE.Mesh.prototype.focus = function () {
+            var originPos = scope.camera.position.clone();
+            var target = scope.controller.target.clone();
+            var thisPos = this.position;
+            var direction = target.clone().sub(originPos).normalize();
+            var x = originPos.x + direction.x / direction.y * (thisPos.y - originPos.y);
+            var z = originPos.z + direction.z / direction.y * (thisPos.y - originPos.y);
+            var y = thisPos.y;
+            var actualTarget = new THREE.Vector3(x,y,z);
+            var newPos = new THREE.Vector3(thisPos.x - actualTarget.x + originPos.x, thisPos.y - actualTarget.y + originPos.y, thisPos.z - actualTarget.z + originPos.z);
+            var deltaCameraPosition = new THREE.Vector3(newPos.x - originPos.x, newPos.y - originPos.y, newPos.z - originPos.z);
+            var deltaTargetPosition = new THREE.Vector3(thisPos.x - target.x, thisPos.y - target.y, thisPos.z - target.z);
+            var percentage = 1 / Math.ceil(500/17);
+
+            scope.animate.register({
+                "scope.camera.position": function () {
+                    var position = this.variable[this.value];
+                    return position.set(position.x + percentage * deltaCameraPosition.x, position.y, position.z + percentage * deltaCameraPosition.z);
+                },
+                "scope.controller.target": function (p) {
+                    return new THREE.Vector3(target.x + p * deltaTargetPosition.x, target.y + p * deltaTargetPosition.y, target.z + p * deltaTargetPosition.z);
+                }
+            },500);
+        };
+    };
     this.render = function(){ 
         this.raycaster.intersectGet();
         this.cameraCube.rotation.copy( this.camera.rotation );
-        // this.renderer.autoClear = true;
         this.renderer.setClearColor( 0xfff0f0 );
         this.renderer.setClearAlpha( 0.5 );    
         this.pass.composer.render();             
-        this.controller.update();                                              
+        this.controller.update();       
+        this.animate.run();                                         
     };
     this.init = function(){
         this.initScene();
-        this.initCamera();
-        this.initLight();
+        this.initCamera();  
         this.initRenderer();
         this.initController();
         this.initRaycaster();
+        this.initHook();  
         this.reRender();
         this.handler.initAllHandler();
     };
