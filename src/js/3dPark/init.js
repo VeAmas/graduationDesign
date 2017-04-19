@@ -37,26 +37,8 @@ var Scene = function () {
     };
 
     this.meshs = {
-        floors:[],
-    };
-
-    this.model = {
-        cur:{
-
-        },
-        temp:{
-            geo:new THREE.CubeGeometry(4,4,4),
-            mat:new THREE.MeshLambertMaterial({color:new THREE.Color("#123456")}),
-            size: [1, 1]
-        },
-        red: {
-            geo:new THREE.CubeGeometry(12,4,4),
-            mat:new THREE.MeshLambertMaterial({color:new THREE.Color("#123456")}),
-            size: [3, 1],
-            option () {
-                return prompt('sdf');
-            }
-        }
+        meshList: [],
+        floors: [],
     };
 
     this.recover = {
@@ -71,7 +53,7 @@ var Scene = function () {
         },
         allOpacity(){
             this.opacityList.forEach(function (i) {
-                i.material.opacity=i.recoverOpacity; 
+                i.material.visible=i.recoverOpacity; 
                 i.recoverOpacity = null;
             });
             this.opacityList = [];            
@@ -82,7 +64,7 @@ var Scene = function () {
         },
         pushOpacity(t){
             this.opacityList.push(t);
-            t.recoverOpacity = t.material.opacity;
+            t.recoverOpacity = t.material.visible;
         }
     };
 
@@ -248,7 +230,10 @@ var Scene = function () {
                 var t = scope.setting.user.brushSize.width;
                 scope.setting.user.brushSize.width = scope.setting.user.brushSize.height;
                 scope.setting.user.brushSize.height = t;
-                scope.model.cur.mesh && (scope.model.cur.mesh.rotation.y += Math.PI / 2);
+                if (scope.state.curState === 'modelHover' && scope.model.cur.mesh) {
+                    scope.model.cur.mesh.rotation.y += Math.PI / 2;
+                }
+                
                 //右键操作
             }
         },
@@ -290,6 +275,93 @@ var Scene = function () {
         }
     };
 
+    this.saveData = [];
+    this.save = function () {
+        scope.saveData = [];
+        scope.meshs.meshList.forEach(function (v) {
+            var item = {
+                type: v.objType,
+                id: v.typeId,
+                position: {
+                    x: v.position.x,
+                    y: v.position.y,
+                    z: v.position.z
+                },
+                rotation: {
+                    x: v.rotation.x,
+                    y: v.rotation.y,
+                    z: v.rotation.z
+                },
+                occupiedArray: []
+            };
+            v.occupiedArray.forEach(function (a) {
+                item.occupiedArray.push({
+                    floor: {
+                        x: a.floor.coord.x,
+                        z: a.floor.coord.z
+                    }
+                });
+            });
+            scope.saveData.push(item);
+        });
+
+        localStorage.setItem('saveData', JSON.stringify(scope.saveData));
+
+        console.clear();
+        scope.saveData.forEach(function (v) {
+            console.log(v.id);
+        });
+    };
+
+    this.loadScene = function () {
+        scope.saveData = JSON.parse(localStorage.getItem('saveData'));
+        if (scope.saveData && scope.saveData.length > 0) {
+            scope.saveData.forEach(function (v) {
+                var m = v.type;
+                scope.model.cur.geo = scope.model[m].geo.clone();
+                scope.model.cur.mat = scope.model[m].mat.clone();  
+                scope.model.cur.option = scope.model[m].option;
+                scope.model.cur.height = scope.model[m].height;
+
+
+                var mat = scope.model.cur.mat.clone();
+                mat.roughness = 1;
+                mat.metalness = 0;
+                var mesh  = new THREE.Mesh(scope.model.cur.geo, mat);
+                mesh.position.set(v.position.x, v.position.y, v.position.z);
+                mesh.targetType = ['cube'];
+                mesh.castShadow = true;
+                mesh.receiveShadow = true;
+                mesh.occupiedArray = [];
+                v.occupiedArray.forEach(function (a) {
+                    scope.meshs.floors[a.floor.x][a.floor.z].occupied = true;
+                    mesh.occupiedArray.push(scope.meshs.floors[a.floor.x][a.floor.z].mesh);
+                });
+                mesh.objType = m;
+                mesh.typeId = v.id;
+                mesh.rotation.set(v.rotation.x, v.rotation.y, v.rotation.z);
+                mesh.size = scope.model[m].size;
+                
+                scope.scene.add(mesh);
+                scope.model.modify = null;
+                scope.state.changeStateTo("selectObject");
+
+                scope.meshs.meshList.push(mesh);
+
+
+                if (m === 'parkingSet') {
+                    var nameTag = new THREE.Mesh(scope.model.cur.geo, new THREE.MeshBasicMaterial( {map: scene.model.canvasTextureList[v.id], side:THREE.DoubleSide, transparent: true} ));
+                    mesh.add(nameTag);
+                    root.setList.forEach(function (v) {
+                        if (v.name === mesh.typeId) {                            
+                            Vue.set(v, 'added', true);
+                        }
+                    });
+                }
+            });
+        }
+    };
+
     this.state = {
         curState:null,
         leftClickMethod:null,
@@ -320,6 +392,10 @@ var Scene = function () {
                     scope.model.cur.mesh.material.transparent = true;
                     scope.model.cur.mesh.material.opacity = 0.5;
                     scope.model.cur.mesh.size = scope.model.cur.size;
+                    if (scope.model.cur.type === 'parkingSet') {
+                        var mesh = new THREE.Mesh(scope.model.cur.geo.clone(), new THREE.MeshBasicMaterial( {map: scene.model.canvasTextureList[scope.model.cur.id], side:THREE.DoubleSide, transparent: true} ));
+                        scope.model.cur.mesh.add(mesh);
+                    }
                     scope.scene.add(scope.model.cur.mesh);
                     scope.canvas.onmousemove = function () {
                        _this_.fn.floorHover(); 
@@ -338,12 +414,22 @@ var Scene = function () {
             modifyObject(){                
                 if(!!scope.model.cur.mesh){
                     scope.scene.remove(scope.model.cur.mesh);
+
+                    var index = scope.meshs.meshList.indexOf(scope.model.cur.mesh);
+                    scope.meshs.meshList.splice(index, 1);
+
                     scope.state.fn.setToFree(scope.model.cur.mesh.occupiedArray);
-                    scope.model.modify = scope.model.cur;
+                    scope.model.modify = {};
+                    for (var i in scope.model.cur) {
+                        scope.model.modify[i] = scope.model.cur[i];
+                    }
+                    scope.model.modify.position = scope.model.modify.mesh.position.clone();
                     var data = scope.model.modify.mesh.data;
                     scope.state.changeStateTo('modelHover');
                     scope.model.modify.mesh.data = data;
                     scope.pass.outlinePass.selectedObjects = [];  
+
+
                 }
             },
             deleteObject(){
@@ -354,6 +440,13 @@ var Scene = function () {
                     //
                     //从物品队列删除
                     //
+                    if (scope.model.cur.type === 'parkingSet') {
+                        root.removeSet(scope.model.cur.id);
+                    }
+
+                    var index = scope.meshs.meshList.indexOf(scope.model.cur.mesh);
+                    scope.meshs.meshList.splice(index, 1);
+                    scope.save();
                 }
             },
             selectObject(){
@@ -365,6 +458,9 @@ var Scene = function () {
                     scope.model.cur.geo = target.geometry;
                     scope.model.cur.mat = target.material;
                     scope.model.cur.size = target.size;
+                    scope.model.cur.id = target.typeId;
+                    scope.model.cur.type = target.objType;
+                    scope.model.cur.height = target.position.y * 2;
 
                     target.focus();
                     // scope.scene.remove(scope.dashLine);
@@ -397,25 +493,37 @@ var Scene = function () {
                     var mat = scope.model.cur.mat.clone();
                     mat.roughness = 1;
                     mat.metalness = 0;
-                    var mesh  = new THREE.Mesh(scope.model.cur.geo.clone(),mat);
+                    var mesh  = new THREE.Mesh(scope.model.cur.geo.clone(), mat);
                     mesh.position.copy(scope.model.cur.mesh.position);
                     mesh.targetType = ['cube'];
                     mesh.castShadow = true;
                     mesh.receiveShadow = true;
                     mesh.occupiedArray = arr;
+                    mesh.objType = scope.model.cur.type;
+                    mesh.typeId = scope.model.cur.id;
                     mesh.rotation.copy(scope.model.cur.mesh.rotation);
                     mesh.size = scope.model.cur.mesh.size;
+                    scope.model.cur.mesh.children.forEach(function (v) {
+                        mesh.add(v);
+                    });
                     if(scope.model.modify){
                         mesh.data = scope.model.modify.mesh.data;
                     }
                     else if(scope.model.cur.option){
-                        mesh.data = scope.model.cur.option()
+                        mesh.data = scope.model.cur.option();
                         // prompt
                     }
                     scope.scene.add(mesh);
                     scope.model.modify = null;
                     scope.state.changeStateTo("selectObject");
 
+                    if(root.cb) {
+                        root.cb();
+                        delete root.cb;
+                    }
+
+                    scope.meshs.meshList.push(mesh);
+                    scope.save();
                     root.setMenuState('normal');
                 }
             },
@@ -464,6 +572,20 @@ var Scene = function () {
                     arr:arr
                 };
             },
+            cancelMove () {
+                if (scope.model.modify.mesh) {
+                    scope.model.modify.mesh.position.copy(scope.model.modify.position);
+                    scope.model.modify.mesh.material.opacity = 1;
+                    scope.model.modify.mesh.material.transparent = false;     
+                    scope.scene.add(scope.model.modify.mesh);   
+                    scope.model.modify.mesh.occupiedArray.forEach(function (v) {
+                        v.occupied = true;
+                    })
+
+                    scope.meshs.meshList.push(scope.model.modify.mesh);   
+                    scope.save();
+                }
+            },
             setToFree(arr){
                  arr.forEach(i => {
                     i.occupied = false;
@@ -485,7 +607,7 @@ var Scene = function () {
                     for(var i = 0;i<result.arr.length;i++){
                         scope.recover.pushColor(result.arr[i]);
                         scope.recover.pushOpacity(result.arr[i]);
-                        result.arr[i].material.opacity = 1;
+                        result.arr[i].material.visible = true;
                         if(result.valid){
                             result.arr[i].material.color.set(scope.setting.system.color.safe);
                         }
@@ -506,7 +628,7 @@ var Scene = function () {
                     var z1 = z0 + parseInt(scope.setting.user.brushSize.height) - 1;
                     scope.model.cur.mesh.position.set(
                         (x0 + 1 + x1) / 2 * scope.setting.system.matrix.size,
-                        2,
+                        scope.model.cur.height / 2,
                         (z0 + 1 + z1) / 2 * scope.setting.system.matrix.size);
                 }
             }
@@ -599,8 +721,7 @@ var Scene = function () {
                 var mat = new THREE.MeshLambertMaterial({color:new THREE.Color(this.setting.system.color.floor)});
                 var mesh = new THREE.Mesh(geo,mat);
                 mat.side = THREE.DoubleSide;
-                mat.transparent =  true;
-                mat.opacity = 0;
+                mat.visible = false;
                 mesh.position.x = i * this.setting.system.matrix.size + this.setting.system.matrix.size / 2;
                 mesh.position.z = j * this.setting.system.matrix.size + this.setting.system.matrix.size / 2;
                 mesh.position.y = 0.1;
@@ -714,6 +835,8 @@ var Scene = function () {
         this.initHook();  
         this.reRender();
         this.handler.initAllHandler();
+
+        this.loadScene();
     };
 };
 

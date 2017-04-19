@@ -8,17 +8,20 @@
 	<div id="root">
 		<div id="canvas" style="height: 600px;width: 1000px;"></div>
 		<div id="leftPanel">
-			<div class="addObject" v-if='state.addObject'>
-				<button @click="selectModel('temp'),changeStat('modelHover')">立方体</button>
-				<button @click="selectModel('red'),changeStat('modelHover')">长方体</button>
+			<div class="sub-menu">
+				<div v-for='item in model'>
+					<span v-text='item.name' @click="selectModel(item.type),changeStat('modelHover'),setMenuState('addObject')"></span>
+				</div>
+			</div>
+			<div class="sub-menu">
+				<div v-for = 'item in setList' v-show='!item.added' @click="selectModel('parkingSet', item.name),setMenuState('addObject'),changeStat('modelHover'),addSet(item)">
+					车位号: <span v-text='item.name'></span>
+				</div>
 			</div>
 		</div>
 		<div id="bottomPanel">
-			<div class="normal" v-if='state.normal'>
-				<button @click="selectModel('temp'),changeStat('modelHover'),setMenuState('addObject')">添加物品</button>		
-			</div>
 			<div class="addObject" v-if='state.addObject'>		
-				<button @click="changeStat('selectObject'),setMenuState('normal')">取消</button>
+				<button @click="scene().state.fn.cancelMove(),changeStat('selectObject'),setMenuState('normal')">取消</button>
 			</div>
 			<div class="selected" v-if='state.selected'>
 				<button @click="scene().state.fn.deleteObject(),setMenuState('normal')">删除</button>
@@ -28,6 +31,9 @@
 		<button @click="changeStat('none')">none</button>
 		<!-- size:<input type="text" v-model="scene.setting.user.brushSize.width">x<input type="text" v-model="scene.setting.user.brushSize.height"> -->
 		<button @click="changeStat('floorHover')">floorHover</button>
+		<button onclick='localStorage.clear()'>clear</button>
+		<button onclick='console.dir(scene.saveData)'>saveData</button>
+
 	</div>
 	<script src = "../../plugin/three.js/three.js"></script>
 	<script src = "lib/OrbitControls.js"></script>
@@ -51,17 +57,46 @@
 					addObject:false,
 					normal:true,
 					selected:false
-				}
+				},
+				setList: [{
+				    name: '3D',
+				    id: '1568413'
+				}, {
+				    name: '4F',
+				    id: '25438648'
+				}, {
+				    name: '3E',
+				    id: '152483'
+				}, {
+				    name: '3F',
+				    id: '483645836'
+				}],
+				model: [{
+					type: 'temp',
+					name: '长方体',
+					img: ''
+				}, {
+					type: 'red',
+					name: '立方体',
+					img: ''
+				}, {
+					type: 'blue',
+					name: '十分色',
+					img: ''
+				}]
 			},
 			methods:{
 				changeStat(s){
 					scene.state.changeStateTo(s);
 				},
-				selectModel(m){
+				selectModel(m, id){
 					scene.model.cur.geo = scene.model[m].geo.clone();
 					scene.model.cur.mat = scene.model[m].mat.clone();
 					scene.model.cur.size = scene.model[m].size;			
 					scene.model.cur.option = scene.model[m].option;
+					scene.model.cur.height = scene.model[m].height;
+					scene.model.cur.type = m;
+					if (id) {scene.model.cur.id = id;}
 				},
 				setMenuState(s){
 					for(var i in this.state){
@@ -71,6 +106,19 @@
 				},
 				scene(){
 					return scene;
+				},
+				addSet(set){
+					this.cb = function () {						
+						set.added = true;
+					};
+				},
+				removeSet(id){
+					this.setList.forEach(function (v) {
+						if (v.name === id) {
+							v.added = false;
+							return false;
+						}
+					});
 				}
 			},
 			created(){
@@ -79,7 +127,7 @@
 			}
 		});
 		var scene = new Scene();
-		scene.init();
+		scene.load();
 	</script>
 
 </body>
