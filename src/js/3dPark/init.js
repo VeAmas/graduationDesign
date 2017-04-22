@@ -244,6 +244,106 @@ var Scene = function () {
         }
     };
 
+    this.addBus = function (setId) {
+        var set;
+        for (var i in scope.meshs.meshList) {
+            if (scope.meshs.meshList[i].objType === 'parkingSet' && scope.meshs.meshList[i].typeId === setId) {
+                set = scope.meshs.meshList[i];
+            }
+        }
+        if (!set) {
+            return;
+        }
+
+        var bus = scope.model.bus.mesh.clone();
+        bus.rotation.y = Math.PI + set.rotation.y;
+
+        var dir = new THREE.Vector3(1,0,0);
+        dir.applyAxisAngle(new THREE.Vector3(0,1,0), bus.rotation.y + Math.PI * 0.5);
+        bus.children.forEach(function (v) {
+            v.material = v.material.clone();
+            v.material.transparent = true;
+            v.material.opacity = 0;
+        });
+        scope.scene.add(bus);
+        bus.position.copy(set.position);
+        bus.position.add(dir.multiplyScalar(4 * scope.setting.system.matrix.size));
+        set.bus = bus;
+
+        var start = bus.position.clone();
+        var end = set.position.clone().add(dir.multiplyScalar(0.5 / 4));
+        scope.animate.register([
+            [
+                bus.position, 
+                "x", 
+                {from: start.x, to: end.x}
+            ], [
+                bus.position,
+                'z',
+                {from: start.z, to: end.z}
+            ]
+        ], 500);
+        bus.children.forEach(function (v) {
+            scope.animate.register([
+                [
+                    v.material, 
+                    "opacity", 
+                    {from: 0, to: 1}
+                ]
+            ], 500, function () {
+                this.material.transparent = false;
+            }, v);
+        });
+    };
+
+    this.removeBus = function (setId) {
+        var set;
+        for (var i in scope.meshs.meshList) {
+            if (scope.meshs.meshList[i].objType === 'parkingSet' && scope.meshs.meshList[i].typeId === setId) {
+                set = scope.meshs.meshList[i];
+            }
+        }
+        if (!set || !set.bus) {
+            return;
+        }
+
+        var bus = set.bus;
+        bus.children.forEach(function (v) {
+            v.material.transparent = true;
+        });        
+
+        var dir = new THREE.Vector3(1,0,0);
+        dir.applyAxisAngle(new THREE.Vector3(0,1,0), bus.rotation.y + Math.PI * 0.5);
+
+        var end = bus.position.clone().add(dir.multiplyScalar(4 * scope.setting.system.matrix.size));
+        var start = set.position.clone().add(dir.multiplyScalar(0.5 / 4));
+
+        scope.animate.register([
+            [
+                bus.position, 
+                "x", 
+                {from: start.x, to: end.x}
+            ], [
+                bus.position,
+                'z',
+                {from: start.z, to: end.z}
+            ]
+        ], 500, function () {
+            scope.scene.remove(this);
+        }, bus);
+        bus.children.forEach(function (v) {
+            scope.animate.register([
+                [
+                    v.material, 
+                    "opacity", 
+                    {from: 1, to: 0}
+                ]
+            ], 500, function () {
+                this.material.transparent = false;
+            }, v);
+        });
+    };
+
     this.raycaster = {
         object:null,
         target:"",
@@ -334,7 +434,7 @@ var Scene = function () {
                 mesh.receiveShadow = true;
                 mesh.occupiedArray = [];
                 v.occupiedArray.forEach(function (a) {
-                    scope.meshs.floors[a.floor.x][a.floor.z].occupied = true;
+                    scope.meshs.floors[a.floor.x][a.floor.z].mesh.occupied = true;
                     mesh.occupiedArray.push(scope.meshs.floors[a.floor.x][a.floor.z].mesh);
                 });
                 mesh.objType = m;
@@ -368,8 +468,8 @@ var Scene = function () {
         getCurState(){},
         changeStateTo(s){
             var _this_ = this;
-            this.curState = s;
             this.fn.clearStat();
+            this.curState = s;
             switch(s){
                 case "selectObject" :
                     scope.canvas.onmousemove = null;
@@ -437,9 +537,7 @@ var Scene = function () {
                     scope.scene.remove(scope.model.cur.mesh);
                     scope.state.fn.setToFree(scope.model.cur.mesh.occupiedArray);
                     scope.pass.outlinePass.selectedObjects = [];  
-                    //
-                    //从物品队列删除
-                    //
+           
                     if (scope.model.cur.type === 'parkingSet') {
                         root.removeSet(scope.model.cur.id);
                     }
@@ -528,7 +626,8 @@ var Scene = function () {
                 }
             },
             clearStat(){
-                if(scope.model.cur.mesh){
+                scope.pass.outlinePass.selectedObjects = [];    
+                if(scope.model.cur.mesh && root.state.addObject){
                     scope.scene.remove(scope.model.cur.mesh);
                     scope.model.cur.mesh = null;
                     scope.recover.allColor();
@@ -573,7 +672,7 @@ var Scene = function () {
                 };
             },
             cancelMove () {
-                if (scope.model.modify.mesh) {
+                if (scope.model.modify && scope.model.modify.mesh) {
                     scope.model.modify.mesh.position.copy(scope.model.modify.position);
                     scope.model.modify.mesh.material.opacity = 1;
                     scope.model.modify.mesh.material.transparent = false;     

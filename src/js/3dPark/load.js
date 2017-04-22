@@ -3,7 +3,8 @@ Scene.prototype.load = function() {
     var textures = {};
     var model = {
         red: './models/red.obj',
-        bus: './models/123.obj'
+        bus: './models/123.obj',
+        building: './models/building.obj'
     };
 
     var manager = new THREE.LoadingManager();
@@ -27,13 +28,33 @@ Scene.prototype.load = function() {
     var loader = new THREE.OBJLoader( manager );
     loader.load( model.bus, function ( object ) {
         object.position.y = 5;
-        object.scale = new THREE.Vector3(0.01,0.01,0.01);
+        var scale = 1.8;
+        object.scale.set(scale,scale,scale)
         scope.model.bus = {
             mesh: object
         };
+        object.children[0].material.color.set('#000000'); // 轮胎
+        object.children[1].material.color.set('#336666'); // 外壳
+        object.children[2].material.color.set('#000000'); // 玻璃
+        object.children[3].material.color.set('#ff0000'); // 玻璃
+        // for (var i = 0; i < bus.children.length; i++) {
+        //     var mat = bus.children[i].material;
+        //     mat
+        // }
     }, onProgress, onError );
 
-    var parkingSetGeo = new THREE.PlaneBufferGeometry(8,16,4);
+    loader.load( model.building, function ( object ) {
+        scope.model.building.geo = object.children[0].geometry;
+        scope.model.building.mat = new THREE.MeshPhongMaterial({
+            map: new THREE.TextureLoader().load('./img/building.jpg'), 
+            bumpMap: new THREE.TextureLoader().load('./img/building_bump.jpg'), 
+            bumpScale: 0.2
+        });
+        var scale = 0.05;
+        object.children[0].geometry.scale(scale,scale,scale);
+    }, onProgress, onError );
+
+    var parkingSetGeo = new THREE.PlaneBufferGeometry(8,24,4);
     parkingSetGeo.rotateX(-0.5*Math.PI);
     var parkingSetMat = new THREE.MeshBasicMaterial({transparent: true, map: new THREE.TextureLoader().load('./img/parkingSet.png')});
 
@@ -91,10 +112,14 @@ Scene.prototype.load = function() {
             geo: parkingSetGeo,
             mat: parkingSetMat,
             height: 0.4,
-            size: [2, 4]
+            size: [2, 6]
+        },
+        building: {
+            mat: new THREE.MeshLambertMaterial({color:new THREE.Color("#486548")}),
+            height: 2.5,
+            size: [10, 4]
         },
         canvasTextureList
     };
       
 };
-
