@@ -3,38 +3,105 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Document</title>
+
+	<style type="text/css">
+		body{
+			padding: 0;
+			margin: 0;
+		}
+		#scene3d {
+			
+		}
+		#scene3d #canvas {
+			position: absolute;
+			left: 200px;
+		}
+		#scene3d .leftPanel{
+			display: flex;
+			flex-direction: column;
+			position: absolute;
+			width: 200px;
+			height: 100%;
+			background-color: #ddd;
+		}
+		#scene3d .leftPanel .sub-menu{
+			background-color: #f00;
+		}
+		#scene3d .leftPanel .item{
+			background-color: #0f0;
+			height: 30px;
+			width: 100%;
+		}
+		#scene3d .leftPanel .sub-menu label{
+			display: block;
+			height: 30px;
+			width: 100%;
+		}
+		#scene3d .leftPanel .sub-menu.scene .item{
+			background-color: #0f0;
+
+		}
+		#scene3d .leftPanel .sub-menu.parkingSet{
+			flex: 1;
+			position: relative;
+		}
+		#scene3d .leftPanel .sub-menu.parkingSet .container{
+			overflow-y: scroll;
+			height: 100%;
+			position: absolute;
+			width: 100%;
+			top: 30px;
+			bottom: 0;
+		}
+		#scene3d .leftPanel .sub-menu.parkingSet .item{
+			background-color: #00f;
+		}
+
+		#scene3d .leftPanel .bottomPanel{
+			height: 30px;
+		}
+
+	</style>
 </head>
 <body>
-	<div id="root">
+	<section id = 'scene3d'>
 		<div id="canvas" style="height: 600px;width: 1000px;"></div>
-		<div id="leftPanel">
-			<div class="sub-menu">
-				<div v-for='item in model'>
+		<div class="leftPanel">
+			<div class="sub-menu scene">
+				<label>场景物品</label>
+				<div class="item" v-for='item in model'>
 					<span v-text='item.name' @click="selectModel(item.type),changeStat('modelHover'),setMenuState('addObject')"></span>
 				</div>
 			</div>
-			<div class="sub-menu">
-				<div v-for = 'item in setList' v-show='!item.added' @click="selectModel('parkingSet', item.name),setMenuState('addObject'),changeStat('modelHover'),addSet(item)">
-					车位号: <span v-text='item.name'></span>
+			<div class="sub-menu parkingSet">
+				<label>车位</label>
+				<div class="container">
+					<div class="item" v-for = 'item in setList' v-show='!item.added' @click="selectModel('parkingSet', item.name),setMenuState('addObject'),changeStat('modelHover'),addSet(item)">
+						车位号: <span v-text='item.name'></span>
+					</div>
+				</div>
+			</div>
+
+			<div class="bottomPanel">
+				<div class="addObject" v-if='state.addObject'>		
+					<button @click="scene().state.fn.cancelMove(),changeStat('selectObject'),setMenuState('normal')">取消</button>
+				</div>
+				<div class="selected" v-if='state.selected'>
+					<button @click="scene().state.fn.deleteObject(),setMenuState('normal')">删除</button>
+					<button @click="scene().state.fn.modifyObject(),setMenuState('addObject')">移动</button>
 				</div>
 			</div>
 		</div>
-		<div id="bottomPanel">
-			<div class="addObject" v-if='state.addObject'>		
-				<button @click="scene().state.fn.cancelMove(),changeStat('selectObject'),setMenuState('normal')">取消</button>
-			</div>
-			<div class="selected" v-if='state.selected'>
-				<button @click="scene().state.fn.deleteObject(),setMenuState('normal')">删除</button>
-				<button @click="scene().state.fn.modifyObject(),setMenuState('addObject')">移动</button>
-			</div>
-		</div>
 		<button @click="changeStat('none')">none</button>
-		<!-- size:<input type="text" v-model="scene.setting.user.brushSize.width">x<input type="text" v-model="scene.setting.user.brushSize.height"> -->
 		<button @click="changeStat('floorHover')">floorHover</button>
 		<button onclick='localStorage.clear()'>clear</button>
 		<button onclick='console.dir(scene.saveData)'>saveData</button>
+	</section>
 
-	</div>
+
+
+
+
 	<script src = "../../plugin/three.js/three.js"></script>
 	<script src = "lib/OrbitControls.js"></script>
 	<script src = "lib/CopyShader.js"></script>
@@ -51,7 +118,7 @@
 
 	<script>
 		var root = new Vue({
-			el:"#root",
+			el:"#scene3d",
 			data:{
 				state:{
 					addObject:false,
@@ -70,22 +137,19 @@
 				}, {
 				    name: '3F',
 				    id: '483645836'
-				}],
+				},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'}
+				],
 				model: [{
-					type: 'temp',
-					name: '长方体',
+					type: 'building1',
+					name: '房子1',
 					img: ''
 				}, {
-					type: 'red',
-					name: '立方体',
+					type: 'building2',
+					name: '房子2',
 					img: ''
 				}, {
-					type: 'blue',
-					name: '十分色',
-					img: ''
-				}, {
-					type: 'building',
-					name: '房子',
+					type: 'lamp',
+					name: '路灯',
 					img: ''
 				}]
 			},

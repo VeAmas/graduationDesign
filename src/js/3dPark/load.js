@@ -4,7 +4,9 @@ Scene.prototype.load = function() {
     var model = {
         red: './models/red.obj',
         bus: './models/123.obj',
-        building: './models/building.obj'
+        building1: './models/building1.obj',
+        building2: './models/building2.obj',        
+        lamp: './models/lamp.obj'
     };
 
     var manager = new THREE.LoadingManager();
@@ -22,37 +24,62 @@ Scene.prototype.load = function() {
             console.log( Math.round(percentComplete, 2) + '% downloaded' );
         }
     };
-    var onError = function ( xhr ) {
-    };
 
     var loader = new THREE.OBJLoader( manager );
     loader.load( model.bus, function ( object ) {
         object.position.y = 5;
         var scale = 1.8;
-        object.scale.set(scale,scale,scale)
+        object.scale.set(scale,scale,scale);
         scope.model.bus = {
             mesh: object
         };
         object.children[0].material.color.set('#000000'); // 轮胎
         object.children[1].material.color.set('#336666'); // 外壳
-        object.children[2].material.color.set('#000000'); // 玻璃
-        object.children[3].material.color.set('#ff0000'); // 玻璃
+        object.children[2].material = new THREE.MeshLambertMaterial({ color: '#000000'}); // 玻璃
+        object.children[3].material.color.set('#000000'); // 窗户的边框
+        object.children[4].material.color.set('#333333'); // 车牌边框和上下车的脚垫
+
+        object.children[0].castShadow = true;
+        object.children[1].castShadow = true;
+        object.children[2].castShadow = true;
+        object.children[3].castShadow = true;
+        object.children[4].castShadow = true;
         // for (var i = 0; i < bus.children.length; i++) {
         //     var mat = bus.children[i].material;
         //     mat
         // }
-    }, onProgress, onError );
+    }, onProgress);
 
-    loader.load( model.building, function ( object ) {
-        scope.model.building.geo = object.children[0].geometry;
-        scope.model.building.mat = new THREE.MeshPhongMaterial({
-            map: new THREE.TextureLoader().load('./img/building.jpg'), 
-            bumpMap: new THREE.TextureLoader().load('./img/building_bump.jpg'), 
+    loader.load( model.building1, function ( object ) {
+        scope.model.building1.geo = object.children[0].geometry;
+        scope.model.building1.mat = new THREE.MeshPhongMaterial({
+            map: new THREE.TextureLoader().load('./img/building1.jpg'), 
+            bumpMap: new THREE.TextureLoader().load('./img/building1_bump.jpg'), 
             bumpScale: 0.2
         });
         var scale = 0.05;
         object.children[0].geometry.scale(scale,scale,scale);
-    }, onProgress, onError );
+    }, onProgress );
+
+    loader.load( model.building2, function ( object ) {
+        scope.model.building2.geo = object.children[0].geometry;
+        scope.model.building2.mat = new THREE.MeshPhongMaterial({
+            map: new THREE.TextureLoader().load('./img/building2.jpg'), 
+            bumpScale: 0.2
+        });
+        var scale = 0.1;
+        object.children[0].geometry.scale(scale,scale,scale);
+    }, onProgress );
+
+    loader.load( model.lamp, function ( object ) {
+        scope.model.lamp.geo = object.children[0].geometry;
+        scope.model.lamp.mat = new THREE.MeshPhongMaterial({
+            map: new THREE.TextureLoader().load('./img/lamp.jpg'), 
+            // bumpScale: 0.2
+        });
+        var scale = 0.03;
+        object.children[0].geometry.scale(scale,scale,scale);
+    }, onProgress );
 
     var parkingSetGeo = new THREE.PlaneBufferGeometry(8,24,4);
     parkingSetGeo.rotateX(-0.5*Math.PI);
@@ -90,34 +117,23 @@ Scene.prototype.load = function() {
         cur:{
 
         },
-        temp:{
-            geo:new THREE.CubeGeometry(4,4,4),
-            mat:new THREE.MeshLambertMaterial({color:new THREE.Color("#123456")}),
-            height: 4,
-            size: [1, 1]
-        },
-        red: {
-            geo:new THREE.CubeGeometry(12,4,4),
-            mat:new THREE.MeshLambertMaterial({color:new THREE.Color("#123456")}),
-            height: 4,
-            size: [3, 1]
-        },
-        blue: {
-            geo:new THREE.CubeGeometry(12,4,8),
-            mat:new THREE.MeshLambertMaterial({color:new THREE.Color("#486548")}),
-            height: 4,
-            size: [3, 2]
-        },
         parkingSet: {
             geo: parkingSetGeo,
             mat: parkingSetMat,
             height: 0.4,
             size: [2, 6]
         },
-        building: {
-            mat: new THREE.MeshLambertMaterial({color:new THREE.Color("#486548")}),
+        building1: {
             height: 2.5,
             size: [10, 4]
+        },
+        building2: {
+            height: 43,
+            size: [8, 8]
+        },
+        lamp: {
+            height: -0.5,
+            size: [1, 1]
         },
         canvasTextureList
     };

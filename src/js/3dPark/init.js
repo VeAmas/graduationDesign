@@ -283,7 +283,7 @@ var Scene = function () {
                 {from: start.z, to: end.z}
             ]
         ], 500);
-        bus.children.forEach(function (v) {
+        bus.children.forEach(function (v, i) {
             scope.animate.register([
                 [
                     v.material, 
@@ -292,6 +292,10 @@ var Scene = function () {
                 ]
             ], 500, function () {
                 this.material.transparent = false;
+                if (i === 2) {
+                    this.material.transparent = true;
+                    this.material.opacity = 0.8;
+                }
             }, v);
         });
     };

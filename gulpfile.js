@@ -46,7 +46,7 @@ gulp.task('browser-sync', function(){
         server: {
             baseDir: "./src"
         },
-        port: 5000
+        port: 5110
     });
 });
 
