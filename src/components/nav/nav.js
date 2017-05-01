@@ -103,7 +103,7 @@ Vue.component('epNav',{
 				icon:"glyphicon-heart",
 				link:"/vehicle/stat"
 			},{
-				data:"保养编排",
+				data:"车辆调度",
 				icon:"glyphicon-star",
 				link:"/vehicle/assign"
 			}]
@@ -114,11 +114,11 @@ Vue.component('epNav',{
 			children:[{
 				data:"泊位指定",
 				icon:"glyphicon-user",
-				link:""
+				link:"/parking/specify"
 			},{
 				data:"泊位概况",
 				icon:"glyphicon-film",
-				link:""
+				link:"/parking/stat"
 			}]
 		},{
 			data:"统计报表",
