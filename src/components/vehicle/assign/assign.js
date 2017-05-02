@@ -1,6 +1,6 @@
 const vehicle_assign = {
 	template:`
-		<section id = "vehicle-stat">
+		<section id = "vehicle-assign">
 			<div id="left">
 				<list-menu :data="vehicleRoute" name = "公交路线"></list-menu>
 			</div>
@@ -45,16 +45,16 @@ const vehicle_assign = {
 					</div>
 				</div>
 			</div> 		
-			<modal v-if = "startOut.isShow" id="vehicle_delete">
+			<modal v-if = "startOut.isShow" id="startOut">
 				<div class="modal-header">
-					<h4 class="modal-title">是否删除车牌号为&nbsp;<span class="high-light" v-text="startOut.obj.vehicle.license"></span>&nbsp;的车辆？</h4>
+					<h4 class="modal-title">是否派出车辆&nbsp;<span class="high-light" v-text="startOut.obj.vehicle.license"></span>&nbsp;？</h4>
 				</div>
 				<div class="modal-footer">
 					<button class="btn ok" @click="startOut.clear()">确认</button>
 					<button class="btn cancle" @click="startOut.clear()">取消</button>
 				</div>
 			</modal>
-			<modal v-if = "modifyNextStart.isShow" id="vehicle_delete">
+			<modal v-if = "modifyNextStart.isShow" id="modifyNextStart">
 				<div class="modal-header">
 					<h4 class="modal-title">修改车牌号为 &nbsp;<span class="high-light" v-text="modifyNextStart.obj.vehicle.license"></span>&nbsp;的车辆的下次发车时间至：</h4></br>
 					<datetime-picker class='modifyNextStartDatetimePicker' :data="modifyNextStart.obj.nextStart"></datetime-picker>

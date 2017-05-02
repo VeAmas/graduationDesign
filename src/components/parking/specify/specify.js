@@ -1,6 +1,6 @@
 const parking_specify = {
 	template:`
-		<section id = "vehicle-stat">
+		<section id = "parking-specify">
 			<div id="left">
 				<list-menu :data="vehicleRoute" name = "停车场列表"></list-menu>
 			</div>
@@ -46,7 +46,7 @@ const parking_specify = {
 					</div>
 				</div>
 			</div>
-			<modal v-if = "parkingSetSpecify.isShow" id="vehicle_modify">
+			<modal v-if = "parkingSetSpecify.isShow" id="parkingSetSpecify">
 				<div class="modal-header">
 					<h4 class="modal-title">车辆修改</h4>
 				</div>
