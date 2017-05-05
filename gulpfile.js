@@ -9,9 +9,9 @@ var notify = require('gulp-notify');
 var runSequence = require('run-sequence');
 
 var paths = {
-    js: "./src/**/*.js",
-    pages: "./src/**/*.html",
-    sass: "./src/**/*.scss"
+    js: "./src/main/resources/static/src/**/*.js",
+    pages: "./src/main/resources/static/src/**/*.html",
+    sass: "./src/main/resources/static/src/**/*.scss"
 };
 
 gulp.task('styles',function () {
@@ -23,7 +23,7 @@ gulp.task('styles',function () {
             outputStyle:'expanded',
             precision:10
         }))
-        .pipe(gulp.dest('src/css'))
+        .pipe(gulp.dest('./src/main/resources/static/src/css'))
         .pipe(reload({stream:true}));
 });
 
@@ -44,7 +44,7 @@ gulp.task('reflash',function(){
 gulp.task('browser-sync', function(){
     browserSync.init({
         server: {
-            baseDir: "./src"
+            baseDir: "./src/main/resources/static/src"
         },
         port: 5110
     });

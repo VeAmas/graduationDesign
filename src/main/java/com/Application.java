@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 
-@ComponentScan				//开启组件扫描
-@EnableAutoConfiguration 	//开启自动扫描
+@ComponentScan				
+@EnableAutoConfiguration 	
 @RestController
 public class Application extends SpringBootServletInitializer{
 

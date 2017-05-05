@@ -1,0 +1,28 @@
+#parking-stat {
+  position: absolute;
+  left: 0px;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  padding: 20px;
+}
+
+#parking-stat .panel {
+  padding-bottom: 40px;
+}
+
+#parking-stat td, #parking-stat th {
+  text-align: center;
+}
+
+#parking-stat .operate-bar {
+  width: 120px;
+}
+
+#parking-stat #showAllSet .scroll1 {
+  max-height: 200px;
+}
+
+#parking-stat #showAllVehicle .scroll2 {
+  max-height: 200px;
+}

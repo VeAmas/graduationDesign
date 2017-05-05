@@ -1,0 +1,117 @@
+#vehicle-stat #left {
+  position: absolute;
+  left: 0;
+  width: 250px;
+  bottom: 0;
+  top: 0;
+  padding: 20px;
+}
+
+#vehicle-stat #right {
+  position: absolute;
+  left: 230px;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  padding: 20px;
+}
+
+#vehicle-stat #right .panel {
+  padding-bottom: 40px;
+}
+
+#vehicle-stat #right td, #vehicle-stat #right th {
+  text-align: center;
+}
+
+#vehicle-stat #right .operate-bar {
+  width: 120px;
+}
+
+#vehicle-stat .modal .modal-body > div {
+  display: flex;
+}
+
+#vehicle-stat .modal .modal-body > div .photo {
+  border: 1px solid #ddd;
+}
+
+#vehicle-stat .modal .modal-body > div .stat {
+  width: 100%;
+}
+
+#vehicle-stat .modal .modal-body > div .stat table {
+  width: 100%;
+}
+
+#vehicle-stat .modal .modal-body > div .stat tr {
+  border: 1px solid #ddd;
+  height: 24px;
+  line-height: 24px;
+}
+
+#vehicle-stat .modal .modal-body > div .stat tr td {
+  text-align: center;
+  border-left: 1px solid #ddd;
+}
+
+#vehicle-stat .modal .modal-body > div .stat tr td:nth-child(1) {
+  padding: 0 10px;
+  width: 120px;
+  text-align: left;
+  border: none;
+}
+
+#vehicle-stat .modal#vehicle_check .vehicle-info .photo img {
+  height: 192px;
+}
+
+#vehicle-stat .modal#vehicle_check .driver-info .photo img {
+  height: 168px;
+}
+
+#vehicle-stat .modal#vehicle_modify .vehicle-info .photo img {
+  height: 168px;
+}
+
+#vehicle-stat .modal#vehicle_modify .vehicle-info input, #vehicle-stat .modal#vehicle_modify .vehicle-info select {
+  outline: none;
+  width: 100%;
+  height: 100%;
+  border: none;
+  padding: 0 10px;
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+#vehicle-stat .modal#vehicle_modify .vehicle-info option {
+  color: #000;
+}
+
+#vehicle-stat .modal#vehicle_modify .vehicle-info input.license {
+  padding-left: 0;
+  float: right;
+}
+
+#vehicle-stat .modal#vehicle_modify .vehicle-info input.license.middle {
+  width: 10%;
+}
+
+#vehicle-stat .modal#vehicle_modify .vehicle-info input.license.end {
+  width: 70%;
+}
+
+#vehicle-stat .modal#vehicle_modify .vehicle-info select.license {
+  width: 20%;
+  height: 100%;
+  padding-left: 10px;
+  border: none;
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+#vehicle-stat .modal#vehicle_modify .vehicle-info .purchasedDate {
+  height: 100%;
+}
+
+#vehicle-stat .modal#vehicle_modify .vehicle-info .purchasedDate input {
+  height: auto;
+}

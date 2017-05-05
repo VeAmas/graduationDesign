@@ -1,0 +1,203 @@
+.content-bg {
+  background-color: #edf1f2;
+}
+
+#nav .container {
+  background-color: #1e262c;
+}
+
+#nav .container .menu li {
+  background-color: #1e262c;
+  color: #8a8f97;
+}
+
+#nav .container .menu li:hover {
+  background-color: #3a434b;
+}
+
+#nav .container .menu li.active {
+  background-color: #4b5158;
+  color: #e4e5e6;
+  border-left-color: #f56c2d;
+}
+
+#nav .container .menu li.active.expanded {
+  background-color: #27343e;
+}
+
+#nav .container hr {
+  border-color: #4b5158;
+}
+
+#nav .container .version {
+  color: #e4e5e6;
+}
+
+#nav .container .icon {
+  color: #f56c2d;
+}
+
+#header .container {
+  background-color: #1e262c;
+  border-bottom: 3px solid #f56c2d;
+}
+
+#header .container .enterprise-name {
+  color: #e4e5e6;
+}
+
+#header .container .user {
+  color: #e4e5e6;
+}
+
+#header .container .user:hover {
+  background-color: #3a434b;
+}
+
+#header .container .user .sub-menu {
+  background-color: #1e262c;
+}
+
+.list-menu div {
+  color: #888e95;
+}
+
+.list-menu div x
+.glyphicon {
+  color: #f56c2d;
+}
+
+.list-menu ul div:hover {
+  background-color: rgba(0, 0, 0, 0.2);
+  color: #565d62;
+}
+
+.list-menu .active {
+  color: #565d62;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.panel {
+  background-color: #FFF;
+}
+
+.panel .panel-head {
+  background-color: #1e262c;
+  color: #e4e5e6;
+  border-bottom: 3px solid #f56c2d;
+}
+
+.panel .panel-footer {
+  border-top: 3px solid #f56c2d;
+  background-color: #1e262c;
+}
+
+.form-inline select, .form-inline input {
+  border-color: #1e262c;
+}
+
+.form-inline button {
+  background-color: #f56c2d;
+  color: #fff;
+}
+
+.form-inline button:hover {
+  background-color: #f96;
+}
+
+.modal .modal-dialog .modal-content {
+  background-color: #1e262c;
+  color: #e4e5e6;
+}
+
+.modal .modal-dialog .modal-content .modal-header {
+  border-bottom-color: #4b5158;
+}
+
+.modal .modal-dialog .modal-content .modal-footer {
+  border-top-color: #4b5158;
+}
+
+.modal .modal-dialog .modal-content button {
+  transition: background-color 0.2s;
+}
+
+.modal .modal-dialog .modal-content .ok {
+  background-color: #f56c2d;
+}
+
+.modal .modal-dialog .modal-content .ok:hover {
+  color: #e4e5e6;
+  background-color: #f96;
+}
+
+.modal .modal-dialog .modal-content .cancle {
+  background-color: #1e262c;
+  border-color: #e4e5e6;
+}
+
+.modal .modal-dialog .modal-content .cancle:hover {
+  color: #e4e5e6;
+  background-color: #3a434b;
+}
+
+.modal .high-light {
+  color: #f56c2d;
+}
+
+.xdsoft_datetimepicker {
+  background-color: #1e262c !important;
+}
+
+.xdsoft_datetimepicker div, .xdsoft_datetimepicker th, .xdsoft_datetimepicker td {
+  background-color: #1e262c !important;
+}
+
+.xdsoft_datetimepicker.xdsoft_dark .xdsoft_calendar td.xdsoft_date:hover div,
+.xdsoft_datetimepicker.xdsoft_dark .xdsoft_calendar td.xdsoft_date:hover {
+  background-color: #f96 !important;
+}
+
+.xdsoft_datetimepicker.xdsoft_dark .xdsoft_timepicker .xdsoft_time_box > div > div.xdsoft_time:hover {
+  background-color: #f96 !important;
+}
+
+.xdsoft_datetimepicker table {
+  background-color: #3a434b;
+}
+
+.xdsoft_datetimepicker td.xdsoft_current, .xdsoft_datetimepicker th.xdsoft_current, .xdsoft_datetimepicker div.xdsoft_current, .xdsoft_datetimepicker .xdsoft_current div {
+  background-color: #f56c2d !important;
+}
+
+.pagination a {
+  border: solid 1px #e4e5e6;
+  background-color: transparent;
+  color: #e4e5e6;
+}
+
+.pagination a, .pagination span {
+  transition: background-color,color 0.2s;
+}
+
+.pagination a:hover, .pagination span:hover {
+  background-color: #f96;
+  color: #1e262c;
+}
+
+.pagination .current {
+  background: #f56c2d;
+  color: #fff;
+  border: solid 1px #AAE;
+}
+
+.pagination .current:hover {
+  background-color: #f56c2d;
+  color: #fff;
+}
+
+.pagination .current.prev, .pagination .current.next {
+  color: #999;
+  border-color: #999;
+  background: #4b5158;
+}

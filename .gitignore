@@ -1,4 +1,6 @@
 node_modules
 
-src/plugin
-src/css
+src/main/resources/static/src/src/plugin
+src/main/resources/static/src/src/css
+target
+target1

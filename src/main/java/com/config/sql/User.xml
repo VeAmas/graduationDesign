@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="User">
+	<resultMap id="UserResult" type="com.model.User">
+		<id property="userId" jdbcType="INTEGER" column="userId"/>
+		<result property="userType" jdbcType="VARCHAR" column="userType"/>
+		<result property="name" jdbcType="VARCHAR" column="name"/>
+		<result property="age" jdbcType="VARCHAR" column="age"/>
+		<result property="photo" jdbcType="VARCHAR" column="photo"/>
+		<result property="gender" jdbcType="VARCHAR" column="gender"/>
+		<result property="birth" jdbcType="VARCHAR" column="birth"/>
+		<result property="ID" jdbcType="VARCHAR" column="ID"/>
+		<result property="address" jdbcType="VARCHAR" column="address"/>
+		<result property="cellPhone" jdbcType="VARCHAR" column="cellPhone"/>
+		<result property="email" jdbcType="VARCHAR" column="email"/>
+		<result property="startDate" jdbcType="VARCHAR" column="startDate"/>
+		<result property="curVehicle" jdbcType="VARCHAR" column="curVehicle"/>
+		<result property="lastRecordTime" jdbcType="VARCHAR" column="lastRecordTime"/>
+	</resultMap>
+	  
+  <select id="getUserByUserId" parameterType="jav.lang.String" resultMap="UserResult">
+    SELECT * FROM User where userId = #{userId}
+  </select>
+	
+</mapper>
+
