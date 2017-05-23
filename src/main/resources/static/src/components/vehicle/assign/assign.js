@@ -157,7 +157,6 @@ const vehicle_assign = {
 				"sefsfe",
 				"87874356",
 				"sdfsef",
-				"546",
 				"sefsfe",
 				"87874356",
 			];

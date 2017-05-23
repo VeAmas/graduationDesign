@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Vehicle">
+	<resultMap id="VehicleResult" type="com.model.Vehicle">
+		<id property="license" jdbcType="VARCHAR" column="license"/>
+		<result property="route" jdbcType="VARCHAR" column="route"/>
+		<result property="photo" jdbcType="VARCHAR" column="photo"/>
+		<result property="model" jdbcType="VARCHAR" column="model"/>
+		<result property="purchasedDate" jdbcType="INTEGER" column="purchasedDate"/>
+		<result property="maintenance" jdbcType="VARCHAR" column="maintenance"/>
+		<result property="km" jdbcType="INTEGER" column="km"/>
+		<result property="lastRecordTime" jdbcType="INTEGER" column="lastRecordTime"/>
+		<result property="curStat" jdbcType="VARCHAR" column="curStat"/>
+		<result property="nextStart" jdbcType="INTEGER" column="nextStart"/>
+		<result property="parkingId" jdbcType="INTEGER" column="parkingId"/>
+	</resultMap>
+	  
+	<select id="getVehicleByLicense" parameterType="java.lang.String" resultMap="VehicleResult">
+		SELECT * FROM vehicle where license = #{license}
+	</select>
+	<select id="getVehicleByParkingId" parameterType="java.lang.String" resultMap="VehicleResult">
+		SELECT * FROM vehicle where parkingId = #{parkingId}
+	</select>	
+	<select id="queryVehicle" parameterType="com.model.VehicleQuery" resultMap="VehicleResult">
+		SELECT * FROM vehicle 
+		<where>
+			<if test="route != null and route != ''">
+			     route = #{route}
+			</if> 
+			<if test="parkingId != null and parkingId != ''">
+			     and parkingId = #{parkingId}
+			</if> 
+			<if test="curStat != null and curStat != ''">
+			    AND curStat = #{curStat}
+			</if> 
+		</where>
+	</select>
+	<insert id="addVehicle" parameterType="com.model.Vehicle">
+		insert into Vehicle (license,route,photo,model,purchasedDate,maintenance,km,lastRecordTime,curStat,parkingId) values(#{license},#{route},#{photo},#{model},#{purchasedDate},#{maintenance},#{km},#{lastRecordTime},#{curStat},#{parkingId})
+	</insert>	
+	<update id="updateVehicle" parameterType="com.model.Vehicle">
+		update Vehicle set route = #{route},model = #{model},purchasedDate = #{purchasedDate},maintenance = #{maintenance},km = #{km},curStat = #{curStat} where license = #{license};
+	</update>
+	<insert id="deleteVehicle" parameterType="java.lang.String">
+		delete from Vehicle where license = #{license}
+	</insert>
+	<update id="changeVehicleStatus" parameterType="com.model.Vehicle">
+		update Vehicle set curStat = #{curStat} where license = #{license};
+	</update>
+	<update id="changeVehicleNestStart" parameterType="com.model.Vehicle">
+		update Vehicle set nextStart = #{nextStart} where license = #{license};
+	</update>
+	
+	
+</mapper>
+

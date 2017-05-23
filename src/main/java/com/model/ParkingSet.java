@@ -1,10 +1,19 @@
 package com.model;
 
 public class ParkingSet {
-    private String name;
+	private Integer setId;
+	private String name;
     private String available;
-    private Vehicle curVehicle;
-    private String lastRecordTime;
+    private String curVehicle;
+    private String parkingId;
+    private Integer lastRecordTime;
+
+    public Integer getSetId() {
+		return setId;
+	}
+	public void setSetId(Integer setId) {
+		this.setId = setId;
+	}
 	public String getName() {
 		return name;
 	}
@@ -17,18 +26,28 @@ public class ParkingSet {
 	public void setAvailable(String available) {
 		this.available = available;
 	}
-	public Vehicle getCurVehicle() {
+	public String getCurVehicle() {
 		return curVehicle;
 	}
-	public void setCurVehicle(Vehicle curVehicle) {
+	public void setCurVehicle(String curVehicle) {
 		this.curVehicle = curVehicle;
 	}
-	public String getLastRecordTime() {
+	public Integer getLastRecordTime() {
 		return lastRecordTime;
 	}
-	public void setLastRecordTime(String lastRecordTime) {
+	public void setLastRecordTime(Integer lastRecordTime) {
 		this.lastRecordTime = lastRecordTime;
 	}
-    
+	public String getParkingId() {
+		return parkingId;
+	}
+	public void setParkingId(String parkingId) {
+		this.parkingId = parkingId;
+	}
+	@Override
+	public String toString() {
+		return "ParkingSet [setId=" + setId + ", name=" + name + ", available=" + available + ", curVehicle="
+				+ curVehicle + ", parkingId=" + parkingId + ", lastRecordTime=" + lastRecordTime + "]";
+	}
     
 }

@@ -7,7 +7,7 @@ public class User {
     private String age;
     private String photo;
     private String gender;
-    private String birth;
+    private Integer birth;
     private String ID;
     private String address;
     private String cellPhone;
@@ -52,10 +52,10 @@ public class User {
 	public void setGender(String gender) {
 		this.gender = gender;
 	}
-	public String getBirth() {
+	public Integer getBirth() {
 		return birth;
 	}
-	public void setBirth(String birth) {
+	public void setBirth(Integer birth) {
 		this.birth = birth;
 	}
 	public String getID() {
@@ -99,6 +99,13 @@ public class User {
 	}
 	public void setLastRecordTime(Integer lastRecordTime) {
 		this.lastRecordTime = lastRecordTime;
+	}
+	@Override
+	public String toString() {
+		return "User [userId=" + userId + ", userType=" + userType + ", name=" + name + ", age=" + age + ", photo="
+				+ photo + ", gender=" + gender + ", birth=" + birth + ", ID=" + ID + ", address=" + address
+				+ ", cellPhone=" + cellPhone + ", email=" + email + ", startDate=" + startDate + ", curVehicle="
+				+ curVehicle + ", lastRecordTime=" + lastRecordTime + "]";
 	}
 }
 

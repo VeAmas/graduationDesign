@@ -1,30 +1,27 @@
 package com.serviceImpl;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
 import com.DButil.DBAccess;
-import com.model.User;
-import com.model.UserQuery;
-import com.service.UserDao;
+import com.model.ParkingSet;
+import com.service.ParkingSetDao;
 
-@Repository("userDao")
-public class UserDaoImpl implements UserDao {
+@Repository("ParkingSetDao")
+public class ParkingSetDaoImpl implements ParkingSetDao {
 
 	@Override
-	public User getUserByUserId(String userId) {
-		User u = new User();	
+	public ParkingSet getParkingSetBySetId(String setId) {
+		ParkingSet ps;
 		
 		DBAccess dbAccess = new DBAccess();
 		SqlSession sqlSession = null;
 		try{
 			sqlSession = dbAccess.getSqlSession();
-			u = sqlSession.selectOne("User.getUserByUserId", userId);
-			return u;
+			ps = sqlSession.selectOne("ParkingSet.getParkingSetBySetId", setId);
+			return ps;
 		}catch(IOException e){
 			e.printStackTrace();
 		}finally{
@@ -36,12 +33,13 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	@Override
-	public boolean addUser(User user) {
+	public boolean addParkingSet(ParkingSet parkingSet) {
+
 		DBAccess dbAccess = new DBAccess();
 		SqlSession sqlSession = null;
 		try{
 			sqlSession = dbAccess.getSqlSession();
-			sqlSession.insert("User.addUser", user);
+			sqlSession.insert("ParkingSet.addParkingSet", parkingSet);
 			sqlSession.commit();
 			return true;
 		}catch(IOException e){
@@ -55,36 +53,12 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	@Override
-	public ArrayList<User> queryUser(UserQuery userQuery) {
-		ArrayList<User> u = new ArrayList<User>();	
-		
+	public boolean changeParkingSetVehicle(ParkingSet parkingSet) {
 		DBAccess dbAccess = new DBAccess();
 		SqlSession sqlSession = null;
 		try{
 			sqlSession = dbAccess.getSqlSession();
-			List<Object> os;
-			os = sqlSession.selectList("User.queryUser", userQuery);
-			for	(int i = 0; i < os.size(); i++){
-				u.add((User)os.get(i));
-			}
-			return u;
-		}catch(IOException e){
-			e.printStackTrace();
-		}finally{
-			if(sqlSession != null){
-				sqlSession.close();
-			}			
-		}
-		return null;
-	}
-
-	@Override
-	public boolean updateUser(User user) {
-		DBAccess dbAccess = new DBAccess();
-		SqlSession sqlSession = null;
-		try{
-			sqlSession = dbAccess.getSqlSession();
-			sqlSession.update("User.updateUser", user);
+			sqlSession.update("ParkingSet.changeParkingSetVehicle", parkingSet);
 			sqlSession.commit();
 			return true;
 		}catch(IOException e){
@@ -94,6 +68,26 @@ public class UserDaoImpl implements UserDao {
 				sqlSession.close();
 			}			
 		}
-		return false;	}
+		return false;
+	}
 
+	@Override
+	public boolean deleteParkingSet(String setId) {
+		DBAccess dbAccess = new DBAccess();
+		SqlSession sqlSession = null;
+		try{
+			sqlSession = dbAccess.getSqlSession();
+			sqlSession.delete("ParkingSet.deleteParkingSet", setId);
+			sqlSession.commit();
+			return true;
+		}catch(IOException e){
+			e.printStackTrace();
+		}finally{
+			if(sqlSession != null){
+				sqlSession.close();
+			}			
+		}
+		return false;
+	}
+	
 }

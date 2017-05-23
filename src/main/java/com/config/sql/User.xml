@@ -5,7 +5,7 @@
 
 <mapper namespace="User">
 	<resultMap id="UserResult" type="com.model.User">
-		<id property="userId" jdbcType="INTEGER" column="userId"/>
+		<id property="userId" jdbcType="VARCHAR" column="userId"/>
 		<result property="userType" jdbcType="VARCHAR" column="userType"/>
 		<result property="name" jdbcType="VARCHAR" column="name"/>
 		<result property="age" jdbcType="VARCHAR" column="age"/>
@@ -18,12 +18,32 @@
 		<result property="email" jdbcType="VARCHAR" column="email"/>
 		<result property="startDate" jdbcType="VARCHAR" column="startDate"/>
 		<result property="curVehicle" jdbcType="VARCHAR" column="curVehicle"/>
-		<result property="lastRecordTime" jdbcType="VARCHAR" column="lastRecordTime"/>
+		<result property="lastRecordTime" jdbcType="INTEGER" column="lastRecordTime"/>
 	</resultMap>
 	  
-  <select id="getUserByUserId" parameterType="jav.lang.String" resultMap="UserResult">
-    SELECT * FROM User where userId = #{userId}
-  </select>
+	<select id="getUserByUserId" parameterType="java.lang.String" resultMap="UserResult">
+		SELECT * FROM User where userId = #{userId}
+	</select>
+	<select id="queryUser" parameterType="com.model.UserQuery" resultMap="UserResult">
+		SELECT * FROM User
+	  	<where> 
+			<if test="userType != null and userType != ''">
+			     userType = #{userType}
+			</if> 
+			<if test="name != null and name != ''">
+			     and name = #{name}
+			</if> 
+			<if test="gender != null and gender != ''">
+			    AND gender = #{gender}
+			</if> 
+		</where>
+	</select>
+	<insert id="addUser" parameterType="com.model.User">
+		insert into User (gender,age,name,userType,ID,address,birth,cellPhone,email,startDate,lastRecordTime,photo) values(#{gender},#{age},#{name},#{userType},#{ID},#{address},#{birth},#{cellPhone},#{email},#{startDate},#{lastRecordTime},#{photo})
+	</insert>
+	<update id="updateUser" parameterType="com.model.User">
+		update User set gender = #{gender},age = #{age},name = #{name},userType = #{userType},ID = #{ID},address = #{address},birth = #{birth},cellPhone = #{cellPhone},photo = #{photo},email = #{email},startDate = #{startDate} where userId = #{userId};
+	</update>
 	
 </mapper>
 

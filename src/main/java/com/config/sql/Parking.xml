@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Parking">
+	<resultMap id="ParkingResult" type="com.model.Parking">
+		<id property="parkingId" jdbcType="VARCHAR" column="parkingId"/>
+		<result property="name" jdbcType="VARCHAR" column="name"/>
+		<result property="address" jdbcType="VARCHAR" column="address"/>
+	</resultMap>
+	  
+	<select id="getParkingById" parameterType="java.lang.String" resultMap="ParkingResult">
+		SELECT * FROM Parking where parkingId = #{parkingId}
+	</select>
+
+	
+	
+</mapper>
+

@@ -22,13 +22,16 @@
         <property name="driver" value="com.mysql.jdbc.Driver"/>
         <property name="url" value="jdbc:mysql://localhost:3306/bryning?useUnicode=true&amp;characterEncoding=utf8"/>
         <property name="username" value="root"/>
-        <property name="password" value="root"/>
+        <property name="password" value=""/>
       </dataSource>
     </environment>
   </environments>
 
   <mappers>
-    <mapper resource="com/kongtrolink/config/sql/User.xml"/>
+    <mapper resource="com/config/sql/User.xml"/>
+    <mapper resource="com/config/sql/Vehicle.xml"/>
+    <mapper resource="com/config/sql/ParkingSet.xml"/>
+    <mapper resource="com/config/sql/Parking.xml"/>
   </mappers>
 
 </configuration>
