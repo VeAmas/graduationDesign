@@ -36,7 +36,11 @@
 			<if test="curStat != null and curStat != ''">
 			    AND curStat = #{curStat}
 			</if> 
+			<if test="license != null and license != ''">
+			    AND license LIKE CONCAT('%',#{license},'%')
+			</if> 
 		</where>
+		limit #{curPage} , #{itemsPrePage}
 	</select>
 	<insert id="addVehicle" parameterType="com.model.Vehicle">
 		insert into Vehicle (license,route,photo,model,purchasedDate,maintenance,km,lastRecordTime,curStat,parkingId) values(#{license},#{route},#{photo},#{model},#{purchasedDate},#{maintenance},#{km},#{lastRecordTime},#{curStat},#{parkingId})

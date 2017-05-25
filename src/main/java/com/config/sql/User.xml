@@ -19,6 +19,7 @@
 		<result property="startDate" jdbcType="VARCHAR" column="startDate"/>
 		<result property="curVehicle" jdbcType="VARCHAR" column="curVehicle"/>
 		<result property="lastRecordTime" jdbcType="INTEGER" column="lastRecordTime"/>
+		<result property="password" jdbcType="VARCHAR" column="password"/>
 	</resultMap>
 	  
 	<select id="getUserByUserId" parameterType="java.lang.String" resultMap="UserResult">
@@ -44,6 +45,9 @@
 	<update id="updateUser" parameterType="com.model.User">
 		update User set gender = #{gender},age = #{age},name = #{name},userType = #{userType},ID = #{ID},address = #{address},birth = #{birth},cellPhone = #{cellPhone},photo = #{photo},email = #{email},startDate = #{startDate} where userId = #{userId};
 	</update>
+	<select id="getUserByMany" parameterType="java.lang.String" resultMap="UserResult">
+		SELECT * FROM User where userId = #{many} or email = #{many} or cellPhone = #{many} 
+	</select>
 	
 </mapper>
 

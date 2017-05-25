@@ -34,6 +34,26 @@ public class UserDaoImpl implements UserDao {
 		}
 		return null;
 	}
+	
+	@Override
+	public User getUserByMany(String many) {
+		User u = new User();	
+		
+		DBAccess dbAccess = new DBAccess();
+		SqlSession sqlSession = null;
+		try{
+			sqlSession = dbAccess.getSqlSession();
+			u = sqlSession.selectOne("User.getUserByMany", many);
+			return u;
+		}catch(IOException e){
+			e.printStackTrace();
+		}finally{
+			if(sqlSession != null){
+				sqlSession.close();
+			}			
+		}
+		return null;
+	}
 
 	@Override
 	public boolean addUser(User user) {

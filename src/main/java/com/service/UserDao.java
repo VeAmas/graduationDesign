@@ -13,4 +13,5 @@ public interface UserDao {
 	public boolean addUser(User user);
 	public ArrayList<User> queryUser(UserQuery userQuery);
 	public boolean updateUser(User user);
+	public User getUserByMany(String many);
 }

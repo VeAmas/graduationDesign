@@ -16,6 +16,15 @@ public class User {
     private String curVehicle;
     private Integer lastRecordTime;
     
+    
+    public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	private String password;
+    
 	public String getUserId() {
 		return userId;
 	}
