@@ -1,6 +1,7 @@
 node_modules
 
 src/main/resources/static/src/src/plugin
+src/main/resources/static/src/plugin
 src/main/resources/static/src/src/css
 target
 target1

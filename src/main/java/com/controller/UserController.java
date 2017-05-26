@@ -37,13 +37,14 @@ public class UserController {
     }
     
     @RequestMapping(value = "/getUserPhoto", method = RequestMethod.POST)  
-    public String getUserPhoto(@RequestBody String many) {
+    public User getUserPhoto(@RequestBody String many) {
     	
     	User u = userDao.getUserByMany(many);
     	if (u == null) {
     		return null;
     	}
-    	return u.getPhoto();
+    	u.setPassword(null);
+    	return u;
     }
     
     @RequestMapping(value = "/getUser", method = RequestMethod.POST)  

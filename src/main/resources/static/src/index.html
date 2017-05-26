@@ -12,15 +12,29 @@
 			<div class="logo"></div>
 			<h1 class="title text-center">博莱宁公交泊位管理系统</h1>
 			<h3 class="slogan text-center">为您带来更舒适的泊车体验</h3>
-			<div class="form panel panel-default">
+			<div class="form panel panel-default" v-if = '!user'>
 				<div class="avatar">
 					<img src="img/avatar-default.png" >
 				</div>
 				<div class="form-group">
-					<input class="form-control" type="text" id="username" placeholder="Enter you username">					
+					<input class="form-control" type="text" id="username" placeholder="Enter you username" v-model = 'userName'>					
 				</div>
 				<div class="form-group">
-					<button class="submit btn btn-primary btn-block"><a href="main.html">Next</a></button>					
+					<button class="submit btn btn-primary btn-block" @click = 'getUser'>Next</button>					
+				</div>
+			</div>
+			<div class="form panel panel-default" v-else>
+				<div class="avatar">
+					<img :src="user.photo" >
+				</div>
+
+				<label class = 'text-center container' v-text='user.name'></label>		
+
+				<div class="form-group">
+					<input class="form-control" type="password" id="password" placeholder="Enter you password" v-model = 'password'>				
+				</div>
+				<div class="form-group">
+					<button class="submit btn btn-primary btn-block" @click = 'login'>Next</button>					
 				</div>
 			</div>
 			<div class="footer text-center">
@@ -36,5 +50,31 @@
 		   </video>
 		</div>
 	</section>	
+	<script src="plugin/vue/dist/vue.js"></script>
+	<script src="plugin/vue-resource/dist/vue-resource.js"></script>
+	<script>
+		var root = new Vue({
+			el: '#indexPage',
+			data: {
+				user: null,
+				userName: "",
+				password: ""
+			},
+			methods: {
+				getUser: function () {
+					this.$http.post('/user/getUserPhoto', this.userName).then(function(res){
+						console.log(res);
+						this.user = res.data
+					})
+				},
+				login: function () {
+					this.$http.post('/user/login', {many: this.userName, password: this.password}).then(function(res){
+						console.log(res);
+						// this.user = res.data
+					})
+				}
+			}
+		})
+	</script>
 </body>
 </html>
