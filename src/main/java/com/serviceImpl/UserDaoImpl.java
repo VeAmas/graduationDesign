@@ -36,6 +36,26 @@ public class UserDaoImpl implements UserDao {
 	}
 	
 	@Override
+	public User getUserByUserVehicleLicense(String license) {
+		User u = new User();	
+		
+		DBAccess dbAccess = new DBAccess();
+		SqlSession sqlSession = null;
+		try{
+			sqlSession = dbAccess.getSqlSession();
+			u = sqlSession.selectOne("User.getUserByUserVehicleLicense", license);
+			return u;
+		}catch(IOException e){
+			e.printStackTrace();
+		}finally{
+			if(sqlSession != null){
+				sqlSession.close();
+			}			
+		}
+		return null;
+	}
+	
+	@Override
 	public User getUserByMany(String many) {
 		User u = new User();	
 		
@@ -114,6 +134,26 @@ public class UserDaoImpl implements UserDao {
 				sqlSession.close();
 			}			
 		}
-		return false;	}
+		return false;	
+	}
+	
+	@Override
+	public boolean deleteUser(String userId) {
+		DBAccess dbAccess = new DBAccess();
+		SqlSession sqlSession = null;
+		try{
+			sqlSession = dbAccess.getSqlSession();
+			sqlSession.delete("User.deleteUser", userId);
+			sqlSession.commit();
+			return true;
+		}catch(IOException e){
+			e.printStackTrace();
+		}finally{
+			if(sqlSession != null){
+				sqlSession.close();
+			}			
+		}
+		return false;
+	}
 
 }

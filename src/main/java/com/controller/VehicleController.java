@@ -24,8 +24,28 @@ public class VehicleController {
    public ArrayList<Vehicle> queryVehicle(@RequestBody VehicleQuery vq) {  
 	   if (vq.getCurPage() != null && vq.getItemsPrePage() != null) {
 		   vq.setCurPage(vq.getCurPage() * vq.getItemsPrePage());
+	   } else if (vq.getCurPage() == null && vq.getItemsPrePage() == null) {
+		   vq.setCurPage(0);
+		   vq.setItemsPrePage(10000);
 	   }
 	   ArrayList<Vehicle> vs = vehicleDao.queryVehicle(vq);
        return vs;  
+   }
+   
+   @RequestMapping(value = "/getVehicle", method = RequestMethod.POST)  
+   public Vehicle getVehicle(@RequestBody String license) {  
+   	Vehicle v = vehicleDao.getVehicleByLicense(license);
+   	System.out.println(v);
+       return v;  
+   }
+   
+   @RequestMapping(value = "/updateVehicle", method = RequestMethod.POST)  
+   public boolean updateVehicle(@RequestBody Vehicle vehicle) {
+       return vehicleDao.updateVehicle(vehicle);
    }  
+   
+   @RequestMapping(value = "/deleteVehicle", method = RequestMethod.POST)  
+   public boolean deleteVehicle(@RequestBody String license) {  
+       return vehicleDao.deleteVehicle(license);
+   }
 }

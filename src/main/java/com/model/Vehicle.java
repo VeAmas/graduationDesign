@@ -10,9 +10,16 @@ public class Vehicle {
     private Integer km;
     private Integer lastRecordTime;
     private String curStat;
+    private String curSet;
     private Integer nextStart;
     private Integer parkingId;
     
+	public String getCurSet() {
+		return curSet;
+	}
+	public void setCurSet(String curSet) {
+		this.curSet = curSet;
+	}
 	public Integer getNextStart() {
 		return nextStart;
 	}

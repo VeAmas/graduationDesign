@@ -10,8 +10,10 @@ public interface UserDao {
 	
 	//用户登录方法
 	public User getUserByUserId(String userId);
+	public User getUserByUserVehicleLicense(String userId);	
 	public boolean addUser(User user);
 	public ArrayList<User> queryUser(UserQuery userQuery);
 	public boolean updateUser(User user);
 	public User getUserByMany(String many);
+	public boolean deleteUser(String userId); 
 }

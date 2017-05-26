@@ -14,6 +14,7 @@
 		<result property="km" jdbcType="INTEGER" column="km"/>
 		<result property="lastRecordTime" jdbcType="INTEGER" column="lastRecordTime"/>
 		<result property="curStat" jdbcType="VARCHAR" column="curStat"/>
+		<result property="curSet" jdbcType="VARCHAR" column="curSet"/>		
 		<result property="nextStart" jdbcType="INTEGER" column="nextStart"/>
 		<result property="parkingId" jdbcType="INTEGER" column="parkingId"/>
 	</resultMap>
@@ -46,7 +47,7 @@
 		insert into Vehicle (license,route,photo,model,purchasedDate,maintenance,km,lastRecordTime,curStat,parkingId) values(#{license},#{route},#{photo},#{model},#{purchasedDate},#{maintenance},#{km},#{lastRecordTime},#{curStat},#{parkingId})
 	</insert>	
 	<update id="updateVehicle" parameterType="com.model.Vehicle">
-		update Vehicle set route = #{route},model = #{model},purchasedDate = #{purchasedDate},maintenance = #{maintenance},km = #{km},curStat = #{curStat} where license = #{license};
+		update Vehicle set route = #{route},model = #{model},purchasedDate = #{purchasedDate},maintenance = #{maintenance},km = #{km},curStat = #{curStat},curSet = #{curSet} where license = #{license};
 	</update>
 	<insert id="deleteVehicle" parameterType="java.lang.String">
 		delete from Vehicle where license = #{license}

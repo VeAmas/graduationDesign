@@ -5,8 +5,7 @@
 
 <mapper namespace="ParkingSet">
 	<resultMap id="ParkingSetResult" type="com.model.ParkingSet">
-		<id property="setId" jdbcType="VARCHAR" column="setId"/>
-		
+		<id property="setId" jdbcType="VARCHAR" column="setId"/>		
 		<result property="name" jdbcType="VARCHAR" column="name"/>
 		<result property="parkingId" jdbcType="VARCHAR" column="parkingId"/>		
 		<result property="available" jdbcType="VARCHAR" column="available"/>
@@ -16,6 +15,21 @@
 	  
 	<select id="getParkingSetBySetId" parameterType = "java.lang.String" resultMap="ParkingSetResult">
 		SELECT * FROM parkingSet where setId = #{setId}
+	</select>	
+	<select id="queryParkingSet" parameterType="com.model.ParkingSetQuery" resultMap="ParkingSetResult">
+		SELECT * FROM ParkingSet 
+		<where>
+			<if test="name != null and name != ''">
+			     name LIKE CONCAT('%',#{name},'%')
+			</if> 
+			<if test="parkingId != null and parkingId != ''">
+			     and parkingId = #{parkingId}
+			</if> 
+			<if test="available != null and available != ''">
+			    AND available = #{available}
+			</if> 
+		</where>
+		limit #{curPage} , #{itemsPrePage}
 	</select>
 	<select id="getParkingSetByParkingId" parameterType = "java.lang.String" resultMap="ParkingSetResult">
 		SELECT * FROM parkingSet where parkingId = #{parkingId}
@@ -23,6 +37,9 @@
 	<insert id="addParkingSet" parameterType="com.model.ParkingSet">
 		insert into ParkingSet (name,parkingId,available,curVehicle,lastRecordTime) values(#{name},#{parkingId},#{available},#{curVehicle},#{lastRecordTime})
 	</insert>	
+	<update id="updateParkingSet" parameterType="com.model.ParkingSet">
+		update ParkingSet set name = #{name}, curVehicle = #{curVehicle} where setId = #{setId};
+	</update>
 	<delete id="deleteParkingSet" parameterType = "java.lang.String">
 		delete from parkingSet where setId = #{setId}
 	</delete>

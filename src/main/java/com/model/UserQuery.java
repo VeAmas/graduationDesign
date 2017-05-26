@@ -1,36 +1,22 @@
 package com.model;
 
 public class UserQuery {
-	private Integer parkingId;
 	private String name;
-	private String route;
-	private String curStat;
+	private String userType;
 	private String gender;
 	private Integer curPage;
 	private Integer itemsPrePage;
-	public Integer getParkingId() {
-		return parkingId;
-	}
-	public void setParkingId(Integer parkingId) {
-		this.parkingId = parkingId;
-	}
 	public String getName() {
 		return name;
 	}
 	public void setName(String name) {
 		this.name = name;
 	}
-	public String getRoute() {
-		return route;
+	public String getUserType() {
+		return userType;
 	}
-	public void setRoute(String route) {
-		this.route = route;
-	}
-	public String getCurStat() {
-		return curStat;
-	}
-	public void setCurStat(String curStat) {
-		this.curStat = curStat;
+	public void setUserType(String userType) {
+		this.userType = userType;
 	}
 	public String getGender() {
 		return gender;
@@ -50,6 +36,10 @@ public class UserQuery {
 	public void setItemsPrePage(Integer itemsPrePage) {
 		this.itemsPrePage = itemsPrePage;
 	}
-	
+	@Override
+	public String toString() {
+		return "UserQuery [name=" + name + ", userType=" + userType + ", gender=" + gender + ", curPage=" + curPage
+				+ ", itemsPrePage=" + itemsPrePage + "]";
+	}
 	
 }

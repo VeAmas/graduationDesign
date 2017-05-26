@@ -25,19 +25,23 @@
 	<select id="getUserByUserId" parameterType="java.lang.String" resultMap="UserResult">
 		SELECT * FROM User where userId = #{userId}
 	</select>
+	<select id="getUserByUserVehicleLicense" parameterType="java.lang.String" resultMap="UserResult">
+		SELECT * FROM User where curVehicle = #{license}
+	</select>
 	<select id="queryUser" parameterType="com.model.UserQuery" resultMap="UserResult">
 		SELECT * FROM User
-	  	<where> 
+		<where>
 			<if test="userType != null and userType != ''">
 			     userType = #{userType}
 			</if> 
-			<if test="name != null and name != ''">
-			     and name = #{name}
-			</if> 
 			<if test="gender != null and gender != ''">
-			    AND gender = #{gender}
+			     and gender = #{gender}
+			</if> 
+			<if test="name != null and name != ''">
+			    AND name LIKE CONCAT('%',#{name},'%')
 			</if> 
 		</where>
+		limit #{curPage} , #{itemsPrePage}
 	</select>
 	<insert id="addUser" parameterType="com.model.User">
 		insert into User (gender,age,name,userType,ID,address,birth,cellPhone,email,startDate,lastRecordTime,photo) values(#{gender},#{age},#{name},#{userType},#{ID},#{address},#{birth},#{cellPhone},#{email},#{startDate},#{lastRecordTime},#{photo})
@@ -47,7 +51,10 @@
 	</update>
 	<select id="getUserByMany" parameterType="java.lang.String" resultMap="UserResult">
 		SELECT * FROM User where userId = #{many} or email = #{many} or cellPhone = #{many} 
-	</select>
+	</select>	
+	<delete id="deleteUser" parameterType = "java.lang.String">
+		delete from User where userId = #{userId}
+	</delete>
 	
 </mapper>
 
