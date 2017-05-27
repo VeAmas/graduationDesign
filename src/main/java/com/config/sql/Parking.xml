@@ -13,8 +13,15 @@
 	<select id="getParkingById" parameterType="java.lang.String" resultMap="ParkingResult">
 		SELECT * FROM Parking where parkingId = #{parkingId}
 	</select>
-
-	
+	<select id="queryParking" parameterType="com.model.ParkingQuery" resultMap="ParkingResult">
+		SELECT * FROM Parking 
+		<where>
+			<if test="name != null and name != ''">
+			     name LIKE CONCAT('%',#{name},'%')
+			</if> 
+		</where>
+		limit #{curPage} , #{itemsPrePage}
+	</select>
 	
 </mapper>
 

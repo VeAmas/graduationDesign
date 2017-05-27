@@ -1,5 +1,8 @@
 package com.service;
+import java.util.ArrayList;
+
 import com.model.Parking;
+import com.model.ParkingQuery;
 import com.model.ParkingSet;
 
 
@@ -8,4 +11,5 @@ public interface ParkingDao {
 	
 	//用户登录方法
 	public Parking getParkingById(String parkingId);
+	public ArrayList<Parking> queryParking(ParkingQuery pq);
 }

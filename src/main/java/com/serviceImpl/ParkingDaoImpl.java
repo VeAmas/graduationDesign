@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.DButil.DBAccess;
 import com.model.Parking;
+import com.model.ParkingQuery;
 import com.model.ParkingSet;
 import com.model.Vehicle;
 import com.service.ParkingDao;
@@ -39,6 +40,30 @@ public class ParkingDaoImpl implements ParkingDao {
 			p.setSet(ps);
 			p.setVehicles(v);
 			return p;
+		}catch(IOException e){
+			e.printStackTrace();
+		}finally{
+			if(sqlSession != null){
+				sqlSession.close();
+			}			
+		}
+		return null;
+	}
+
+	@Override
+	public ArrayList<Parking> queryParking(ParkingQuery pq) {
+		ArrayList<Parking> v = new ArrayList<Parking>();
+		
+		DBAccess dbAccess = new DBAccess();
+		SqlSession sqlSession = null;
+		try{
+			sqlSession = dbAccess.getSqlSession();
+			List<Object> os;
+			os = sqlSession.selectList("Parking.queryParking", pq);
+			for	(int i = 0; i < os.size(); i++){
+				v.add((Parking)os.get(i));
+			}
+			return v;
 		}catch(IOException e){
 			e.printStackTrace();
 		}finally{

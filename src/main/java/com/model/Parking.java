@@ -6,9 +6,23 @@ public class Parking {
 	private Integer parkingId;
 	private ArrayList<ParkingSet> set;
 	private ArrayList<Vehicle> vehicles;
+	private Integer setNum;
+	private Integer vehicleNum;
 	private String name;
 	private String address;
 	
+	public Integer getSetNum() {
+		return setNum;
+	}
+	public void setSetNum(Integer setNum) {
+		this.setNum = setNum;
+	}
+	public Integer getVehicleNum() {
+		return vehicleNum;
+	}
+	public void setVehicleNum(Integer vehicleNum) {
+		this.vehicleNum = vehicleNum;
+	}
 	public ArrayList<ParkingSet> getSet() {
 		return set;
 	}

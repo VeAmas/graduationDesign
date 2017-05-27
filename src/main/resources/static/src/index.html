@@ -16,8 +16,9 @@
 				<div class="avatar">
 					<img src="img/avatar-default.png" >
 				</div>
-				<div class="form-group">
-					<input class="form-control" type="text" id="username" placeholder="Enter you username" v-model = 'userName'>					
+				<div class="form-group" :class = 'waringUserName ? "has-error" : ""'>
+					<label class="control-label" v-if = 'waringUserName' v-text = 'waringUserName'></label>
+					<input class="form-control" type="text" id="username" placeholder="Enter you username" v-model = 'userName'>	
 				</div>
 				<div class="form-group">
 					<button class="submit btn btn-primary btn-block" @click = 'getUser'>Next</button>					
@@ -30,8 +31,9 @@
 
 				<label class = 'text-center container' v-text='user.name'></label>		
 
-				<div class="form-group">
-					<input class="form-control" type="password" id="password" placeholder="Enter you password" v-model = 'password'>				
+				<div class="form-group" :class = 'waringPassword ? "has-error" : ""'>
+					<label class="control-label" v-if = 'waringPassword' v-text = 'waringPassword'></label>
+					<input class="form-control" type="password" id="password" placeholder="Enter you password" v-model = 'password'>	
 				</div>
 				<div class="form-group">
 					<button class="submit btn btn-primary btn-block" @click = 'login'>Next</button>					
@@ -58,19 +60,29 @@
 			data: {
 				user: null,
 				userName: "",
-				password: ""
+				password: "",
+				waringUserName: '',
+				waringPassword: ''
 			},
 			methods: {
 				getUser: function () {
 					this.$http.post('/user/getUserPhoto', this.userName).then(function(res){
 						console.log(res);
 						this.user = res.data
+						this.waringUserName = ''
+						if (!res.data) {
+							this.waringUserName = '用户名不存在！'
+						}
 					})
 				},
 				login: function () {
 					this.$http.post('/user/login', {many: this.userName, password: this.password}).then(function(res){
 						console.log(res);
-						// this.user = res.data
+						if (res.body) {
+							location = '/src/main.html';
+						} else {
+							this.waringPassword = '密码错误！'
+						}
 					})
 				}
 			}
