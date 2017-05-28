@@ -41,6 +41,15 @@ public class ParkingSetController {
         return ps;  
     }
     
+    @RequestMapping(value = "/getSetNum", method = RequestMethod.POST)  
+    public Integer getSetNum(@RequestBody ParkingSetQuery psq) {  
+		psq.setCurPage(0);
+		psq.setItemsPrePage(10000);
+
+    	ArrayList<ParkingSet> ps = parkingSetDao.queryParkingSet(psq);
+        return ps.size();  
+    }
+    
     @RequestMapping(value = "/updateParkingSet", method = RequestMethod.POST)  
     public Boolean updateParkingSet(@RequestBody ParkingSet ps) {  
     	return parkingSetDao.updateParkingSet(ps);

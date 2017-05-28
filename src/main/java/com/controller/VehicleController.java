@@ -75,6 +75,11 @@ public class VehicleController {
    public ArrayList<String> getAllRoutes() {  
        return vehicleDao.getAllRoutes();
    }
-   
+
+   @RequestMapping(value = "/addVehicle", method = RequestMethod.POST)  
+   public boolean addVehicle(@RequestBody Vehicle vehicle) {  
+   	System.out.println(vehicle);
+       return vehicleDao.addVehicle(vehicle);
+   }   
    
 }

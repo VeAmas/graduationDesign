@@ -42,10 +42,14 @@ public class ParkingController {
     		
     		ParkingSetQuery psq = new ParkingSetQuery();
     		psq.setParkingId(p.get(i).getParkingId());
+    		psq.setCurPage(0);
+    		psq.setItemsPrePage(10000);
     		p.get(i).setSetNum(parkingSetDao.queryParkingSet(psq).size());
     		
     		VehicleQuery vq = new VehicleQuery();
     		vq.setParkingId(p.get(i).getParkingId());
+    		vq.setCurPage(0);
+    		vq.setItemsPrePage(10000);
     		p.get(i).setVehicleNum(vehicleDao.queryVehicle(vq).size());
     	}
         return p;  

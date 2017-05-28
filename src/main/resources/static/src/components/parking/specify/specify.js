@@ -2,7 +2,7 @@ const parking_specify = {
 	template:`
 		<section id = "parking-specify">
 			<div id="left">
-				<list-menu :data="vehicleRoute" name = "停车场列表"></list-menu>
+				<list-menu :data="parkingList" name = "停车场列表"></list-menu>
 			</div>
 			<div id="right">
 				<div class="panel">
@@ -23,11 +23,11 @@ const parking_specify = {
 					      </thead>
 					      <tbody>
 					        <tr v-for="item in parkingSetList">
-					        	<td v-text="item.set.name"></td>
-					        	<td v-text="item.set.available ? '无车辆' : '有车辆'"></td>
-					        	<td v-text="item.vehicle.license"></td>
-					        	<td v-text="item.vehicle.route"></td>
-					        	<td v-text="item.set.lastRecordTime"></td>
+					        	<td v-text="item.name"></td>
+					        	<td v-text="item.available ? '无车辆' : '有车辆'"></td>
+					        	<td v-text="item.license"></td>
+					        	<td v-text="item.route"></td>
+					        	<td v-text="item.lastRecordTime"></td>
 					        	<td class="operate-bar">
 									<a class = "operate" title="指派泊位" @click="parkingSetSpecify.toModal(item)">
 										<span class="glyphicon glyphicon-cog"></span>
@@ -74,6 +74,9 @@ const parking_specify = {
 	`,
 	data(){
 		return {
+			curPage: 0,
+			curParking: null,
+			parkingList: [],
 			vehicleRoute:[],
 			parkingSetList:[],
 			parkingSetSpecify:{
@@ -84,7 +87,65 @@ const parking_specify = {
 			}
 		};
 	},
+	watch: {
+		curParking: function (val, oldVal) {
+			this.getSetList(true);	
+		}
+	},
 	methods:{
+		getSetNum: function(){
+			var _this_ = this;
+			var handlePaginationClick = function (new_page_index, pagination_container) {
+				_this_.curPage = new_page_index;
+				_this_.getSetList();
+			    return false;
+			};
+			this.$http.post('/parkingSet/getSetNum', {
+				parkingId: _this_.curParking.parkingId,
+				name: _this_.curName,
+				available: _this_.curAvailable,				
+			}).then(function(res){
+			
+				$("#vehicle-stat-pagination").pagination(res.body, {
+			        items_per_page:20,
+			        prev_text:"上一页",
+			        next_text:"下一页",
+			        num_display_entries:7,
+			        callback:handlePaginationClick
+				});
+			});
+			
+		},
+		getParkings: function () {
+			var _this_ = this;
+			this.$http.post('/parking/queryParking', {}).then(function(res){
+				if (res.body) {
+					_this_.parkings = res.body;
+					_this_.parkingList = res.body.map(function(v){
+						return v.name;
+					});
+					_this_.curParking = res.body[0];
+					_this_.getSetList();
+					_this_.getSetNum();
+				}
+			})
+		},
+		getSetList: function () {
+			var _this_ = this;
+			var query = {
+				parkingId: _this_.curParking.parkingId,
+				name: _this_.curName,
+				available: _this_.curAvailable,		
+				curPage: _this_.curPage,
+				itemsPrePage: 20
+				
+			};
+			this.$http.post('/parkingSet/queryParkingSet', query).then(function(res){
+				if (res.body) {
+					_this_.parkingSetList = res.body;					
+				}
+			})
+		}	
 	},
 	created(){
 		this.parkingSetSpecify.obj={};
@@ -134,74 +195,11 @@ const parking_specify = {
 		};
 	},
 	mounted(){
+		var _this_ = this;
 		$(this.$el).find(".panel-body").niceScroll({
 			grabcursorenabled: false
 		});
-		function handlePaginationClick(new_page_index, pagination_container) {
-			console.log(new_page_index,pagination_container)
-		    return false;
-		}
-		$("#vehicle-stat-pagination").pagination(1500, {
-	        items_per_page:20,
-	        prev_text:"上一页",
-	        next_text:"下一页",
-	        num_display_entries:7,
-	        callback:handlePaginationClick
-		});
-		var _this_ = this;
-		window.setTimeout(function(){
-
-			_this_.vehicleRoute = [
-				"sdfsef",
-				"546",
-				"sefsfe",
-				"87874356",
-				"sdfsef",
-				"546",
-				"sefsfe",
-				"87874356",
-				"sdfsef",
-				"546",
-				"sefsfe",
-				"87874356",
-				"sdfsef",
-				"546",
-				"sefsfe",
-				"87874356",
-				"sdfsef",
-				"546",
-				"sefsfe",
-				"87874356",
-				"sdfsef",
-				"546",
-				"sefsfe",
-				"87874356",
-				"sdfsef",
-				"546",
-				"sefsfe",
-				"87874356",
-			];
-			_this_.parkingSetList = [{
-				set: {
-					name: '3D',
-					available: false,
-					lastRecordTime:"2016.2.2",
-				},
-				vehicle: {
-					route:"123",
-					license:"浙A·12345",
-					photo:"img/avatar-default.png",
-					model:"",
-					purchasedDate:"2015-3-10",
-					maintenance:"",
-					km:"",
-					lastRecordTime:"2016.2.2",
-					curStat:"出车"
-				}
-			}];
-			for(var i = 0;i<30;i++){
-				_this_.parkingSetList.push(_this_.parkingSetList[0]);
-			}
-		},1000);
+		this.getParkings()
 	}
+
 };

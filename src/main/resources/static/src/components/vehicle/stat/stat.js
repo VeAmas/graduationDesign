@@ -8,6 +8,7 @@ const vehicle_stat = {
 				<div class="panel">
 					<div class="panel-head">
 						车辆列表
+						<a  @click = 'addVehicle.toModal()'>asdf</a>
 					</div>
 					<div class="panel-body">
 						<table class="table table-striped table-hover">
@@ -170,6 +171,71 @@ const vehicle_stat = {
 					<button class="btn cancle" @click="vehicleDelete.clear()">取消</button>
 				</div>
 			</modal>
+			
+			<modal v-if = "addVehicle.isShow" id="vehicle_modify">
+				<div class="modal-header">
+					<h4 class="modal-title">车辆修改</h4>
+				</div>
+				<div class="modal-body">
+					<div class="vehicle-info">
+						<div class="photo">
+							<img :src="addVehicle.obj.photo" />
+						</div>
+						<div class="stat">
+							<table>
+								<tr>
+									<td>车牌号</td>
+									<td>
+										<select class = 'license' v-model="addVehicle.obj.license.front">
+											<option v-for="p in common.province" :value="p" v-text="p"></option>
+										</select>
+										<input class = 'license end' type="text" v-model="addVehicle.obj.license.end" maxlength="5"/>
+										<input class = 'license middle' type="text" v-model="addVehicle.obj.license.middle" maxlength="1"/>
+									</td>
+								</tr>
+								<tr><td>公交线路</td>
+									<td>
+										<input type="text" v-model="addVehicle.obj.route"/>
+									</td>
+								</tr>
+								<tr><td>车辆型号</td>
+									<td>
+										<input type="text" v-model="addVehicle.obj.model"/>
+									</td>
+								</tr>
+								<tr><td>购买日期</td>
+									<td>
+										<datetime-picker class='purchasedDate' :data="addVehicle.obj.purchasedDate"></datetime-picker>
+									</td>
+								</tr>
+								<tr><td>保养等级</td>
+									<td>
+										<select v-model="addVehicle.obj.maintenance">
+											<option v-for="p in common.maintenanceLevel" :value="p" v-text="p"></option>
+										</select>
+									</td>
+								</tr>
+								<tr><td>行驶公里数</td>
+									<td>
+										<input type="text" v-model="addVehicle.obj.km"/>
+									</td>
+								</tr>
+								<tr><td>当前状态</td>
+									<td>
+										<select v-model="addVehicle.obj.curStat">
+											<option v-for="p in common.vehicleStat" :value="p" v-text="p"></option>
+										</select>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button class="btn ok" @click="addVehicle.execute()">确认</button>
+					<button class="btn cancle" @click="addVehicle.clear()">关闭</button>
+				</div>
+			</modal>
 		</section>
 	`,
 	data(){
@@ -186,6 +252,9 @@ const vehicle_stat = {
 			},
 			vehicleDelete:{
 				isShow:false
+			},
+			addVehicle:{
+				isShow: false
 			}
 		};
 	}, 
@@ -324,6 +393,33 @@ const vehicle_stat = {
 			this.isShow = false;
 		};
 		this.vehicleDelete.clear = function () {
+			this.obj = {};
+			this.isShow = false;
+		};
+		
+		this.addVehicle.obj={};
+		this.addVehicle.toModal = function () {
+			console.log(this)
+			this.obj.license = {
+				front:'',
+				middle: '',
+				end: ''
+			};	
+			this.isShow = true;
+		};
+		this.addVehicle.execute = function () {
+			var __this = this;
+			this.obj.license = this.obj.license.front + this.obj.license.middle+this.obj.license.end;
+			_this.$http.post('/vehicle/addVehicle', this.obj).then(function(res){
+				console.log(res)
+				_this.getVehicleList();
+				_this.getVehicleNum();	
+			}, function(err){
+				console.error(err)
+			})
+			this.isShow = false;
+		};
+		this.addVehicle.clear = function () {
 			this.obj = {};
 			this.isShow = false;
 		};

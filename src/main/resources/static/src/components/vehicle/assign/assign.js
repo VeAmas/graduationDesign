@@ -23,10 +23,10 @@ const vehicle_assign = {
 					      </thead>
 					      <tbody>
 					        <tr v-for="item in vehicleList">
-					        	<td v-text="item.vehicle.route"></td>
-					        	<td v-text="item.vehicle.license"></td>
-					        	<td v-text="item.driver.name"></td>
-					        	<td v-text="item.vehicle.curStat"></td>
+					        	<td v-text="item.route"></td>
+					        	<td v-text="item.license"></td>
+					        	<td v-text="item.curUser"></td>
+					        	<td v-text="item.curStat"></td>
 					        	<td>
 									<a v-text="item.nextStart" title="出车" @click="modifyNextStart.toModal(item)"></a>
 					        	</td>
@@ -47,20 +47,20 @@ const vehicle_assign = {
 			</div> 		
 			<modal v-if = "startOut.isShow" id="startOut">
 				<div class="modal-header">
-					<h4 class="modal-title">是否派出车辆&nbsp;<span class="high-light" v-text="startOut.obj.vehicle.license"></span>&nbsp;？</h4>
+					<h4 class="modal-title">是否派出车辆&nbsp;<span class="high-light" v-text="startOut.obj.license"></span>&nbsp;？</h4>
 				</div>
 				<div class="modal-footer">
-					<button class="btn ok" @click="startOut.clear()">确认</button>
+					<button class="btn ok" @click="startOut.execute()">确认</button>
 					<button class="btn cancle" @click="startOut.clear()">取消</button>
 				</div>
 			</modal>
 			<modal v-if = "modifyNextStart.isShow" id="modifyNextStart">
 				<div class="modal-header">
-					<h4 class="modal-title">修改车牌号为 &nbsp;<span class="high-light" v-text="modifyNextStart.obj.vehicle.license"></span>&nbsp;的车辆的下次发车时间至：</h4></br>
+					<h4 class="modal-title">修改车牌号为 &nbsp;<span class="high-light" v-text="modifyNextStart.obj.license"></span>&nbsp;的车辆的下次发车时间至：</h4></br>
 					<datetime-picker class='modifyNextStartDatetimePicker' :data="modifyNextStart.obj.nextStart"></datetime-picker>
 				</div>
 				<div class="modal-footer">
-					<button class="btn ok" @click="modifyNextStart.clear()">确认</button>
+					<button class="btn ok" @click="modifyNextStart.execute()">确认</button>
 					<button class="btn cancle" @click="modifyNextStart.clear()">取消</button>
 				</div>
 			</modal>
@@ -68,6 +68,8 @@ const vehicle_assign = {
 	`,
 	data(){
 		return {
+			curRoute: null,
+			curPage: 0,
 			vehicleRoute:[],
 			vehicleList:[],
 			startOut:{
@@ -78,9 +80,72 @@ const vehicle_assign = {
 			}
 		};
 	},
+	watch: {
+		curRoute: function (val, oldVal) {
+			this.getVehicleList(true);	
+		}
+	},
 	methods:{
+		getVehicleNum: function(){
+			var _this_ = this;
+			var handlePaginationClick = function (new_page_index, pagination_container) {
+				_this_.curPage = new_page_index;
+				_this_.getVehicleList();
+			    return false;
+			};
+			this.$http.post('/vehicle/getVehicleNum', {
+				route: _this_.curRoute,
+				license: _this_.curLicense,
+				curStat: _this_.curStat,				
+			}).then(function(res){
+			
+				$("#vehicle-stat-pagination").pagination(res.body, {
+			        items_per_page:20,
+			        prev_text:"上一页",
+			        next_text:"下一页",
+			        num_display_entries:7,
+			        callback:handlePaginationClick
+				});
+			});
+			
+		},
+		getVehicleRoutes: function () {
+			var _this_ = this;
+			this.$http.post('/vehicle/getAllRoutes').then(function(res){
+				if (res.body) {
+					_this_.vehicleRoute = res.body;
+					_this_.curRoute = res.body[0];
+					_this_.getVehicleList();
+					_this_.getVehicleNum();
+				}
+			})
+		},
+		getVehicleList: function () {
+			var _this_ = this;
+			var query = {
+				route: _this_.curRoute,
+				license: _this_.curLicense,
+				curStat: _this_.curStat,
+				curPage: _this_.curPage,
+				itemsPrePage: 20
+				
+			};
+			this.$http.post('/vehicle/queryVehicle', {
+					route: _this_.curRoute,
+					license: _this_.curLicense,
+					curStat: _this_.curStat,
+					curPage: _this_.curPage,
+					itemsPrePage: 20
+					
+				}).then(function(res){
+				if (res.body) {
+					_this_.vehicleList = res.body;					
+				}
+			})
+		}
 	},
 	created(){
+		var _this = this;
 		this.$on("select",function (selected) {
 			console.log(selected);
 		});
@@ -95,7 +160,12 @@ const vehicle_assign = {
 			this.isShow = false;
 		};
 		this.startOut.execute = function () {
-			this.obj = {};
+			this.obj.curStat = '出车';
+			_this.$http.post('/vehicle/updateVehicle', this.obj).then(function(res){
+				_this.getVehicleList();
+			}, function(error){
+				console.error(error)
+			})
 			this.isShow = false;
 		};
 
@@ -109,87 +179,24 @@ const vehicle_assign = {
 			this.isShow = false;
 		};
 		this.modifyNextStart.execute = function () {
-			this.obj = {};
+			this.obj.nextStart = new Date(this.obj.nextStart).getTime();
+			console.log(this.obj)
+			_this.$http.post('/vehicle/updateVehicle', this.obj).then(function(res){
+				_this.getVehicleList();
+			}, function(error){
+				console.error(error)
+			})
 			this.isShow = false;
 		};
 	},
 	mounted(){
+		var _this_ = this;
 		$(this.$el).find(".panel-body").niceScroll({
 			grabcursorenabled: false
 		});
-		function handlePaginationClick(new_page_index, pagination_container) {
-			console.log(new_page_index,pagination_container)
-		    return false;
-		}
-		$("#vehicle-stat-pagination").pagination(1500, {
-	        items_per_page:20,
-	        prev_text:"上一页",
-	        next_text:"下一页",
-	        num_display_entries:7,
-	        callback:handlePaginationClick
-		});
-		var _this_ = this;
-		window.setTimeout(function(){
 
-			_this_.vehicleRoute = [
-				"sdfsef",
-				"546",
-				"sefsfe",
-				"87874356",
-				"sdfsef",
-				"546",
-				"sefsfe",
-				"87874356",
-				"sdfsef",
-				"546",
-				"sefsfe",
-				"87874356",
-				"sdfsef",
-				"546",
-				"sefsfe",
-				"87874356",
-				"sdfsef",
-				"546",
-				"sefsfe",
-				"87874356",
-				"sdfsef",
-				"546",
-				"sefsfe",
-				"87874356",
-				"sdfsef",
-				"sefsfe",
-				"87874356",
-			];
-			_this_.vehicleList = [{
-				vehicle:{
-					route:"123",
-					license:"浙A·12345",
-					photo:"img/avatar-default.png",
-					model:"",
-					purchasedDate:"2015-3-10",
-					maintenance:"",
-					km:"",
-					lastRecordTime:"2016.2.2",
-					curStat:"出车"
-				},
-				driver:{
-					name:"张晓丽",
-					age:"32",
-					photo:"img/avatar-default.png",
-					gender:"女",
-					birth:"",
-					ID:"",
-					address:"",
-					cellPhone:"",
-					email:"",
-					startDate:""
-				},
-				nextStart: '2016.2.2'
+		this.getVehicleRoutes()
 
-			}];
-			for(var i = 0;i<30;i++){
-				_this_.vehicleList.push(_this_.vehicleList[0]);
-			}
-		},1000);
+
 	}
 };
