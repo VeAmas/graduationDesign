@@ -54,7 +54,8 @@ public class UserController {
     }
     
     @RequestMapping(value = "/getUserByCurVehicle", method = RequestMethod.POST)  
-    public User getUserByCurVehicle(@RequestBody String license) {    	
+    public User getUserByCurVehicle(@RequestBody String license) {   
+    	System.out.println(license); 	
     	User u = userDao.getUserByUserVehicleLicense(license);
     	return u;
     }

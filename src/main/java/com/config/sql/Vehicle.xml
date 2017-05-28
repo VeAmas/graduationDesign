@@ -18,6 +18,10 @@
 		<result property="nextStart" jdbcType="INTEGER" column="nextStart"/>
 		<result property="parkingId" jdbcType="INTEGER" column="parkingId"/>
 	</resultMap>
+	
+	<resultMap id="String" type="java.lang.String">
+		<result property="route" jdbcType="VARCHAR" column="route"/>
+	</resultMap>
 	  
 	<select id="getVehicleByLicense" parameterType="java.lang.String" resultMap="VehicleResult">
 		SELECT * FROM vehicle where license = #{license}
@@ -42,6 +46,9 @@
 			</if> 
 		</where>
 		limit #{curPage} , #{itemsPrePage}
+	</select>
+	<select id="getAllRoutes" resultMap="String">
+		SELECT DISTINCT route FROM vehicle;
 	</select>
 	<insert id="addVehicle" parameterType="com.model.Vehicle">
 		insert into Vehicle (license,route,photo,model,purchasedDate,maintenance,km,lastRecordTime,curStat,parkingId) values(#{license},#{route},#{photo},#{model},#{purchasedDate},#{maintenance},#{km},#{lastRecordTime},#{curStat},#{parkingId})

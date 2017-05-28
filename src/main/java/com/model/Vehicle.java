@@ -11,6 +11,7 @@ public class Vehicle {
     private Integer lastRecordTime;
     private String curStat;
     private String curSet;
+    private String curUser;
     private Integer nextStart;
     private Integer parkingId;
     
@@ -92,6 +93,12 @@ public class Vehicle {
 		return "Vehicle [route=" + route + ", license=" + license + ", photo=" + photo + ", model=" + model
 				+ ", purchasedDate=" + purchasedDate + ", maintenance=" + maintenance + ", km=" + km
 				+ ", lastRecordTime=" + lastRecordTime + ", curStat=" + curStat + ", nextStart=" + nextStart + "]";
+	}
+	public String getCurUser() {
+		return curUser;
+	}
+	public void setCurUser(String curUser) {
+		this.curUser = curUser;
 	}
 	
 	

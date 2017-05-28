@@ -158,5 +158,28 @@ public class VehicleDaoImpl implements VehicleDao {
 		return null;
 	}
 
+	@Override
+	public ArrayList<String> getAllRoutes() {
+		ArrayList<String> res = new ArrayList<String>();
+		DBAccess dbAccess = new DBAccess();
+		SqlSession sqlSession = null;
+		try{
+			sqlSession = dbAccess.getSqlSession();
+			List<Object> os;
+			os = sqlSession.selectList("Vehicle.getAllRoutes");
+			for (int i = 0; i< os.size(); i++) {
+				res.add((String)os.get(i));
+			}
+			return res;
+		}catch(IOException e){
+			e.printStackTrace();
+		}finally{
+			if(sqlSession != null){
+				sqlSession.close();
+			}			
+		}
+		return null;
+	}
+
 
 }

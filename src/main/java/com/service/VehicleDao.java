@@ -17,4 +17,5 @@ public interface VehicleDao {
 	public boolean changeVehicleStatus(Vehicle vehicle);
 	public boolean changeVehicleNestStart(Vehicle vehicle);
 	public ArrayList<Vehicle> queryVehicle(VehicleQuery vehicleQuery);
+	public ArrayList<String> getAllRoutes();
 }

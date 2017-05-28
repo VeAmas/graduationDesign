@@ -30,8 +30,8 @@ Vue.component("list-menu",{
 		click(v){
 			this.$parent.$emit("select",v.name);
 			for(var i = 0;i<this.items.length;i++){
-				this.$set(this.items[i],"name","sdf");
-				console.log(this.items[i]);
+//				this.$set(this.items[i],"name","sdf");
+//				console.log(this.items[i]);
 			}
 		}
 	},
