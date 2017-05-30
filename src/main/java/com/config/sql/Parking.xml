@@ -21,7 +21,10 @@
 			</if> 
 		</where>
 		limit #{curPage} , #{itemsPrePage}
-	</select>
+	</select>	
+	<insert id="addParking" parameterType="com.model.Parking">
+		insert into Parking (name,address) values(#{name},#{address})
+	</insert>	
 	
 </mapper>
 

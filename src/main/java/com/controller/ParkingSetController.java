@@ -41,6 +41,12 @@ public class ParkingSetController {
         return ps;  
     }
     
+    @RequestMapping(value = "/addParkingSet", method = RequestMethod.POST)  
+    public boolean addParkingSet(@RequestBody ParkingSet parkingSet) {  
+    	System.out.println(parkingSet);
+        return parkingSetDao.addParkingSet(parkingSet);
+    }
+    
     @RequestMapping(value = "/getSetNum", method = RequestMethod.POST)  
     public Integer getSetNum(@RequestBody ParkingSetQuery psq) {  
 		psq.setCurPage(0);
@@ -53,6 +59,12 @@ public class ParkingSetController {
     @RequestMapping(value = "/updateParkingSet", method = RequestMethod.POST)  
     public Boolean updateParkingSet(@RequestBody ParkingSet ps) {  
     	return parkingSetDao.updateParkingSet(ps);
+    }
+
+    @RequestMapping(value = "/deleteParkingSet", method = RequestMethod.POST)  
+    public boolean deleteParkingSet(@RequestBody String setId) {  
+    	System.out.println(setId);
+        return parkingSetDao.deleteParkingSet(setId);
     }
     
     @RequestMapping(value = "/specify", method = RequestMethod.POST)  

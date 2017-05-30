@@ -7,12 +7,29 @@
   padding: 20px;
 }
 
+#vehicle-assign #top {
+  position: absolute;
+  left: 230px;
+  right: 0;
+  top: 0;
+  height: 105px;
+  padding: 20px;
+}
+
+#vehicle-assign #top .panel {
+  padding: 20px;
+}
+
+#vehicle-assign #top .panel .form-inline {
+  padding-right: 30px;
+}
+
 #vehicle-assign #right {
   position: absolute;
   left: 230px;
   right: 0;
   bottom: 0;
-  top: 0;
+  top: 85px;
   padding: 20px;
 }
 

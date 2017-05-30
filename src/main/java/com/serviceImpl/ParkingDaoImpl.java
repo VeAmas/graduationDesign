@@ -74,4 +74,23 @@ public class ParkingDaoImpl implements ParkingDao {
 		return null;
 	}
 
+	@Override
+	public Boolean addParking(Parking p) {
+		DBAccess dbAccess = new DBAccess();
+		SqlSession sqlSession = null;
+		try{
+			sqlSession = dbAccess.getSqlSession();
+			sqlSession.insert("Parking.addParking", p);
+			sqlSession.commit();
+			return true;
+		}catch(IOException e){
+			e.printStackTrace();
+		}finally{
+			if(sqlSession != null){
+				sqlSession.close();
+			}			
+		}
+		return false;
+	}
+
 }

@@ -1,21 +1,38 @@
-#parking-stat {
+#parking-stat #top {
+  position: absolute;
+  left: 0px;
+  right: 0;
+  top: 0;
+  height: 105px;
+  padding: 20px;
+}
+
+#parking-stat #top .panel {
+  padding: 20px;
+}
+
+#parking-stat #top .panel .form-inline {
+  padding-right: 30px;
+}
+
+#parking-stat #bottom {
   position: absolute;
   left: 0px;
   right: 0;
   bottom: 0;
-  top: 0;
+  top: 85px;
   padding: 20px;
 }
 
-#parking-stat .panel {
+#parking-stat #bottom .panel {
   padding-bottom: 40px;
 }
 
-#parking-stat td, #parking-stat th {
+#parking-stat #bottom td, #parking-stat #bottom th {
   text-align: center;
 }
 
-#parking-stat .operate-bar {
+#parking-stat #bottom .operate-bar {
   width: 120px;
 }
 

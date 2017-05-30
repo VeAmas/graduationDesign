@@ -18,6 +18,10 @@ Vue.prototype.common = {
 	gender:[
 		"男",
 		"女"
+	],
+	available: [
+		"无车辆",
+		"有车辆"
 	]
 };
 $.datetimepicker.setLocale('ch');

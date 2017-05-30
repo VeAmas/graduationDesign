@@ -38,7 +38,7 @@
 		insert into ParkingSet (name,parkingId,available,curVehicle,lastRecordTime) values(#{name},#{parkingId},#{available},#{curVehicle},#{lastRecordTime})
 	</insert>	
 	<update id="updateParkingSet" parameterType="com.model.ParkingSet">
-		update ParkingSet set name = #{name}, curVehicle = #{curVehicle} where setId = #{setId};
+		update ParkingSet set name = #{name}, curVehicle = #{curVehicle}, lastRecordTime = #{lastRecordTime} where setId = #{setId};
 	</update>
 	<delete id="deleteParkingSet" parameterType = "java.lang.String">
 		delete from parkingSet where setId = #{setId}

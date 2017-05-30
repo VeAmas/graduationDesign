@@ -4,10 +4,33 @@ const parking_specify = {
 			<div id="left">
 				<list-menu :data="parkingList" name = "停车场列表"></list-menu>
 			</div>
+			<div id="top">
+				<div class="panel">
+					<div class="form-inline">
+						<label for="">泊位名称</label>
+						<input v-model = 'query.name' type="text" />
+					</div>
+					<div class="form-inline">
+						<label for="">泊位状态</label>
+						<select name="" id="" v-model='query.available'>
+							<option v-for="item in common.available" :value="item==='无车辆'" v-text="item"></option>
+						</select>
+					</div>
+					<div class="form-inline fr">
+						<button @click = 'getSetList()'>筛选</button>
+					</div>
+					<div class="form-inline fr">
+						<button @click = 'query = {}'>清空</button>
+					</div>
+				</div>
+			</div>
 			<div id="right">
 				<div class="panel">
 					<div class="panel-head">
-						车辆列表
+						泊位列表
+						<div class="form-inline">
+							<button  @click = 'parkingSetAdd.toModal()'><span class="glyphicon glyphicon-plus"></span>&nbsp;添加泊位</button>
+						</div>
 					</div>
 					<div class="panel-body">
 						<table class="table table-striped table-hover">
@@ -16,7 +39,6 @@ const parking_specify = {
 					          <th>泊位编号</th>
 					          <th>泊位状态</th>
 					          <th>当前停泊车辆</th>
-					          <th>停泊线路</th>
 					          <th>更新时间</th>
 					          <th>操作</th>
 					        </tr>
@@ -24,11 +46,13 @@ const parking_specify = {
 					      <tbody>
 					        <tr v-for="item in parkingSetList">
 					        	<td v-text="item.name"></td>
-					        	<td v-text="item.available ? '无车辆' : '有车辆'"></td>
-					        	<td v-text="item.license"></td>
-					        	<td v-text="item.route"></td>
-					        	<td v-text="item.lastRecordTime"></td>
+					        	<td v-text="item.curVehicle ? '有车辆' : '无车辆'"></td>
+					        	<td v-text="item.curVehicle"></td>
+					        	<td v-text="new Date(item.lastRecordTime*1000).toLocaleString()"></td>
 					        	<td class="operate-bar">
+									<a class = "operate" title="修改泊位" @click="parkingSetModify.toModal(item)">
+										<span class="glyphicon glyphicon-file"></span>
+									</a>
 									<a class = "operate" title="指派泊位" @click="parkingSetSpecify.toModal(item)">
 										<span class="glyphicon glyphicon-cog"></span>
 									</a>
@@ -53,7 +77,7 @@ const parking_specify = {
 				<div class="modal-body">
 					您将把该车位指派给&nbsp;<span class="high-light">车辆&nbsp;</span> 
 					<select  v-model="parkingSetSpecify.obj.specifyVehicle">
-						<option v-for='item in parkingSetSpecify.vehicleList' v-text='item.license' :value='item.license'/>
+						<option v-for='item in parkingSetSpecify.obj' v-text='item.license' :value='item.license'/>
 					</select>
 				</div>
 				<div class="modal-footer">
@@ -63,17 +87,48 @@ const parking_specify = {
 			</modal>
 			<modal v-if = "parkingSetDelete.isShow" id="vehicle_delete">
 				<div class="modal-header">
-					<h4 class="modal-title">是否删除编号为&nbsp;<span class="high-light" v-text="parkingSetDelete.obj.set.name"></span>&nbsp;的车位？</h4>
+					<h4 class="modal-title">是否删除编号为&nbsp;<span class="high-light" v-text="parkingSetDelete.obj.name"></span>&nbsp;的车位？</h4>
 				</div>
 				<div class="modal-footer">
-					<button class="btn ok" @click="parkingSetDelete.clear()">确认</button>
+					<button class="btn ok" @click="parkingSetDelete.execute()">确认</button>
 					<button class="btn cancle" @click="parkingSetDelete.clear()">取消</button>
+				</div>
+			</modal>
+			<modal v-if = "parkingSetAdd.isShow" id="vehicle_delete">
+				<div class="modal-header">
+					<h4 class="modal-title">添加泊位</h4>
+				</div>
+				<div class="modal-body">
+					<div class="form-inline">
+						<label for="">泊位名称</label>
+						<input type="text" v-model = 'parkingSetAdd.obj'/>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button class="btn ok" @click="parkingSetAdd.execute()">确认</button>
+					<button class="btn cancle" @click="parkingSetAdd.clear()">取消</button>
+				</div>
+			</modal>
+			<modal v-if = "parkingSetModify.isShow" id="vehicle_delete">
+				<div class="modal-header">
+					<h4 class="modal-title">添加泊位</h4>
+				</div>
+				<div class="modal-body">
+					<div class="form-inline">
+						<label for="">泊位名称</label>
+						<input type="text" v-model = 'parkingSetModify.obj.name'/>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button class="btn ok" @click="parkingSetModify.execute()">确认</button>
+					<button class="btn cancle" @click="parkingSetModify.clear()">取消</button>
 				</div>
 			</modal>
 		</section>
 	`,
 	data(){
 		return {
+			query: {},
 			curPage: 0,
 			curParking: null,
 			parkingList: [],
@@ -83,6 +138,12 @@ const parking_specify = {
 				isShow:false
 			},
 			parkingSetDelete:{
+				isShow:false
+			},
+			parkingSetAdd:{
+				isShow:false
+			},
+			parkingSetModify:{
 				isShow:false
 			}
 		};
@@ -102,8 +163,8 @@ const parking_specify = {
 			};
 			this.$http.post('/parkingSet/getSetNum', {
 				parkingId: _this_.curParking.parkingId,
-				name: _this_.curName,
-				available: _this_.curAvailable,				
+				name: _this_.query.name,
+				available: _this_.query.available			
 			}).then(function(res){
 			
 				$("#vehicle-stat-pagination").pagination(res.body, {
@@ -134,8 +195,8 @@ const parking_specify = {
 			var _this_ = this;
 			var query = {
 				parkingId: _this_.curParking.parkingId,
-				name: _this_.curName,
-				available: _this_.curAvailable,		
+				name: _this_.query.name,
+				available: _this_.query.available,		
 				curPage: _this_.curPage,
 				itemsPrePage: 20
 				
@@ -148,36 +209,37 @@ const parking_specify = {
 		}	
 	},
 	created(){
+		var _this = this;
 		this.parkingSetSpecify.obj={};
-		this.parkingSetSpecify.toModal = function () {
-			this.vehicleList = [{
-				route:"123",
-				license:"浙A·12345",
-				photo:"img/avatar-default.png",
-				model:"",
-				purchasedDate:"2015-3-10",
-				maintenance:"",
-				km:"",
-				lastRecordTime:"2016.2.2",
-				curStat:"出车"
-			},{
-				route:"123",
-				license:"浙A·12345",
-				photo:"img/avatar-default.png",
-				model:"",
-				purchasedDate:"2015-3-10",
-				maintenance:"",
-				km:"",
-				lastRecordTime:"2016.2.2",
-				curStat:"出车"
-			}];
-			this.isShow = true;
+		this.parkingSetSpecify.toModal = function (set) {
+			this.curSet = set;
+			var __this = this;
+			_this.$http.post('/vehicle/queryVehicle', {
+				parkingId: _this.curParking.parkingId
+			}).then(function (res) {
+				__this.obj = [{}].concat(res.body);
+				__this.obj.specifyVehicle = set.curVehicle
+				__this.isShow = true;
+			}, function (err) {
+				console.error(err);
+			})
 		};
 		this.parkingSetSpecify.clear = function () {
 			this.isShow = false;
 		};
 		this.parkingSetSpecify.execute = function () {
-			this.isShow = false;
+			var __this = this;
+			_this.$http.post('/parkingSet/specify', {
+				setId: this.curSet.setId,
+				license: this.obj.specifyVehicle
+			}).then(function (res) {
+				__this.obj = [{}].concat(res.body);
+				__this.isShow = false;
+				_this.getSetList();
+			}, function (err) {
+				console.error(err);
+				this.isShow = false;
+			})
 		};
 
 		this.parkingSetDelete.obj={};
@@ -186,10 +248,63 @@ const parking_specify = {
 			this.isShow = true;
 		};
 		this.parkingSetDelete.execute = function () {
+			var __this = this;
+			_this.$http.post('/parkingSet/deleteParkingSet', this.obj.setId).then(function (res) {
+				__this.isShow = false;
+				_this.getSetList();
+			}, function (err) {
+				console.error(err);
+				this.isShow = false;
+			})
+		};
+		this.parkingSetDelete.clear = function () {
 			this.obj = {};
 			this.isShow = false;
 		};
-		this.parkingSetDelete.clear = function () {
+		
+		this.parkingSetAdd.obj={};
+		this.parkingSetAdd.toModal = function (item) {
+			this.obj = item;
+			this.isShow = true;
+		};
+		this.parkingSetAdd.execute = function () {
+			var __this = this;
+			_this.$http.post('/parkingSet/addParkingSet', {
+				name: this.obj,
+			    available: true,
+			    curVehicle: null,
+			    parkingId: _this.curParking.parkingId,
+			    lastRecordTime: new Date().getTime()/1000
+			}).then(function (res) {
+				__this.isShow = false;
+				_this.getSetList();
+			}, function (err) {
+				console.error(err);
+				this.isShow = false;
+			})
+		};
+		this.parkingSetAdd.clear = function () {
+			this.obj = {};
+			this.isShow = false;
+		};
+		
+		this.parkingSetModify.obj={};
+		this.parkingSetModify.toModal = function (item) {
+			this.obj = item;
+			this.isShow = true;
+		};
+		this.parkingSetModify.execute = function () {
+			var __this = this;
+			this.obj.lastRecordTime = new Date().getTime()/1000; 
+			_this.$http.post('/parkingSet/updateParkingSet', this.obj ).then(function (res) {
+				__this.isShow = false;
+				_this.getSetList();
+			}, function (err) {
+				console.error(err);
+				this.isShow = false;
+			})
+		};
+		this.parkingSetModify.clear = function () {
 			this.obj = {};
 			this.isShow = false;
 		};

@@ -12,4 +12,5 @@ public interface ParkingDao {
 	//用户登录方法
 	public Parking getParkingById(String parkingId);
 	public ArrayList<Parking> queryParking(ParkingQuery pq);
+	public Boolean addParking (Parking p);
 }

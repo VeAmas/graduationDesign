@@ -4,6 +4,26 @@ const vehicle_assign = {
 			<div id="left">
 				<list-menu :data="vehicleRoute" name = "公交路线"></list-menu>
 			</div>
+			<div id="top">
+				<div class="panel">
+					<div class="form-inline">
+						<label for="">车辆牌照</label>
+						<input v-model = 'query.license' type="text" />
+					</div>
+					<div class="form-inline">
+						<label for="">当前状态</label>
+						<select name="" id="" v-model='query.curStat'>
+							<option v-for="item in common.vehicleStat" :value="item" v-text="item"></option>
+						</select>
+					</div>
+					<div class="form-inline fr">
+						<button @click = 'getVehicleNum();getVehicleList()'>筛选</button>
+					</div>
+					<div class="form-inline fr">
+						<button @click = 'query = {}'>清空</button>
+					</div>
+				</div>
+			</div>
 			<div id="right">
 				<div class="panel">
 					<div class="panel-head">
@@ -31,7 +51,7 @@ const vehicle_assign = {
 									<a v-text="item.nextStart" title="出车" @click="modifyNextStart.toModal(item)"></a>
 					        	</td>
 					        	<td class="operate-bar">
-									<a class = "operate" title="出车" @click="startOut.toModal(item)">
+									<a v-show='item.curStat === "停车"' class = "operate" title="出车" @click="startOut.toModal(item)">
 										出车
 									</a>
 					        	</td>
@@ -68,6 +88,7 @@ const vehicle_assign = {
 	`,
 	data(){
 		return {
+			query: {},
 			curRoute: null,
 			curPage: 0,
 			vehicleRoute:[],
@@ -83,6 +104,7 @@ const vehicle_assign = {
 	watch: {
 		curRoute: function (val, oldVal) {
 			this.getVehicleList(true);	
+			console.log(val)
 		}
 	},
 	methods:{
@@ -95,8 +117,8 @@ const vehicle_assign = {
 			};
 			this.$http.post('/vehicle/getVehicleNum', {
 				route: _this_.curRoute,
-				license: _this_.curLicense,
-				curStat: _this_.curStat,				
+				license: _this_.query.license,
+				curStat: _this_.query.curStat		
 			}).then(function(res){
 			
 				$("#vehicle-stat-pagination").pagination(res.body, {
@@ -122,18 +144,10 @@ const vehicle_assign = {
 		},
 		getVehicleList: function () {
 			var _this_ = this;
-			var query = {
-				route: _this_.curRoute,
-				license: _this_.curLicense,
-				curStat: _this_.curStat,
-				curPage: _this_.curPage,
-				itemsPrePage: 20
-				
-			};
 			this.$http.post('/vehicle/queryVehicle', {
 					route: _this_.curRoute,
-					license: _this_.curLicense,
-					curStat: _this_.curStat,
+					license: _this_.query.license,
+					curStat: _this_.query.curStat,		
 					curPage: _this_.curPage,
 					itemsPrePage: 20
 					
@@ -147,7 +161,7 @@ const vehicle_assign = {
 	created(){
 		var _this = this;
 		this.$on("select",function (selected) {
-			console.log(selected);
+			this.curRoute = selected;
 		});
 
 		this.startOut.obj={};
@@ -161,6 +175,7 @@ const vehicle_assign = {
 		};
 		this.startOut.execute = function () {
 			this.obj.curStat = '出车';
+			this.obj.lastRecordTime = new Date().getTime()/1000;
 			_this.$http.post('/vehicle/updateVehicle', this.obj).then(function(res){
 				_this.getVehicleList();
 			}, function(error){

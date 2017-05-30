@@ -94,6 +94,7 @@
 
 .form-inline select, .form-inline input {
   border-color: #1e262c;
+  color: #1e262c;
 }
 
 .form-inline button {

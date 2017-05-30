@@ -4,11 +4,33 @@ const vehicle_stat = {
 			<div id="left">
 				<list-menu :data="vehicleRoute" name = "公交路线"></list-menu>
 			</div>
+			<div id="top">
+				<div class="panel">
+					<div class="form-inline">
+						<label for="">车辆牌照</label>
+						<input v-model = 'query.license' type="text" />
+					</div>
+					<div class="form-inline">
+						<label for="">当前状态</label>
+						<select name="" id="" v-model='query.curStat'>
+							<option v-for="item in common.vehicleStat" :value="item" v-text="item"></option>
+						</select>
+					</div>
+					<div class="form-inline fr">
+						<button @click = 'getVehicleNum();getVehicleList()'>筛选</button>
+					</div>
+					<div class="form-inline fr">
+						<button @click = 'query = {}'>清空</button>
+					</div>
+				</div>
+			</div>
 			<div id="right">
 				<div class="panel">
 					<div class="panel-head">
 						车辆列表
-						<a  @click = 'addVehicle.toModal()'>asdf</a>
+						<div class="form-inline">
+							<button  @click = 'addVehicle.toModal()'><span class="glyphicon glyphicon-plus"></span>&nbsp;添加车辆</button>
+						</div>
 					</div>
 					<div class="panel-body">
 						<table class="table table-striped table-hover">
@@ -28,7 +50,7 @@ const vehicle_stat = {
 					        	<td v-text="item.license"></td>
 					        	<td v-text="item.curUser"></td>
 					        	<td v-text="item.curStat"></td>
-					        	<td v-text="item.lastRecordTime"></td>
+					        	<td v-text="new Date(item.lastRecordTime*1000).toLocaleString()"></td>
 					        	<td class="operate-bar">
 									<a class = "operate" title="查看" @click="vehicleCheck.toModal(item)">
 										<span class="glyphicon glyphicon-file"></span>
@@ -64,10 +86,10 @@ const vehicle_stat = {
 								<tr><td>车牌号</td><td v-text="vehicleCheck.obj.license"></td></tr>
 								<tr><td>公交线路</td><td v-text="vehicleCheck.obj.route"></td></tr>
 								<tr><td>车辆型号</td><td v-text="vehicleCheck.obj.model"></td></tr>
-								<tr><td>购买日期</td><td v-text="vehicleCheck.obj.purchasedDate"></td></tr>
+								<tr><td>购买日期</td><td v-text="new Date(vehicleCheck.obj.purchasedDate*1000).toLocaleString()"></td></tr>
 								<tr><td>保养等级</td><td v-text="vehicleCheck.obj.maintenance"></td></tr>
 								<tr><td>行驶公里数</td><td v-text="vehicleCheck.obj.km"></td></tr>
-								<tr><td>上一次更新时间</td><td v-text="vehicleCheck.obj.lastRecordTime"></td></tr>
+								<tr><td>上一次更新时间</td><td v-text="new Date(vehicleCheck.obj.lastRecordTime*1000).toLocaleString()"></td></tr>
 								<tr><td>当前状态</td><td v-text="vehicleCheck.obj.curStat"></td></tr>
 							</table>
 						</div>
@@ -131,7 +153,7 @@ const vehicle_stat = {
 								</tr>
 								<tr><td>购买日期</td>
 									<td>
-										<datetime-picker class='purchasedDate' :data="vehicleModify.obj.purchasedDate"></datetime-picker>
+										<datetime-picker class='purchasedDate' :data="'vehicleModify.obj.purchasedDate'"></datetime-picker>
 									</td>
 								</tr>
 								<tr><td>保养等级</td>
@@ -174,7 +196,7 @@ const vehicle_stat = {
 			
 			<modal v-if = "addVehicle.isShow" id="vehicle_modify">
 				<div class="modal-header">
-					<h4 class="modal-title">车辆修改</h4>
+					<h4 class="modal-title">添加车辆</h4>
 				</div>
 				<div class="modal-body">
 					<div class="vehicle-info">
@@ -205,7 +227,7 @@ const vehicle_stat = {
 								</tr>
 								<tr><td>购买日期</td>
 									<td>
-										<datetime-picker class='purchasedDate' :data="addVehicle.obj.purchasedDate"></datetime-picker>
+										<datetime-picker class='purchasedDate' :data="'addVehicle.obj.purchasedDate'"></datetime-picker>
 									</td>
 								</tr>
 								<tr><td>保养等级</td>
@@ -240,6 +262,7 @@ const vehicle_stat = {
 	`,
 	data(){
 		return {
+			query: {},
 			curRoute: null,
 			curPage: 0,
 			vehicleRoute:[],
@@ -273,8 +296,8 @@ const vehicle_stat = {
 			};
 			this.$http.post('/vehicle/getVehicleNum', {
 				route: _this_.curRoute,
-				license: _this_.curLicense,
-				curStat: _this_.curStat,				
+				license: _this_.query.license,
+				curStat: _this_.query.curStat,				
 			}).then(function(res){
 			
 				$("#vehicle-stat-pagination").pagination(res.body, {
@@ -300,18 +323,10 @@ const vehicle_stat = {
 		},
 		getVehicleList: function () {
 			var _this_ = this;
-			var query = {
-				route: _this_.curRoute,
-				license: _this_.curLicense,
-				curStat: _this_.curStat,
-				curPage: _this_.curPage,
-				itemsPrePage: 20
-				
-			};
 			this.$http.post('/vehicle/queryVehicle', {
 					route: _this_.curRoute,
-					license: _this_.curLicense,
-					curStat: _this_.curStat,
+					license: _this_.query.license,
+					curStat: _this_.query.curStat,			
 					curPage: _this_.curPage,
 					itemsPrePage: 20
 					
@@ -365,6 +380,10 @@ const vehicle_stat = {
 		this.vehicleModify.execute = function () {
 			var __this = this;
 			this.obj.license = this.obj.license.front + this.obj.license.middle+this.obj.license.end;
+			if(this.obj.purchasedDate){
+				this.obj.purchasedDate /= 1000;
+			}
+			this.obj.lastRecordTime = new Date().getTime()/1000;
 			console.log(this.obj)
 			_this.$http.post('/vehicle/updateVehicle', this.obj).then(function(res){
 				console.log(res)
@@ -410,10 +429,13 @@ const vehicle_stat = {
 		this.addVehicle.execute = function () {
 			var __this = this;
 			this.obj.license = this.obj.license.front + this.obj.license.middle+this.obj.license.end;
+			if(this.obj.purchasedDate){
+				this.obj.purchasedDate /= 1000;
+			}
+			this.obj.lastRecordTime = this.obj.purchasedDate;
 			_this.$http.post('/vehicle/addVehicle', this.obj).then(function(res){
 				console.log(res)
-				_this.getVehicleList();
-				_this.getVehicleNum();	
+				_this.getVehicleRoutes();
 			}, function(err){
 				console.error(err)
 			})

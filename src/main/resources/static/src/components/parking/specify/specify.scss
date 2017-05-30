@@ -8,12 +8,26 @@
 		top: 0;
 		padding: 20px;
 	}
+	#top{
+		position: absolute;
+		left: 230px;
+		right: 0;
+		top: 0;
+		height:105px;
+		padding: 20px;
+		.panel{
+			padding:20px;
+			.form-inline{
+				padding-right: 30px;
+			}
+		}
+	}
 	#right{
 		position: absolute;
 		left: 230px;
 		right: 0;
 		bottom: 0;
-		top: 0;
+		top: 85px;
 		padding: 20px;
 		.panel{
 			padding-bottom:40px;

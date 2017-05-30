@@ -54,7 +54,7 @@
 		insert into Vehicle (license,route,photo,model,purchasedDate,maintenance,km,lastRecordTime,curStat,parkingId) values(#{license},#{route},#{photo},#{model},#{purchasedDate},#{maintenance},#{km},#{lastRecordTime},#{curStat},#{parkingId})
 	</insert>	
 	<update id="updateVehicle" parameterType="com.model.Vehicle">
-		update Vehicle set route = #{route},model = #{model},purchasedDate = #{purchasedDate},maintenance = #{maintenance},km = #{km},curStat = #{curStat},curSet = #{curSet} where license = #{license};
+		update Vehicle set route = #{route},model = #{model},purchasedDate = #{purchasedDate},maintenance = #{maintenance},km = #{km},curStat = #{curStat},curSet = #{curSet},lastRecordTime = #{lastRecordTime} where license = #{license};
 	</update>
 	<insert id="deleteVehicle" parameterType="java.lang.String">
 		delete from Vehicle where license = #{license}

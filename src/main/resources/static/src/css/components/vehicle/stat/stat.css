@@ -7,12 +7,29 @@
   padding: 20px;
 }
 
+#vehicle-stat #top {
+  position: absolute;
+  left: 230px;
+  right: 0;
+  top: 0;
+  height: 105px;
+  padding: 20px;
+}
+
+#vehicle-stat #top .panel {
+  padding: 20px;
+}
+
+#vehicle-stat #top .panel .form-inline {
+  padding-right: 30px;
+}
+
 #vehicle-stat #right {
   position: absolute;
   left: 230px;
   right: 0;
   bottom: 0;
-  top: 0;
+  top: 85px;
   padding: 20px;
 }
 
@@ -114,4 +131,8 @@
 
 #vehicle-stat .modal#vehicle_modify .vehicle-info .purchasedDate input {
   height: auto;
+}
+
+#vehicle-stat .photo {
+  min-width: 100px;
 }

@@ -54,4 +54,18 @@ public class ParkingController {
     	}
         return p;  
     }
+	
+    @RequestMapping(value = "/getParkingNum", method = RequestMethod.POST)  
+    public Integer getParkingNum(@RequestBody ParkingQuery pq) {  
+		pq.setCurPage(0);
+		pq.setItemsPrePage(10000);
+		
+    	ArrayList<Parking> p = parkingDao.queryParking(pq);
+        return p.size();  
+    }
+    
+    @RequestMapping(value = "/addParking", method = RequestMethod.POST)  
+    public Boolean addParking(@RequestBody Parking p) {      	
+        return parkingDao.addParking(p);  
+    }
 }
