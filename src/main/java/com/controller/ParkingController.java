@@ -68,4 +68,12 @@ public class ParkingController {
     public Boolean addParking(@RequestBody Parking p) {      	
         return parkingDao.addParking(p);  
     }
+    @RequestMapping(value = "/updateParking", method = RequestMethod.POST)  
+    public Boolean updateParking(@RequestBody Parking p) {      	
+        return parkingDao.modifyParking(p);  
+    }
+    @RequestMapping(value = "/deleteParking", method = RequestMethod.POST)  
+    public Boolean deleteParking(@RequestBody String parkingId) {      	
+        return parkingDao.deleteParking(parkingId);  
+    }
 }

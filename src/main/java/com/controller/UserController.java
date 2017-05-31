@@ -69,7 +69,14 @@ public class UserController {
 		   uq.setItemsPrePage(10000);
 	   }   	
     	return userDao.queryUser(uq);
-    }
+    }   
+    
+    @RequestMapping(value = "/getUserNum", method = RequestMethod.POST)  
+    public Integer getUserNum(@RequestBody UserQuery uq) {    	
+    	uq.setCurPage(0);
+    	uq.setItemsPrePage(10000);
+     	return userDao.queryUser(uq).size();
+     }
     
     @RequestMapping(value = "/addUser", method = RequestMethod.POST)  
     public boolean addUser(@RequestBody User u) {  

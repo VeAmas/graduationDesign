@@ -8,7 +8,7 @@ const parking_stat = {
 						<input v-model = 'query.name' type="text" />
 					</div>
 					<div class="form-inline fr">
-						<button @click = 'getSetList()'>筛选</button>
+						<button @click = 'getParkingNum();getParkings()'>筛选</button>
 					</div>
 					<div class="form-inline fr">
 						<button @click = 'query = {}'>清空</button>
@@ -33,6 +33,7 @@ const parking_stat = {
 					          <th>泊位一览</th>	
 					          <th>车辆一览</th>				          
 					          <th>3D显示</th>
+					          <th>操作</th>
 					        </tr>
 					      </thead>
 					      <tbody>
@@ -47,6 +48,14 @@ const parking_stat = {
 					          		<a @click='showAllVehicle.toModal(item.parkingId)'>车辆一览</a>		
 					        	</td>
 					        	<td></td>
+					        	<td class="operate-bar">
+									<a class = "operate" title="编辑" @click="modifyParking.toModal(item)">
+										<span class="glyphicon glyphicon-cog"></span>
+									</a>
+									<a class = "operate" title="删除" @click="deleteParking.toModal(item)">
+										<span class="glyphicon glyphicon-remove"></span>
+									</a>
+					        	</td>
 					        </tr>
 					      </tbody>
 				    	</table>
@@ -77,7 +86,7 @@ const parking_stat = {
 						        	<td v-text="item.name"></td>
 						        	<td v-text="item.available ? '无车辆' : '有车辆'"></td>
 						        	<td v-text="item.curVehicle"></td>
-						        	<td v-text="item.lastRecordTime"></td>
+						        	<td v-text="new Date(item.lastRecordTime * 1000).toLocaleString()"></td>
 								</tr>
 							</tbody>
 						</table>
@@ -138,6 +147,38 @@ const parking_stat = {
 					<button class="btn ok" @click="addParking.clear()">取消</button>
 				</div>
 			</modal>
+			
+			<modal v-show = "modifyParking.isShow" id="showAllVehicle">
+				<div class="modal-header">
+					添加停车场
+				</div>
+				<div class="modal-body">
+					<div>
+						<div class="form-inline">
+							<label for="">停车场名称</label>
+							<input v-model = 'modifyParking.obj.name' type="text" />
+						</div>	
+					</div>	<div>
+						<div class="form-inline">
+							<label for="">停车场地址</label>
+							<input v-model = 'modifyParking.obj.address' type="text" />
+						</div>
+					</div>						
+				</div>
+				<div class="modal-footer">
+					<button class="btn ok" @click="modifyParking.execute()">确认</button>
+					<button class="btn ok" @click="modifyParking.clear()">取消</button>
+				</div>
+			</modal>
+			<modal v-if = "deleteParking.isShow" id="showAllVehicle">
+				<div class="modal-header">
+					<h4 class="modal-title">是否删除停车场&nbsp;<span class="high-light" v-text="deleteParking.obj.name"></span>&nbsp;？</h4>
+				</div>
+				<div class="modal-footer">
+					<button class="btn ok" @click="deleteParking.execute()">确认</button>
+					<button class="btn cancle" @click="deleteParking.clear()">取消</button>
+				</div>
+			</modal>
 		</section>
 	`,
 	data(){
@@ -146,6 +187,12 @@ const parking_stat = {
 			parkingList:[],
 			addParking:{
 				isShow:false
+			},
+			deleteParking:{
+				isShow:false
+			},
+			modifyParking: {
+				isShow: false
 			},
 			showAllSet:{
 				isShow:false
@@ -164,7 +211,7 @@ const parking_stat = {
 			    return false;
 			};
 			this.$http.post('/parking/getParkingNum', {
-				name: _this_.curName			
+				name: _this_.query.name			
 			}).then(function(res){
 			
 				$("#vehicle-stat-pagination").pagination(res.body, {
@@ -180,7 +227,7 @@ const parking_stat = {
 		getParkings: function () {
 			var _this_ = this;
 			this.$http.post('/parking/queryParking', {
-				name: _this_.curName			
+				name: _this_.query.name
 			}).then(function(res){
 				if (res.body) {
 					_this_.parkingList = res.body;
@@ -201,6 +248,42 @@ const parking_stat = {
 		this.addParking.execute = function () {	
 			var __this = this;
 			_this_.$http.post('/parking/addParking', this.obj).then(function (res) {
+				_this_.getParkingNum(),
+				_this_.getParkings()
+				__this.isShow = false;
+			}, function (err) {
+				console.error(err);
+			})
+		};
+		this.modifyParking.obj={};
+		this.modifyParking.toModal = function (parkingId) {
+			this.obj = parkingId;
+			this.isShow = true;
+		};
+		this.modifyParking.clear = function () {
+			this.isShow = false;
+		};
+		this.modifyParking.execute = function () {	
+			var __this = this;
+			_this_.$http.post('/parking/updateParking', this.obj).then(function (res) {
+				_this_.getParkings()
+				__this.isShow = false;
+			}, function (err) {
+				console.error(err);
+			})
+		};
+
+		this.deleteParking.obj={};
+		this.deleteParking.toModal = function (parkingId) {
+			this.obj = parkingId;
+			this.isShow = true;
+		};
+		this.deleteParking.clear = function () {
+			this.isShow = false;
+		};
+		this.deleteParking.execute = function () {	
+			var __this = this;
+			_this_.$http.post('/parking/deleteParking', this.obj.parkingId).then(function (res) {
 				_this_.getParkingNum(),
 				_this_.getParkings()
 				__this.isShow = false;

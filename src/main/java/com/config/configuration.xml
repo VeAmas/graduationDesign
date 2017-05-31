@@ -37,6 +37,7 @@
     <mapper resource="com/config/sql/Vehicle.xml"/>
     <mapper resource="com/config/sql/ParkingSet.xml"/>
     <mapper resource="com/config/sql/Parking.xml"/>
+    <mapper resource="com/config/sql/Log.xml"/>
   </mappers>
 
 </configuration>

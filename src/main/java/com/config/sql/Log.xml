@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Log">
+	<resultMap id="LogResult" type="com.model.Log">
+		<id property="logId" jdbcType="VARCHAR" column="logId"/>		
+		<result property="type" jdbcType="VARCHAR" column="type"/>
+		<result property="user" jdbcType="VARCHAR" column="user"/>
+		<result property="time" jdbcType="INTEGER" column="time"/>
+		<result property="remark" jdbcType="VARCHAR" column="remark"/>
+		<result property="content" jdbcType="VARCHAR" column="content"/>
+		<result property="set" jdbcType="VARCHAR" column="sets"/>
+		<result property="parking" jdbcType="VARCHAR" column="parking"/>
+	</resultMap>
+	  
+	<select id="getLogById" parameterType="java.lang.String" resultMap="LogResult">
+		SELECT * FROM Log where logId = #{logId}
+	</select>
+	<select id="queryLog" parameterType="com.model.LogQuery" resultMap="LogResult">
+		SELECT * FROM Log 
+		<where>
+			<if test="type != null and type != ''">
+			     type = #{type}
+			</if> 
+			<if test="startTime != null and startTime != ''">
+			     and time &gt; #{startTime}
+			</if> 
+			<if test="endTime != null and endTime != ''">
+			     and time  &lt; #{endTime}
+			</if> 			
+		</where>
+		limit #{curPage} , #{itemsPrePage}
+	</select>	
+	<insert id="addLog" parameterType="com.model.Log">
+		insert into Log (type,user,time,remark,content,sets,parking) values(#{type},#{user},#{time},#{remark},#{content},#{set},#{parking})
+	</insert>	
+	
+</mapper>
+

@@ -15,6 +15,10 @@
   padding-right: 30px;
 }
 
+#user .top .datetime-picker {
+  display: inline-block;
+}
+
 #user .bottom {
   position: absolute;
   left: 0;

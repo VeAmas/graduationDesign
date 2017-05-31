@@ -1,26 +1,27 @@
 const log ={
 	template:`
-	<section id="user">
+	<section id="log">
 		<div class="top">
 			<div class="panel">
 				<div class="form-inline">
-					<label for="">用户类型</label>
-					<select name="" id="">
-						<option v-for="item in common.userType" :value="item" v-text="item"></option>
+					<label for="">日志类型</label>
+					<select name="" id="" v-model = 'query.type'>
+						<option v-for="item in common.logType" :value="item" v-text="item"></option>
 					</select>
 				</div>
 				<div class="form-inline">
-					<label for="">用户姓名</label>
-					<input type="text" />
+					<label for="">开始时间</label>
+					<datetime-picker :data="'$children.2.query.startTime'"></datetime-picker>
 				</div>
 				<div class="form-inline">
-					<label for="">用户性别</label>
-					<select name="" id="">
-						<option v-for="item in common.gender" :value="item" v-text="item"></option>
-					</select>
+					<label for="">结束时间</label>
+					<datetime-picker :data="'$children.2.query.endTime'"></datetime-picker>
 				</div>
 				<div class="form-inline fr">
-					<button>筛选</button>
+					<button @click = 'getLogNum();getLogList()'>筛选</button>
+				</div>
+				<div class="form-inline fr">
+					<button @click = 'query = {};clearDatetimePick()'>清空</button>
 				</div>
 			</div>
 		</div>
@@ -36,7 +37,8 @@ const log ={
 				    			<th>日志类型</th>
 				    			<th>用户</th>
 				    			<th>时间</th>
-				    			<th>登陆IP</th>
+				    			<th>停车场名称</th>
+				    			<th>泊位名称</th>
 				    			<th>日志内容</th>
 				    		</tr>
 				    	</thead>
@@ -44,15 +46,16 @@ const log ={
 					        <tr v-for="log in logList">
 					        	<td v-text="log.type"></td>
 					        	<td v-text="log.user"></td>
-					        	<td v-text="log.time"></td>
-					        	<td v-text="log.ip"></td>
+					        	<td v-text="new Date(log.time*1000).toLocaleString()"></td>
+					        	<td v-text="log.parking"></td>
+					        	<td v-text="log.set"></td>
 					        	<td v-text="log.content"></td>
 					        </tr>
 				      </tbody>
 			    	</table>
 				</div>
 				<div class="panel-footer">
-					<div id="user-pagination"></div>
+					<div id="log-pagination"></div>
 				</div>
 			</div>
 		</div>
@@ -60,8 +63,56 @@ const log ={
 	`,
 	data(){
 		return{
+			query: {},
+			curPage: null,
 			logList:[]
 		};
+	},
+	methods: {
+		getLogNum: function(){
+			var _this_ = this;
+			var handlePaginationClick = function (new_page_index, pagination_container) {
+				_this_.curPage = new_page_index;
+				_this_.getLogList();
+			    return false;
+			};
+			if((this.query.startTime + '').length > 11)
+				this.query.startTime /= 1000;
+			if((this.query.endTime + '').length > 11)
+				this.query.endTime /= 1000;
+			
+			this.$http.post('/log/getLogNum', {
+				type: _this_.query.type,
+				startTime: _this_.query.startTime,
+				endTime: _this_.query.endTime,
+			}).then(function(res){
+			
+				$("#log-pagination"	).pagination(res.body, {
+			        items_per_page:20,
+			        prev_text:"上一页",
+			        next_text:"下一页",
+			        num_display_entries:7,
+			        callback:handlePaginationClick
+				});
+			});
+			
+		},
+		clearDatetimePick: function(){
+			$('#log input').val('');
+		},
+		getLogList: function () {
+			var _this_ = this;
+			
+			this.$http.post('/log/queryLog', {
+				type: _this_.query.type,
+				startTime: _this_.query.startTime,
+				endTime: _this_.query.endTime,
+			}).then(function(res){
+				if (res.body) {
+					_this_.logList = res.body;
+				}
+			})
+		}
 	},
 	created(){
 
@@ -70,29 +121,7 @@ const log ={
 		$(this.$el).find(".panel-body").niceScroll({
 			grabcursorenabled: false
 		});
-		function handlePaginationClick(new_page_index, pagination_container) {
-			console.log(new_page_index,pagination_container)
-		    return false;
-		}
-		$("#user-pagination").pagination(1500, {
-	        items_per_page:20,
-	        prev_text:"上一页",
-	        next_text:"下一页",
-	        num_display_entries:7,
-	        callback:handlePaginationClick
-		});
-		var _this_ = this;
-		window.setTimeout(function () {
-			_this_.logList.push({
-				id:"00001",
-				ip:"192.168.1.101",
-				time:"2016.12.12",
-				user:"张晓霞",
-				type:"登陆",
-				content:"登陆系统"
-			});
-			for(var i = 0;i<50;i++)
-				_this_.logList.push(_this_.logList[0]);
-		},500);
+		this.getLogNum();
+		this.getLogList();
 	}
 };

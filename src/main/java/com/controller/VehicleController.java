@@ -1,6 +1,7 @@
 package com.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -8,9 +9,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.model.Log;
 import com.model.User;
 import com.model.Vehicle;
 import com.model.VehicleQuery;
+import com.serviceImpl.LogDaoImpl;
+import com.serviceImpl.ParkingDaoImpl;
+import com.serviceImpl.ParkingSetDaoImpl;
 import com.serviceImpl.UserDaoImpl;
 import com.serviceImpl.VehicleDaoImpl;
 
@@ -22,7 +27,16 @@ public class VehicleController {
 	VehicleDaoImpl vehicleDao;
 	
 	@Autowired
+	ParkingDaoImpl parkingDao;
+	
+	@Autowired
+	ParkingSetDaoImpl parkingSetDao;
+	
+	@Autowired
 	UserDaoImpl userDao;
+	
+	@Autowired
+	LogDaoImpl logDao;
 
    @RequestMapping(value = "/queryVehicle", method = RequestMethod.POST)  
    public ArrayList<Vehicle> queryVehicle(@RequestBody VehicleQuery vq) {  
@@ -62,6 +76,27 @@ public class VehicleController {
    
    @RequestMapping(value = "/updateVehicle", method = RequestMethod.POST)  
    public boolean updateVehicle(@RequestBody Vehicle vehicle) {
+	   Vehicle v = vehicleDao.getVehicleByLicense(vehicle.getLicense());
+	   Log l = new Log();
+	   
+	   if(!v.getCurStat().equals(vehicle.getCurStat())) {
+		   if (vehicle.getCurStat().equals("出车")) {
+			   l.setContent("出车");
+			   l.setType("出车");
+		   }else {
+			   l.setContent("停车");
+			   l.setType("停车");			   
+		   }
+		   if (vehicle.getParkingId() != null) {
+			   l.setParking(parkingDao.getParkingById(vehicle.getParkingId().toString()).getName());
+		   }
+		   if (vehicle.getCurSet() != null) {
+			   l.setSet(parkingSetDao.getParkingSetBySetId(vehicle.getCurSet()).getName());
+		   }
+		   
+		   logDao.addLog(l);
+	   }
+	   
 	   System.out.println(vehicle);
        return vehicleDao.updateVehicle(vehicle);
    }  

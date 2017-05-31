@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.DButil.DBAccess;
@@ -17,6 +18,7 @@ import com.service.VehicleDao;
 @Repository("VehicleDao")
 public class VehicleDaoImpl implements VehicleDao {
 
+	
 	@Override
 	public Vehicle getVehicleByLicense(String license) {
 		System.out.println(license);

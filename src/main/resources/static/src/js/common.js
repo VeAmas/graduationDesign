@@ -22,6 +22,12 @@ Vue.prototype.common = {
 	available: [
 		"无车辆",
 		"有车辆"
+	],
+	logType: [
+		"登录",
+		"发车",
+		"停车",
+		"交位"
 	]
 };
 $.datetimepicker.setLocale('ch');

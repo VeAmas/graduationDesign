@@ -93,4 +93,43 @@ public class ParkingDaoImpl implements ParkingDao {
 		return false;
 	}
 
+	@Override
+	public Boolean modifyParking(Parking p) {
+		// TODO Auto-generated method stub
+		DBAccess dbAccess = new DBAccess();
+		SqlSession sqlSession = null;
+		try{
+			sqlSession = dbAccess.getSqlSession();
+			sqlSession.update("Parking.updateParking", p);
+			sqlSession.commit();
+			return true;
+		}catch(IOException e){
+			e.printStackTrace();
+		}finally{
+			if(sqlSession != null){
+				sqlSession.close();
+			}			
+		}
+		return false;
+	}
+
+	@Override
+	public Boolean deleteParking(String parkingId) {
+		DBAccess dbAccess = new DBAccess();
+		SqlSession sqlSession = null;
+		try{
+			sqlSession = dbAccess.getSqlSession();
+			sqlSession.delete("Parking.deleteParking", parkingId);
+			sqlSession.commit();
+			return true;
+		}catch(IOException e){
+			e.printStackTrace();
+		}finally{
+			if(sqlSession != null){
+				sqlSession.close();
+			}			
+		}
+		return false;
+	}
+
 }

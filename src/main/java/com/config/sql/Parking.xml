@@ -25,6 +25,12 @@
 	<insert id="addParking" parameterType="com.model.Parking">
 		insert into Parking (name,address) values(#{name},#{address})
 	</insert>	
+	<delete id="deleteParking" parameterType = "java.lang.String">
+		delete from parking where parkingId = #{parkingId}
+	</delete>
+	<update id="updateParking" parameterType="com.model.Parking">
+		update parking set name = #{name},address = #{address}  where parkingId = #{parkingId};
+	</update>
 	
 </mapper>
 

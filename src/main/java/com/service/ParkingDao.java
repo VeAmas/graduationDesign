@@ -13,4 +13,6 @@ public interface ParkingDao {
 	public Parking getParkingById(String parkingId);
 	public ArrayList<Parking> queryParking(ParkingQuery pq);
 	public Boolean addParking (Parking p);
+	public Boolean modifyParking (Parking p);
+	public Boolean deleteParking (String parkingId);
 }

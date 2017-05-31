@@ -1,0 +1,95 @@
+#log .top {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 105px;
+  padding: 20px;
+}
+
+#log .top .panel {
+  padding: 20px;
+}
+
+#log .top .panel .form-inline {
+  padding-right: 30px;
+}
+
+#log .top .datetime-picker {
+  display: inline-block;
+}
+
+#log .bottom {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 85px;
+  padding: 20px;
+}
+
+#log .bottom .panel {
+  padding-bottom: 40px;
+}
+
+#log .bottom table td, #log .bottom table th {
+  text-align: center;
+}
+
+#log .modal .photo {
+  width: 140px;
+}
+
+#log .modal .photo img {
+  width: 100%;
+}
+
+#log .modal table {
+  table-layout: auto;
+  width: 100%;
+}
+
+#log .modal table td {
+  border: 1px #ddd solid;
+  text-align: center;
+  height: 22px;
+}
+
+#log .modal table td div {
+  height: 100%;
+}
+
+#log .modal table td input, #log .modal table td select {
+  outline: none;
+  width: 100%;
+  height: 100%;
+  border: none;
+  padding: 0 10px;
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+#log .modal table td option {
+  color: #000;
+}
+
+#log #user_modify .photo, #log #user_add .photo {
+  border-bottom: none;
+}
+
+#log #user_modify .photo-submit, #log #user_add .photo-submit {
+  border-top: none;
+}
+
+#log #user_modify .photo-submit input, #log #user_add .photo-submit input {
+  float: left;
+  width: 70%;
+}
+
+#log #user_modify .photo-submit button, #log #user_add .photo-submit button {
+  float: right;
+  width: 30%;
+  font-size: 12px;
+  border: none;
+  color: #000;
+  height: 22px;
+}

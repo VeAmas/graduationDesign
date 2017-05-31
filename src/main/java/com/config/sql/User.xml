@@ -47,7 +47,7 @@
 		insert into User (gender,age,name,userType,ID,address,birth,cellPhone,email,startDate,lastRecordTime,photo) values(#{gender},#{age},#{name},#{userType},#{ID},#{address},#{birth},#{cellPhone},#{email},#{startDate},#{lastRecordTime},#{photo})
 	</insert>
 	<update id="updateUser" parameterType="com.model.User">
-		update User set gender = #{gender},age = #{age},name = #{name},userType = #{userType},ID = #{ID},address = #{address},birth = #{birth},cellPhone = #{cellPhone},photo = #{photo},email = #{email},startDate = #{startDate} where userId = #{userId};
+		update User set gender = #{gender},age = #{age},name = #{name},userType = #{userType},ID = #{ID},address = #{address},birth = #{birth},cellPhone = #{cellPhone},photo = #{photo},email = #{email},startDate = #{startDate},lastRecordTime = #{lastRecordTime} where userId = #{userId};
 	</update>
 	<select id="getUserByMany" parameterType="java.lang.String" resultMap="UserResult">
 		SELECT * FROM User where userId = #{many} or email = #{many} or cellPhone = #{many} 
