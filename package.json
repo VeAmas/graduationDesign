@@ -11,7 +11,8 @@
     "gulp-plumber": "^1.1.0",
     "gulp-sass": "^3.1.0",
     "jshint": "^2.9.4",
-    "run-sequence": "^1.2.2"
+    "run-sequence": "^1.2.2",
+    "vue-file-upload": "^0.1.2"
   },
   "devDependencies": {},
   "scripts": {

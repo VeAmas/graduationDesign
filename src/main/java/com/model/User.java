@@ -3,27 +3,26 @@ package com.model;
 import org.jeecgframework.poi.excel.annotation.Excel;
 
 public class User {
-    @Excel(name = "userId", orderNum = "1", mergeVertical = false, isImportField = "userId") 
     private String userId;
-    @Excel(name = "userType", orderNum = "2", mergeVertical = false, isImportField = "userType") 
+    @Excel(name = "userType", orderNum = "1", mergeVertical = false, isImportField = "userType") 
     private String userType;
-    @Excel(name = "name", orderNum = "3", mergeVertical = false, isImportField = "name") 
+    @Excel(name = "name", orderNum = "2", mergeVertical = false, isImportField = "name") 
     private String name;
-    @Excel(name = "age", orderNum = "4", mergeVertical = false, isImportField = "age") 
+    @Excel(name = "age", orderNum = "3", mergeVertical = false, isImportField = "age") 
     private String age;
-    @Excel(name = "gender", orderNum = "5", mergeVertical = false, isImportField = "gender") 
+    @Excel(name = "gender", orderNum = "4", mergeVertical = false, isImportField = "gender") 
     private String gender;
-    @Excel(name = "birth", orderNum = "6", mergeVertical = false, isImportField = "birth") 
-    private Integer birth;
-    @Excel(name = "ID", orderNum = "7", mergeVertical = false, isImportField = "ID") 
+    @Excel(name = "birth", orderNum = "5", mergeVertical = false, isImportField = "birth") 
+    private String birth;
+    @Excel(name = "ID", orderNum = "6", mergeVertical = false, isImportField = "ID") 
     private String ID;
-    @Excel(name = "address", orderNum = "8", mergeVertical = false, isImportField = "address") 
+    @Excel(name = "address", orderNum = "7", mergeVertical = false, isImportField = "address") 
     private String address;
-    @Excel(name = "cellPhone", orderNum = "9", mergeVertical = false, isImportField = "cellPhone") 
+    @Excel(name = "cellPhone", orderNum = "8", mergeVertical = false, isImportField = "cellPhone") 
     private String cellPhone;
-    @Excel(name = "email", orderNum = "10", mergeVertical = false, isImportField = "email") 
+    @Excel(name = "email", orderNum = "9", mergeVertical = false, isImportField = "email") 
     private String email;
-    @Excel(name = "startDate", orderNum = "11", mergeVertical = false, isImportField = "startDate") 
+    @Excel(name = "startDate", orderNum = "10", mergeVertical = false, isImportField = "startDate") 
     private String startDate;
     private Integer lastRecordTime;
     private String photo;
@@ -74,10 +73,10 @@ public class User {
 	public void setGender(String gender) {
 		this.gender = gender;
 	}
-	public Integer getBirth() {
+	public String getBirth() {
 		return birth;
 	}
-	public void setBirth(Integer birth) {
+	public void setBirth(String birth) {
 		this.birth = birth;
 	}
 	public String getID() {

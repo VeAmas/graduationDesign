@@ -132,4 +132,24 @@ public class ParkingDaoImpl implements ParkingDao {
 		return false;
 	}
 
+	@Override
+	public Parking getParkingByName(String name) {
+		Parking p;
+		
+		DBAccess dbAccess = new DBAccess();
+		SqlSession sqlSession = null;
+		try{
+			sqlSession = dbAccess.getSqlSession();
+			p = sqlSession.selectOne("Parking.getParkingByName", name);
+			return p;
+		}catch(IOException e){
+			e.printStackTrace();
+		}finally{
+			if(sqlSession != null){
+				sqlSession.close();
+			}			
+		}
+		return null;
+	}
+
 }

@@ -3,6 +3,8 @@ package com.controller;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,11 +13,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.controller.test.SortByAge;
 import com.model.Log;
 import com.model.LogQuery;
 import com.model.Parking;
 import com.model.ParkingQuery;
+import com.model.ParkingSet;
 import com.model.ParkingSetQuery;
+import com.model.Vehicle;
 import com.model.VehicleQuery;
 import com.serviceImpl.LogDaoImpl;
 import com.serviceImpl.ParkingDaoImpl;
@@ -39,6 +44,9 @@ public class ParkingController {
 	
 	@Autowired
 	LogDaoImpl logDao;	
+
+	@Autowired
+	ParkingSetController psc ;
 	
     @RequestMapping(value = "/queryParking", method = RequestMethod.POST)  
     public ArrayList<Parking> queryParking(@RequestBody ParkingQuery pq) {  
@@ -221,8 +229,71 @@ public class ParkingController {
     
     @RequestMapping(value = "/autoSpecify", method = RequestMethod.POST)  
     public Boolean autoSpecify(@RequestBody String parkingId) {
-    	
+    	LogQuery lq = new LogQuery();
+    	lq.setParking(parkingId);
+    	lq.setType("出车");
+    	lq.setCurPage(0);
+    	lq.setItemsPrePage(10000);
+    	ArrayList<Log>ls = logDao.queryLog(lq);
+    	Parking p = parkingDao.getParkingByName(parkingId);
+    	Integer pid = p.getParkingId();
+    	VehicleQuery vq = new VehicleQuery();
+    	vq.setParkingId(pid);
+    	vq.setCurPage(0);
+    	vq.setItemsPrePage(10000);
+    	ArrayList<Vehicle> vs = vehicleDao.queryVehicle(vq);
+    	for(int i =0 ;i<vs.size();i++) {
+    		vs.get(i).setKm(0);
+    	}
+    	for (int i = 0; i < ls.size(); i++){
+    		for (int j = 0; j < vs.size();j++)
+    		if (ls.get(i).getLicense().equals(vs.get(j).getLicense())) {
+    			vs.get(j).setKm(vs.get(j).getKm()+1);
+    			break;
+    		}
+    	}
+		Collections.sort(vs, new SortByKm());
+		ParkingSetQuery psq = new ParkingSetQuery();
+		psq.setParkingId(pid);
+		psq.setCurPage(0);
+		psq.setItemsPrePage(10000);
+		ArrayList<ParkingSet> pss = parkingSetDao.queryParkingSet(psq);
+
+    	for(int i =0 ;i<pss.size();i++) {
+    		if (pss.get(i).getWeight() == null)
+    			pss.get(i).setWeight(0);
+    	}
+		Collections.sort(pss, new SortByWeight());
+		int pssl = pss.size();
+		int vsl = vs.size();
+		int length = 0;
+		if (pssl>vsl) length = vsl;
+		else length = pssl;
+		
+		
+		for (int i=0; i < length;i++){
+			psc.specify("{\"setId\":" + pss.get(i).getSetId() + ",\"license\":\"" + vs.get(i).getLicense() + "\"}");
+		}
         return false;
     }
+    
+	class SortByKm implements Comparator {
+		public int compare(Object o1, Object o2) {
+        	 Vehicle s1 = (Vehicle) o1;
+        	 Vehicle s2 = (Vehicle) o2;
+        	 if (s1.getKm() < s2.getKm())
+        		 return 1;
+        	 return -1;
+		}
+	}
+	class SortByWeight implements Comparator {
+		public int compare(Object o1, Object o2) {
+			ParkingSet s1 = (ParkingSet) o1;
+			ParkingSet s2 = (ParkingSet) o2;
+        	 if (s1.getWeight() < s2.getWeight())
+        		 return 1;
+        	 return -1;
+		}
+	}
     
 }

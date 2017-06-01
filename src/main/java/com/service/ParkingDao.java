@@ -15,4 +15,5 @@ public interface ParkingDao {
 	public Boolean addParking (Parking p);
 	public Boolean modifyParking (Parking p);
 	public Boolean deleteParking (String parkingId);
+	public Parking getParkingByName(String name);
 }

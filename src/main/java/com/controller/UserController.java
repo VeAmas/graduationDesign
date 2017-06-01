@@ -1,7 +1,9 @@
 package com.controller;
 
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.model.Log;
 import com.model.User;
@@ -126,7 +129,6 @@ public class UserController {
         User u = new User();
         u.setAddress("123");
         u.setAge("12");
-        u.setBirth(12345);
         u.setCellPhone("12354");
         u.setCurVehicle("");
         u.setEmail("sdfde");
@@ -138,7 +140,7 @@ public class UserController {
         u.setStartDate("sefsfe");
         u.setUserId("sef");
         u.setUserType("sefsef");
-        list.add(u);
+//        list.add(u);
         
         Workbook workbook = ExcelExportUtil.exportExcel(new ExportParams(), User.class, list);
         workbook.write(response.getOutputStream());
@@ -146,21 +148,42 @@ public class UserController {
     }
     
     @RequestMapping(value = "/importExcel", method = RequestMethod.POST)  
-    public String importExcel( @RequestParam("file") MultipartFile file) throws Exception {  
-    	System.out.println("in");
+    public ModelAndView  importExcel( @RequestParam("file") MultipartFile file) throws Exception {  
+    	System.out.println("in"); 
+    	ModelAndView mv = new ModelAndView("redirect:/src/main.html#/user");//redirect模式 
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        
     	
     	if (!file.isEmpty()) {  
             try {  
             	InputStream is = file.getInputStream();
                 
-                System.out.println(ExcelImportUtil.importExcel(is, User.class, new ImportParams()));
+                List<Object> ul = ExcelImportUtil.importExcel(is, User.class, new ImportParams());
+                for(int i = 0; i<ul.size();i++) {
+                	User u = (User)ul.get(i);
+                	try {
+						String birth = u.getBirth();
+						String startDate = u.getStartDate();
+						Integer bt = (int) (sdf.parse(birth).getTime() / 1000);
+						Integer st = (int) (sdf.parse(startDate).getTime() / 1000);		
+						u.setBirth(bt.toString());
+						u.setStartDate(st.toString());
+						
+						userDao.addUser(u);
+					} catch (Exception e) {
+						// TODO: handle exception
+					}
+                	
+                			
+                }
                 
-                return "You successfully uploaded "  + " into "  + "-uploaded !";  
+                return mv;  
             } catch (Exception e) {  
-                return "You failed to upload "  + " => " + e.getMessage();  
+            	return mv;  
             }  
         } else {  
-            return "You failed to upload "  + " because the file was empty.";  
+        	return mv;  
         }  
         
     }  

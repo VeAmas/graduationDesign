@@ -13,6 +13,9 @@
 	<select id="getParkingById" parameterType="java.lang.String" resultMap="ParkingResult">
 		SELECT * FROM Parking where parkingId = #{parkingId}
 	</select>
+	<select id="getParkingByName" parameterType="java.lang.String" resultMap="ParkingResult">
+		SELECT * FROM Parking where name = #{name}
+	</select>
 	<select id="queryParking" parameterType="com.model.ParkingQuery" resultMap="ParkingResult">
 		SELECT * FROM Parking 
 		<where>
