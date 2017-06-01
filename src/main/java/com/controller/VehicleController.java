@@ -78,6 +78,7 @@ public class VehicleController {
    public boolean updateVehicle(@RequestBody Vehicle vehicle) {
 	   Vehicle v = vehicleDao.getVehicleByLicense(vehicle.getLicense());
 	   Log l = new Log();
+	   l.setLicense(vehicle.getLicense());
 	   
 	   if(!v.getCurStat().equals(vehicle.getCurStat())) {
 		   if (vehicle.getCurStat().equals("出车")) {

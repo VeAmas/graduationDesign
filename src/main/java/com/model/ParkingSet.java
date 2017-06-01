@@ -7,8 +7,16 @@ public class ParkingSet {
     private String curVehicle;
     private String parkingId;
     private Integer lastRecordTime;
+    private Integer weight;
 
-    public Integer getSetId() {
+    
+    public Integer getWeight() {
+		return weight;
+	}
+	public void setWeight(Integer weight) {
+		this.weight = weight;
+	}
+	public Integer getSetId() {
 		return setId;
 	}
 	public void setSetId(Integer setId) {

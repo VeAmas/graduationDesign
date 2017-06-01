@@ -23,9 +23,4 @@ public class Application extends SpringBootServletInitializer{
     public static void main(String[] args) {  
         SpringApplication.run(Application.class, args);  
     }  
-
-//    @RequestMapping("/")
-//	public ModelAndView home() {
-//        return new ModelAndView("home");
-//    }
 }

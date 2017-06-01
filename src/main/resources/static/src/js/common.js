@@ -27,7 +27,7 @@ Vue.prototype.common = {
 		"登录",
 		"发车",
 		"停车",
-		"交位"
+		"移车"
 	]
 };
 $.datetimepicker.setLocale('ch');

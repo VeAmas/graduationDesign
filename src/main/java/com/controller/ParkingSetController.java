@@ -8,11 +8,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.model.Log;
 import com.model.ParkingSet;
 import com.model.ParkingSetQuery;
 import com.model.User;
 import com.model.Vehicle;
 import com.service.ParkingSetDao;
+import com.serviceImpl.LogDaoImpl;
+import com.serviceImpl.ParkingDaoImpl;
 import com.serviceImpl.ParkingSetDaoImpl;
 import com.serviceImpl.VehicleDaoImpl;
 
@@ -27,6 +30,12 @@ public class ParkingSetController {
 	
 	@Autowired
 	VehicleDaoImpl vehicleDao;
+	
+	@Autowired
+	LogDaoImpl logDao;	
+	
+	@Autowired
+	ParkingDaoImpl parkingDao;	
 	
 
     @RequestMapping(value = "/queryParkingSet", method = RequestMethod.POST)  
@@ -98,12 +107,34 @@ public class ParkingSetController {
         	
         	curP.setCurVehicle(license);
         	parkingSetDao.updateParkingSet(curP);
+        	
+        	Log log = new Log();
+        	log.setContent("移动车辆");
+        	log.setType("移车");
+        	log.setLicense(license);
+        	log.setSet(curP.getName());
+        	if (curP.getParkingId() != null) {        		
+            	log.setParking(parkingDao.getParkingById(curP.getParkingId()).getName());        		
+        	}
+        	logDao.addLog(log);
+        	
         	System.out.println("curp" + curP);
 
         	if (targetP != null) {
         		String t = null;
         		if (curV != null) {
         			t = curV.getLicense();
+        			        			
+        			log = new Log();
+                	log.setContent("移动车辆");
+                	log.setType("移车");
+                	log.setLicense(curV.getLicense());
+                	log.setSet(targetP.getName());
+                	if (targetP.getParkingId() != null) {        		
+                    	log.setParking(parkingDao.getParkingById(targetP.getParkingId()).getName());        		
+                	}
+                	logDao.addLog(log);
+                	                	
         		}
         		targetP.setCurVehicle(t);
         		parkingSetDao.updateParkingSet(targetP);

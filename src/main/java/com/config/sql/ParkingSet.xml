@@ -11,6 +11,7 @@
 		<result property="available" jdbcType="VARCHAR" column="available"/>
 		<result property="curVehicle" jdbcType="VARCHAR" column="curVehicle"/>
 		<result property="lastRecordTime" jdbcType="INTEGER" column="lastRecordTime"/>
+		<result property="weight" jdbcType="INTEGER" column="weight"/>
 	</resultMap>
 	  
 	<select id="getParkingSetBySetId" parameterType = "java.lang.String" resultMap="ParkingSetResult">
@@ -35,10 +36,10 @@
 		SELECT * FROM parkingSet where parkingId = #{parkingId}
 	</select>
 	<insert id="addParkingSet" parameterType="com.model.ParkingSet">
-		insert into ParkingSet (name,parkingId,available,curVehicle,lastRecordTime) values(#{name},#{parkingId},#{available},#{curVehicle},#{lastRecordTime})
+		insert into ParkingSet (name,parkingId,available,curVehicle,lastRecordTime,weight) values(#{name},#{parkingId},#{available},#{curVehicle},#{lastRecordTime},#{weight})
 	</insert>	
 	<update id="updateParkingSet" parameterType="com.model.ParkingSet">
-		update ParkingSet set name = #{name}, curVehicle = #{curVehicle}, lastRecordTime = #{lastRecordTime} where setId = #{setId};
+		update ParkingSet set name = #{name}, curVehicle = #{curVehicle}, lastRecordTime = #{lastRecordTime}, weight = #{weight}  where setId = #{setId};
 	</update>
 	<delete id="deleteParkingSet" parameterType = "java.lang.String">
 		delete from parkingSet where setId = #{setId}

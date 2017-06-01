@@ -1,20 +1,34 @@
 package com.model;
 
+import org.jeecgframework.poi.excel.annotation.Excel;
+
 public class User {
+    @Excel(name = "userId", orderNum = "1", mergeVertical = false, isImportField = "userId") 
     private String userId;
+    @Excel(name = "userType", orderNum = "2", mergeVertical = false, isImportField = "userType") 
     private String userType;
+    @Excel(name = "name", orderNum = "3", mergeVertical = false, isImportField = "name") 
     private String name;
+    @Excel(name = "age", orderNum = "4", mergeVertical = false, isImportField = "age") 
     private String age;
-    private String photo;
+    @Excel(name = "gender", orderNum = "5", mergeVertical = false, isImportField = "gender") 
     private String gender;
+    @Excel(name = "birth", orderNum = "6", mergeVertical = false, isImportField = "birth") 
     private Integer birth;
+    @Excel(name = "ID", orderNum = "7", mergeVertical = false, isImportField = "ID") 
     private String ID;
+    @Excel(name = "address", orderNum = "8", mergeVertical = false, isImportField = "address") 
     private String address;
+    @Excel(name = "cellPhone", orderNum = "9", mergeVertical = false, isImportField = "cellPhone") 
     private String cellPhone;
+    @Excel(name = "email", orderNum = "10", mergeVertical = false, isImportField = "email") 
     private String email;
+    @Excel(name = "startDate", orderNum = "11", mergeVertical = false, isImportField = "startDate") 
     private String startDate;
-    private String curVehicle;
     private Integer lastRecordTime;
+    private String photo;
+    private String curVehicle;
+	private String password;
     
     
     public String getPassword() {
@@ -23,7 +37,6 @@ public class User {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	private String password;
     
 	public String getUserId() {
 		return userId;

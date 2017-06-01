@@ -13,6 +13,7 @@
 		<result property="content" jdbcType="VARCHAR" column="content"/>
 		<result property="set" jdbcType="VARCHAR" column="sets"/>
 		<result property="parking" jdbcType="VARCHAR" column="parking"/>
+		<result property="license" jdbcType="VARCHAR" column="license"/>
 	</resultMap>
 	  
 	<select id="getLogById" parameterType="java.lang.String" resultMap="LogResult">
@@ -24,6 +25,15 @@
 			<if test="type != null and type != ''">
 			     type = #{type}
 			</if> 
+			<if test="parking != null and parking != ''">
+			     and parking = #{parking}
+			</if>
+			<if test="license != null and license != ''">
+			     and license = #{license}
+			</if>
+			<if test="set != null and set != ''">
+			     and sets = #{set}
+			</if>
 			<if test="startTime != null and startTime != ''">
 			     and time &gt; #{startTime}
 			</if> 
@@ -34,7 +44,7 @@
 		limit #{curPage} , #{itemsPrePage}
 	</select>	
 	<insert id="addLog" parameterType="com.model.Log">
-		insert into Log (type,user,time,remark,content,sets,parking) values(#{type},#{user},#{time},#{remark},#{content},#{set},#{parking})
+		insert into Log (type,user,time,remark,content,sets,parking,license) values(#{type},#{user},#{time},#{remark},#{content},#{set},#{parking},#{license})
 	</insert>	
 	
 </mapper>
