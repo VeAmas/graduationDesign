@@ -1,0 +1,130 @@
+#report{
+	#left{
+		position: absolute;
+		left: 0;
+		width: 250px;
+		bottom: 0;
+		top: 0;
+		padding: 20px;
+	}
+	#top{
+		position: absolute;
+		left: 230px;
+		right: 0;
+		top: 0;
+		height:105px;
+		padding: 20px;
+		.panel{
+			padding:20px;
+			.form-inline{
+				padding-right: 30px;
+			}
+		}
+	}
+	#right{
+		position: absolute;
+		left: 230px;
+		right: 0;
+		bottom: 0;
+		top:85px;
+		padding: 20px;
+		.panel{
+			padding-bottom:40px;
+		}
+		td,th{
+			text-align: center;
+		}
+		.operate-bar{
+			width: 120px;
+		}
+	}
+	$border-color:#ddd;
+	.modal{
+		.modal-body>div{
+			display: flex;
+			.photo{
+				border: 1px solid $border-color;
+			}
+			.stat{
+				width: 100%;
+				table{
+					width: 100%;
+				}				
+				tr{
+					border: 1px solid $border-color;
+					height: 24px;
+					line-height: 24px;
+					td{
+						text-align: center;
+						border-left: 1px solid $border-color;
+					}
+					td:nth-child(1){
+						padding: 0 10px;
+						width: 120px;
+						text-align:left;
+						border:none;
+					}
+				}
+			}
+		}
+		&#vehicle_check .vehicle-info .photo img{
+			height: 24*8px;
+		}
+		&#vehicle_check .driver-info .photo img{
+			height: 24*7px;
+		}
+		&#vehicle_modify{
+			.vehicle-info {
+				.photo img{
+					height: 24*7px;
+				}
+				input,select{
+					outline: none;
+					width:100%;
+					height: 100%;
+					border: none;
+					padding: 0 10px;
+					background-color: rgba(255,255,255,0.3);
+				}
+				option{
+					color: #000;
+				}
+				input.license{
+					padding-left: 0;
+					float: right;
+					&.middle{
+						width: 10%;
+					}
+					&.end{
+						width: 70%;
+					}
+				}
+				select.license{
+					width: 20%;
+					height: 100%;
+					padding-left: 10px;
+					border:none;
+					background-color: rgba(255,255,255,0.3);
+				}
+				.purchasedDate{
+					height: 100%;
+					input{
+						height: auto;
+					}
+				}
+			} 
+
+		}
+	}
+	#vehicle_delete{
+		.modal-header{
+		}
+	}
+	.photo {
+		min-width: 100px;
+	}
+	#echarts{
+		width: 100%;
+		height: 100%;
+	}
+}

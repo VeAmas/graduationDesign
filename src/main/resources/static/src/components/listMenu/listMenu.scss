@@ -18,10 +18,14 @@
 			margin-bottom: 2px;
 			div{
 				border-radius:5px;
+				overflow: hidden;
 				height: 100%;
 				line-height: 30px;
 				padding:0 10px;
 				transition: color,background-color 0.4s;
+				span {
+					white-space: nowrap;					
+				}
 				.glyphicon {
 					transition: opacity 0.4s;
 					opacity: 0;

@@ -29,6 +29,9 @@ const parking_specify = {
 					<div class="panel-head">
 						泊位列表
 						<div class="form-inline">
+							<button @click="autoSpecify.toModal()"><span class="glyphicon glyphicon-refresh"></span>&nbsp;自动分配</button>
+						</div>
+						<div class="form-inline">
 							<button  @click = 'parkingSetAdd.toModal()'><span class="glyphicon glyphicon-plus"></span>&nbsp;添加泊位</button>
 						</div>
 					</div>
@@ -124,6 +127,15 @@ const parking_specify = {
 					<button class="btn cancle" @click="parkingSetModify.clear()">取消</button>
 				</div>
 			</modal>
+			<modal v-if = "autoSpecify.isShow" id="vehicle_delete">
+				<div class="modal-header">
+					<h4 class="modal-title">是否要自动分配泊位？</h4>
+				</div>
+				<div class="modal-footer">
+					<button class="btn ok" @click="autoSpecify.execute()">确认</button>
+					<button class="btn cancle" @click="autoSpecify.clear()">取消</button>
+				</div>
+			</modal>
 		</section>
 	`,
 	data(){
@@ -134,6 +146,9 @@ const parking_specify = {
 			parkingList: [],
 			vehicleRoute:[],
 			parkingSetList:[],
+			autoSpecify:{
+				isShow:false
+			},
 			parkingSetSpecify:{
 				isShow:false
 			},
@@ -308,9 +323,38 @@ const parking_specify = {
 			this.obj = {};
 			this.isShow = false;
 		};
+		
+		this.autoSpecify.obj={};
+		this.autoSpecify.toModal = function (item) {
+			this.obj = item;
+			this.isShow = true;
+		};
+		this.autoSpecify.execute = function () {
+			var __this = this;
+			_this.$http.post('/parking/autoSpecify', _this.curParking.name ).then(function (res) {
+				__this.isShow = false;
+				_this.getSetList();
+			}, function (err) {
+				console.error(err);
+				this.isShow = false;
+			})
+		};
+		this.autoSpecify.clear = function () {
+			this.obj = {};
+			this.isShow = false;
+		};
 	},
 	mounted(){
 		var _this_ = this;
+		this.$on("select",function (selected) {
+			var p;
+			this.parkings.forEach(function(v){
+				if(v.name === selected){
+					p = v
+				}
+			})
+			this.curParking = p;
+		});
 		$(this.$el).find(".panel-body").niceScroll({
 			grabcursorenabled: false
 		});

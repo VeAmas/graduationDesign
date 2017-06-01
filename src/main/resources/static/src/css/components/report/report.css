@@ -1,0 +1,143 @@
+#report #left {
+  position: absolute;
+  left: 0;
+  width: 250px;
+  bottom: 0;
+  top: 0;
+  padding: 20px;
+}
+
+#report #top {
+  position: absolute;
+  left: 230px;
+  right: 0;
+  top: 0;
+  height: 105px;
+  padding: 20px;
+}
+
+#report #top .panel {
+  padding: 20px;
+}
+
+#report #top .panel .form-inline {
+  padding-right: 30px;
+}
+
+#report #right {
+  position: absolute;
+  left: 230px;
+  right: 0;
+  bottom: 0;
+  top: 85px;
+  padding: 20px;
+}
+
+#report #right .panel {
+  padding-bottom: 40px;
+}
+
+#report #right td, #report #right th {
+  text-align: center;
+}
+
+#report #right .operate-bar {
+  width: 120px;
+}
+
+#report .modal .modal-body > div {
+  display: flex;
+}
+
+#report .modal .modal-body > div .photo {
+  border: 1px solid #ddd;
+}
+
+#report .modal .modal-body > div .stat {
+  width: 100%;
+}
+
+#report .modal .modal-body > div .stat table {
+  width: 100%;
+}
+
+#report .modal .modal-body > div .stat tr {
+  border: 1px solid #ddd;
+  height: 24px;
+  line-height: 24px;
+}
+
+#report .modal .modal-body > div .stat tr td {
+  text-align: center;
+  border-left: 1px solid #ddd;
+}
+
+#report .modal .modal-body > div .stat tr td:nth-child(1) {
+  padding: 0 10px;
+  width: 120px;
+  text-align: left;
+  border: none;
+}
+
+#report .modal#vehicle_check .vehicle-info .photo img {
+  height: 192px;
+}
+
+#report .modal#vehicle_check .driver-info .photo img {
+  height: 168px;
+}
+
+#report .modal#vehicle_modify .vehicle-info .photo img {
+  height: 168px;
+}
+
+#report .modal#vehicle_modify .vehicle-info input, #report .modal#vehicle_modify .vehicle-info select {
+  outline: none;
+  width: 100%;
+  height: 100%;
+  border: none;
+  padding: 0 10px;
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+#report .modal#vehicle_modify .vehicle-info option {
+  color: #000;
+}
+
+#report .modal#vehicle_modify .vehicle-info input.license {
+  padding-left: 0;
+  float: right;
+}
+
+#report .modal#vehicle_modify .vehicle-info input.license.middle {
+  width: 10%;
+}
+
+#report .modal#vehicle_modify .vehicle-info input.license.end {
+  width: 70%;
+}
+
+#report .modal#vehicle_modify .vehicle-info select.license {
+  width: 20%;
+  height: 100%;
+  padding-left: 10px;
+  border: none;
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+#report .modal#vehicle_modify .vehicle-info .purchasedDate {
+  height: 100%;
+}
+
+#report .modal#vehicle_modify .vehicle-info .purchasedDate input {
+  height: auto;
+}
+
+#report .photo {
+  min-width: 100px;
+}
+
+#report #echarts {
+  width: 100%;
+  height: 100%;
+}

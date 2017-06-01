@@ -15,10 +15,16 @@ var router = new VueRouter({
 		path:"/log",
 		component:log
 	},{
+		path:"/report",
+		component:report
+	},{
 		path:"/parking/specify",
 		component:parking_specify
 	},{
 		path:"/parking/stat",
 		component:parking_stat
+	},{
+		path:"/3dPark",
+		component:s3dPark
 	}]
 });

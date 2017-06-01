@@ -21,6 +21,8 @@
 	<link rel="stylesheet" href="css/components/parking/stat/stat.css">
 	<link rel="stylesheet" href="css/components/user/user.css">
 	<link rel="stylesheet" href="css/components/log/log.css">
+	<link rel="stylesheet" href="css/components/report/report.css">
+	<link rel="stylesheet" href="css/components/parking/stat/3dPark.css">
 
 </head>
 <body>
@@ -31,6 +33,19 @@
 			<router-view></router-view>
 		</div>
 	</div>		
+
+	<script src = "plugin/three.js/three.js"></script>
+	<script src = "js/3dPark/lib/OrbitControls.js"></script>
+	<script src = "js/3dPark/lib/CopyShader.js"></script>
+	<script src = "js/3dPark/lib/EffectComposer.js"></script>
+	<script src = "js/3dPark/lib/RenderPass.js"></script>
+	<script src = "js/3dPark/lib/ShaderPass.js"></script>
+	<script src = "js/3dPark/lib/OutlinePass.js"></script>
+	<script src = "js/3dPark/lib/FXAAShader.js"></script>
+	<script src = "js/3dPark/lib/OBJLoader.js"></script>
+	<script src = "js/3dPark/init.js"></script>
+	<script src = "js/3dPark/load.js"></script>
+
 	<script src="plugin/vue/dist/vue.js"></script>
 	<script src="plugin/vue-resource/dist/vue-resource.js"></script>
 	<script src="plugin/vue-router/dist/vue-router.js"></script>
@@ -39,6 +54,7 @@
 	<script src="plugin/jquery.nicescroll/dist/jquery.nicescroll.min.js"></script>
 	<script src="plugin/datetimepicker/build/jquery.datetimepicker.full.js"></script>
 	<script src="plugin/jquery-pagination/src/jquery.pagination.js"></script>
+	<script src="plugin/echarts/dist/echarts.js"></script>
 
 	<script src="components/modal/modal.js"></script>
 	<script src="components/header/header.js"></script>
@@ -52,9 +68,12 @@
 	<script src="components/parking/stat/stat.js"></script>
 	<script src="components/user/user.js"></script>
 	<script src="components/log/log.js"></script>
+	<script src="components/report/report.js"></script>
+	<script src = "js/3dPark/3dPark.js"></script>
 
 	<script src="js/router.js"></script>
 	<script src="js/common.js"></script>
+
 </body>
 </html>
 

@@ -2,11 +2,11 @@ Scene.prototype.load = function() {
     var scope = this;
     var textures = {};
     var model = {
-        red: './models/red.obj',
-        bus: './models/123.obj',
-        building1: './models/building1.obj',
-        building2: './models/building2.obj',        
-        lamp: './models/lamp.obj'
+        red: 'js/3dPark/models/red.obj',
+        bus: 'js/3dPark/models/123.obj',
+        building1: 'js/3dPark/models/building1.obj',
+        building2: 'js/3dPark/models/building2.obj',        
+        lamp: 'js/3dPark/models/lamp.obj'
     };
 
     var manager = new THREE.LoadingManager();
@@ -53,8 +53,8 @@ Scene.prototype.load = function() {
     loader.load( model.building1, function ( object ) {
         scope.model.building1.geo = object.children[0].geometry;
         scope.model.building1.mat = new THREE.MeshPhongMaterial({
-            map: new THREE.TextureLoader().load('./img/building1.jpg'), 
-            bumpMap: new THREE.TextureLoader().load('./img/building1_bump.jpg'), 
+            map: new THREE.TextureLoader().load('js/3dPark/img/building1.jpg'), 
+            bumpMap: new THREE.TextureLoader().load('js/3dPark/img/building1_bump.jpg'), 
             bumpScale: 0.2
         });
         var scale = 0.05;
@@ -64,7 +64,7 @@ Scene.prototype.load = function() {
     loader.load( model.building2, function ( object ) {
         scope.model.building2.geo = object.children[0].geometry;
         scope.model.building2.mat = new THREE.MeshPhongMaterial({
-            map: new THREE.TextureLoader().load('./img/building2.jpg'), 
+            map: new THREE.TextureLoader().load('js/3dPark/img/building2.jpg'), 
             bumpScale: 0.2
         });
         var scale = 0.1;
@@ -74,7 +74,7 @@ Scene.prototype.load = function() {
     loader.load( model.lamp, function ( object ) {
         scope.model.lamp.geo = object.children[0].geometry;
         scope.model.lamp.mat = new THREE.MeshPhongMaterial({
-            map: new THREE.TextureLoader().load('./img/lamp.jpg'), 
+            map: new THREE.TextureLoader().load('js/3dPark/img/lamp.jpg'), 
             // bumpScale: 0.2
         });
         var scale = 0.03;
@@ -83,7 +83,7 @@ Scene.prototype.load = function() {
 
     var parkingSetGeo = new THREE.PlaneBufferGeometry(8,24,4);
     parkingSetGeo.rotateX(-0.5*Math.PI);
-    var parkingSetMat = new THREE.MeshBasicMaterial({transparent: true, map: new THREE.TextureLoader().load('./img/parkingSet.png')});
+    var parkingSetMat = new THREE.MeshBasicMaterial({transparent: true, map: new THREE.TextureLoader().load('js/3dPark/img/parkingSet.png')});
 
     var canvasTextureList = {};
     var setList = [{

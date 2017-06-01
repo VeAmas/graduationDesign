@@ -32,7 +32,7 @@ const user = {
 				<div class="panel-head">
 					用户列表
 					<div class="form-inline">
-						<button><span class="glyphicon glyphicon-list-alt"></span>&nbsp;导入用户</button>
+						<button @click="excelAdd.toModal()"><span class="glyphicon glyphicon-list-alt"></span>&nbsp;导入用户</button>
 					</div>
 					<div class="form-inline">
 						<button @click="userAdd.toModal()"><span class="glyphicon glyphicon-user"></span>&nbsp;添加用户</button>
@@ -226,6 +226,21 @@ const user = {
 				<button class="btn cancle" @click="userDelete.clear()">取消</button>
 			</div>
 		</modal>
+		<modal v-if = "excelAdd.isShow" id="user_delete">
+				<form method="POST" enctype="multipart/form-data" action="/user/importExcel">  
+			<div class="modal-header">
+				<h4 class="modal-title">批量导入用户</h4>
+			</div>
+			<div class="modal-body">
+				File to upload: <input type="file" name="file" @change='excelAdd.onChange'><br />	 
+				<a href = '/user/getExcel'>模板下载</a>
+			</div>
+			<div class="modal-footer">
+				<input type="submit" class="btn ok"  value = '确认' />
+				<button class="btn cancle" @click="excelAdd.clear()">取消</button>
+			</div>
+				</form>  
+		</modal>
 		<modal v-if = "userAdd.isShow" id="user_add">
 			<div class="modal-header">
 				<h4 class="modal-title">添加用户</h4>
@@ -313,6 +328,10 @@ const user = {
 		return {
 			query: {},
 			userList:[],
+			curPage: 0,
+			excelAdd:{
+				isShow:false
+			},
 			userDelete:{
 				isShow:false
 			},
@@ -332,7 +351,7 @@ const user = {
 			var _this_ = this;
 			var handlePaginationClick = function (new_page_index, pagination_container) {
 				_this_.curPage = new_page_index;
-				_this_.getSetList();
+				_this_.getUserList();
 			    return false;
 			};
 			this.$http.post('/user/getUserNum', {
@@ -355,7 +374,9 @@ const user = {
 			this.$http.post('/user/queryUser', {
 				name: _this_.query.name,
 				userType: _this_.query.userType,
-				gender: _this_.query.gender	
+				gender: _this_.query.gender,		
+				curPage: _this_.curPage,
+				itemsPrePage: 20				
 			}).then(function(res){
 				if (res.body) {
 					_this_.userList = res.body;
@@ -438,6 +459,35 @@ const user = {
 		this.userAdd.clear=function () {
 			this.isShow = false;
 		};
+		this.excelAdd.obj = {};
+		this.excelAdd.toModal = function () {
+			this.obj = {};
+			this.isShow = true;
+		};
+		this.excelAdd.onChange = function (e) {
+			var files = e.target.files || e.dataTransfer.files;
+			if (!files.length) {
+				_this.excelAdd.obj = null;
+				return;				
+			}
+			_this.excelAdd.obj = files[0];
+		};
+		this.excelAdd.execute=function () {
+			var __this = this;
+			if (this.obj && this.obj.type === 'application/vnd.ms-excel') {
+				_this.$http.post('/user/importExcel', __this.obj,{headers: {
+			        'Content-Type': 'multipart/form-data;  boundary=-----asdfasdfasdfasdf '
+			    }}).then(function(res){
+					alert(res)
+				}, function(error){
+					console.error(error)
+				})
+			}
+		};
+		this.excelAdd.clear=function () {
+			this.isShow = false;
+		};
+		
 	},
 	mounted(){
 		$(this.$el).find(".panel-body").niceScroll({

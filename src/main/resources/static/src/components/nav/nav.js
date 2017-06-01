@@ -123,7 +123,7 @@ Vue.component('epNav',{
 		},{
 			data:"统计报表",
 			icon:"glyphicon-th-large",
-			link:"",
+			link:"/report",
 			children:null
 		},{
 			data:"用户管理",

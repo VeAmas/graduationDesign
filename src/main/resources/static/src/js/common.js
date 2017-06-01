@@ -24,10 +24,15 @@ Vue.prototype.common = {
 		"有车辆"
 	],
 	logType: [
+		"",
 		"登录",
-		"发车",
+		"出车",
 		"停车",
 		"移车"
+	],
+	reportType: [
+		"车辆",
+		"泊位"
 	]
 };
 $.datetimepicker.setLocale('ch');
@@ -42,22 +47,4 @@ var root = new Vue({
     }
 });
 		
-
-var template={
-	user:{
-		userId:"13005",
-		userType:"",
-		name:"张晓丽",
-		age:"32",
-		photo:"img/avatar-default.png",
-		gender:"女",
-		birth:"",
-		ID:"",
-		address:"",
-		cellPhone:"",
-		email:"",
-		startDate:"",
-		curVehicle:"",
-		lastRecordTime:""
-	}
-}		
+	

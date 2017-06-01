@@ -1,0 +1,78 @@
+#scene3d {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+}
+
+#scene3d #canvas {
+  position: absolute;
+  left: 0px;
+  right: 200px;
+  top: 0;
+  bottom: 0;
+}
+
+#scene3d .leftPanel {
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  right: 0px;
+  width: 200px;
+  height: 100%;
+  background-color: #ddd;
+}
+
+#scene3d .leftPanel .sub-menu {
+  background-color: #1e262c;
+}
+
+#scene3d .leftPanel .sub-menu label {
+  display: block;
+  height: 30px;
+  width: 100%;
+  line-height: 30px;
+  text-indent: 10px;
+}
+
+#scene3d .leftPanel .sub-menu.scene .item {
+  background-color: #f56c2d;
+}
+
+#scene3d .leftPanel .sub-menu.parkingSet {
+  flex: 1;
+  position: relative;
+}
+
+#scene3d .leftPanel .sub-menu.parkingSet .container {
+  overflow-y: auto;
+  height: 100%;
+  position: absolute;
+  width: 100%;
+  top: 30px;
+  padding: 0;
+  bottom: 0;
+}
+
+#scene3d .leftPanel .sub-menu.parkingSet .item {
+  background-color: #f56c2d;
+}
+
+#scene3d .leftPanel .item {
+  background-color: #0f0;
+  height: 30px;
+  width: 100%;
+  line-height: 30px;
+  text-indent: 20px;
+}
+
+#scene3d .leftPanel .bottomPanel {
+  height: 30px;
+  position: absolute;
+  bottom: 0;
+  right: 50px;
+  color: #1e262c;
+}

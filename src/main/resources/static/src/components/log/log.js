@@ -64,7 +64,7 @@ const log ={
 	data(){
 		return{
 			query: {},
-			curPage: null,
+			curPage: 0,
 			logList:[]
 		};
 	},
@@ -107,6 +107,8 @@ const log ={
 				type: _this_.query.type,
 				startTime: _this_.query.startTime,
 				endTime: _this_.query.endTime,
+				curPage: _this_.curPage,
+				itemsPrePage: 20
 			}).then(function(res){
 				if (res.body) {
 					_this_.logList = res.body;

@@ -47,7 +47,7 @@ const parking_stat = {
 					        	<td>
 					          		<a @click='showAllVehicle.toModal(item.parkingId)'>车辆一览</a>		
 					        	</td>
-					        	<td></td>
+					        	<td><router-link :to="'/3dPark?parkingId='+item.parkingId" >3D停车场</router-link></td>
 					        	<td class="operate-bar">
 									<a class = "operate" title="编辑" @click="modifyParking.toModal(item)">
 										<span class="glyphicon glyphicon-cog"></span>
@@ -185,6 +185,7 @@ const parking_stat = {
 		return {
 			query: {},
 			parkingList:[],
+			curPage: 0,
 			addParking:{
 				isShow:false
 			},
@@ -207,7 +208,7 @@ const parking_stat = {
 			var _this_ = this;
 			var handlePaginationClick = function (new_page_index, pagination_container) {
 				_this_.curPage = new_page_index;
-				_this_.getSetList();
+				_this_.getParkings();
 			    return false;
 			};
 			this.$http.post('/parking/getParkingNum', {
@@ -227,7 +228,9 @@ const parking_stat = {
 		getParkings: function () {
 			var _this_ = this;
 			this.$http.post('/parking/queryParking', {
-				name: _this_.query.name
+				name: _this_.query.name,
+				curPage: _this_.curPage,
+				itemsPrePage: 20
 			}).then(function(res){
 				if (res.body) {
 					_this_.parkingList = res.body;

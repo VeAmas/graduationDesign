@@ -196,8 +196,8 @@ var Scene = function () {
 
     this.handler = {
         onMouseMove(e){
-            scope.mouse.x =  ((e.clientX-scope.canvas.offsetLeft) / scope.canvas.offsetWidth) * 2 - 1;
-            scope.mouse.y = -((e.clientY-scope.canvas.offsetTop) / scope.canvas.offsetHeight) * 2 + 1;
+            scope.mouse.x =  ((e.clientX-scope.canvas.offsetLeft - 200) / scope.canvas.offsetWidth) * 2 - 1;
+            scope.mouse.y = -((e.clientY-scope.canvas.offsetTop - 45) / scope.canvas.offsetHeight) * 2 + 1;
         },
         onMousedown(e){
             scope.timer.clickTimer.flag = true;
@@ -456,7 +456,7 @@ var Scene = function () {
                 if (m === 'parkingSet') {
                     var nameTag = new THREE.Mesh(scope.model.cur.geo, new THREE.MeshBasicMaterial( {map: scene.model.canvasTextureList[v.id], side:THREE.DoubleSide, transparent: true} ));
                     mesh.add(nameTag);
-                    root.setList.forEach(function (v) {
+                    root3D.setList.forEach(function (v) {
                         if (v.name === mesh.typeId) {                            
                             Vue.set(v, 'added', true);
                         }
@@ -543,7 +543,7 @@ var Scene = function () {
                     scope.pass.outlinePass.selectedObjects = [];  
            
                     if (scope.model.cur.type === 'parkingSet') {
-                        root.removeSet(scope.model.cur.id);
+                        root3D.removeSet(scope.model.cur.id);
                     }
 
                     var index = scope.meshs.meshList.indexOf(scope.model.cur.mesh);
@@ -568,13 +568,13 @@ var Scene = function () {
                     // scope.scene.remove(scope.dashLine);
                     //
                     //弹出菜单
-                    root.setMenuState('selected');
+                    root3D.setMenuState('selected');
                     //
                 }else{
                     scope.pass.outlinePass.selectedObjects = [];    
                     scope.model.cur.mesh = null;   
                     // scope.scene.add(scope.dashLine);
-                    root.setMenuState('normal');             
+                    root3D.setMenuState('normal');             
                 }
             },
             addObject(){
@@ -619,19 +619,19 @@ var Scene = function () {
                     scope.model.modify = null;
                     scope.state.changeStateTo("selectObject");
 
-                    if(root.cb) {
-                        root.cb();
-                        delete root.cb;
+                    if(root3D.cb) {
+                        root3D.cb();
+                        delete root3D.cb;
                     }
 
                     scope.meshs.meshList.push(mesh);
                     scope.save();
-                    root.setMenuState('normal');
+                    root3D.setMenuState('normal');
                 }
             },
             clearStat(){
                 scope.pass.outlinePass.selectedObjects = [];    
-                if(scope.model.cur.mesh && root.state.addObject){
+                if(scope.model.cur.mesh && root3D.state.addObject){
                     scope.scene.remove(scope.model.cur.mesh);
                     scope.model.cur.mesh = null;
                     scope.recover.allColor();
@@ -750,7 +750,7 @@ var Scene = function () {
         this.scene.add( light );
         light.shadowMapWidth = light.shadowMapHeight = 4096;    //阴影大小
 
-        var urls = [ "img/posx.jpg", "img/negx.jpg", "img/posy.jpg", "img/negy.jpg", "img/posz.jpg", "img/negz.jpg" ];
+        var urls = [ "js/3dPark/img/posx.jpg", "js/3dPark/img/negx.jpg", "js/3dPark/img/posy.jpg", "js/3dPark/img/negy.jpg", "js/3dPark/img/posz.jpg", "js/3dPark/img/negz.jpg" ];
         var textureCube = new THREE.CubeTextureLoader().load( urls );
         textureCube.format = THREE.RGBFormat;
         textureCube.mapping = THREE.CubeReflectionMapping;
@@ -769,8 +769,7 @@ var Scene = function () {
         this.sceneCube.add( cubeMesh );
 
 
-
-        var directions  = [ "img/posx.jpg", "img/negx.jpg", "img/posy.jpg", "img/negy.jpg", "img/posz.jpg", "img/negz.jpg" ];
+        var directions = [ "js/3dPark/img/posx.jpg", "js/3dPark/img/negx.jpg", "js/3dPark/img/posy.jpg", "js/3dPark/img/negy.jpg", "js/3dPark/img/posz.jpg", "js/3dPark/img/negz.jpg" ];
         var skyGeometry = new THREE.CubeGeometry( 500, 500, 500 );   
         
         var materialArray = [];

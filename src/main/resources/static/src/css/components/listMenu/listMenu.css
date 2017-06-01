@@ -22,10 +22,15 @@
 
 .list-menu ul li div {
   border-radius: 5px;
+  overflow: hidden;
   height: 100%;
   line-height: 30px;
   padding: 0 10px;
   transition: color,background-color 0.4s;
+}
+
+.list-menu ul li div span {
+  white-space: nowrap;
 }
 
 .list-menu ul li div .glyphicon {
