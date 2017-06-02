@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import com.model.Parking;
 import com.model.ParkingQuery;
 import com.model.ParkingSet;
+import com.model.SceneData;
 
 
 //用户业务逻辑接口
@@ -16,4 +17,7 @@ public interface ParkingDao {
 	public Boolean modifyParking (Parking p);
 	public Boolean deleteParking (String parkingId);
 	public Parking getParkingByName(String name);
+	public Boolean addSceneData(SceneData sd);
+	public Boolean updateSceneData(SceneData sd);
+	public SceneData getSceneData(String parkingId);
 }

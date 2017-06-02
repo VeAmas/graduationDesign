@@ -11,6 +11,7 @@ import com.DButil.DBAccess;
 import com.model.Parking;
 import com.model.ParkingQuery;
 import com.model.ParkingSet;
+import com.model.SceneData;
 import com.model.Vehicle;
 import com.service.ParkingDao;
 
@@ -141,6 +142,64 @@ public class ParkingDaoImpl implements ParkingDao {
 		try{
 			sqlSession = dbAccess.getSqlSession();
 			p = sqlSession.selectOne("Parking.getParkingByName", name);
+			return p;
+		}catch(IOException e){
+			e.printStackTrace();
+		}finally{
+			if(sqlSession != null){
+				sqlSession.close();
+			}			
+		}
+		return null;
+	}
+
+	@Override
+	public Boolean addSceneData(SceneData sd) {
+		DBAccess dbAccess = new DBAccess();
+		SqlSession sqlSession = null;
+		try{
+			sqlSession = dbAccess.getSqlSession();
+			sqlSession.insert("SceneData.addSceneData", sd);
+			sqlSession.commit();
+			return true;
+		}catch(IOException e){
+			e.printStackTrace();
+		}finally{
+			if(sqlSession != null){
+				sqlSession.close();
+			}			
+		}
+		return false;
+	}
+
+	@Override
+	public Boolean updateSceneData(SceneData sd) {
+		DBAccess dbAccess = new DBAccess();
+		SqlSession sqlSession = null;
+		try{
+			sqlSession = dbAccess.getSqlSession();
+			sqlSession.update("SceneData.updateData", sd);
+			sqlSession.commit();
+			return true;
+		}catch(IOException e){
+			e.printStackTrace();
+		}finally{
+			if(sqlSession != null){
+				sqlSession.close();
+			}			
+		}
+		return false;
+	}
+
+	@Override
+	public SceneData getSceneData(String parkingId) {
+		SceneData p;
+		
+		DBAccess dbAccess = new DBAccess();
+		SqlSession sqlSession = null;
+		try{
+			sqlSession = dbAccess.getSqlSession();
+			p = sqlSession.selectOne("SceneData.getDataByParkingId", parkingId);
 			return p;
 		}catch(IOException e){
 			e.printStackTrace();

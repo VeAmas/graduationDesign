@@ -1,6 +1,6 @@
 /*
-SQLyog Ultimate v11.27 (32 bit)
-MySQL - 5.6.21 : Database - bryning
+SQLyog v10.2 
+MySQL - 5.5.19 : Database - bryning
 *********************************************************************
 */
 
@@ -31,11 +31,11 @@ CREATE TABLE `log` (
   `parking` varchar(20) DEFAULT NULL,
   `license` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`logId`)
-) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8;
 
 /*Data for the table `log` */
 
-insert  into `log`(`logId`,`type`,`user`,`time`,`remark`,`content`,`sets`,`parking`,`license`) values (1,'登录','asdf',1495106540,'舍得坊','是打发色粉',NULL,NULL,NULL),(2,'出车',NULL,1496144808,NULL,'出车',NULL,NULL,NULL),(3,'停车',NULL,1496145324,NULL,'停车',NULL,NULL,NULL),(6,'移车',NULL,1496147164,NULL,'移动车辆','aa','锦园停车场','京212312'),(7,'出车',NULL,1496248173,NULL,'出车',NULL,'锦园停车场','bbb'),(8,'登录','大超市2',1496276830,NULL,'用户登录',NULL,NULL,NULL),(9,'移车',NULL,1496278394,NULL,'移动车辆','pbkjs','锦园停车场','bbb'),(10,'移车',NULL,1496281735,NULL,'移动车辆','aa','锦园停车场','京212312'),(11,'移车',NULL,1496281754,NULL,'移动车辆','aa','锦园停车场','bbb'),(12,'移车',NULL,1496281754,NULL,'移动车辆','pbkjs','锦园停车场','京212312'),(13,'移车',NULL,1499281754,NULL,'移动车辆','aa','锦园停车场','bbb'),(14,'登录','大超市2',1496317865,NULL,'用户登录',NULL,NULL,NULL),(15,'停车',NULL,1496333857,NULL,'停车',NULL,'锦园停车场','abcd'),(16,'停车',NULL,1496333860,NULL,'停车',NULL,'锦园停车场','渝212334'),(17,'出车',NULL,1496333866,NULL,'出车',NULL,'锦园停车场','abcd'),(18,'出车',NULL,1496333867,NULL,'出车',NULL,'锦园停车场','渝212334'),(19,'停车',NULL,1496333875,NULL,'停车',NULL,'锦园停车场','abcd'),(20,'停车',NULL,1496333878,NULL,'停车',NULL,'锦园停车场','渝212334'),(21,'移车',NULL,1496334127,NULL,'移动车辆','3F','锦园停车场','沪SDCXCV'),(22,'移车',NULL,1496334137,NULL,'移动车辆','3F','锦园停车场','渝212334'),(23,'移车',NULL,1496334150,NULL,'移动车辆','3F','锦园停车场','京A2SSSS'),(24,'移车',NULL,1496337083,NULL,'移动车辆','3F','锦园停车场','渝212334'),(25,'移车',NULL,1496337087,NULL,'移动车辆','pbkjs','锦园停车场','bbb'),(26,'移车',NULL,1496337088,NULL,'移动车辆','aa','锦园停车场','京212312'),(27,'移车',NULL,1496337093,NULL,'移动车辆','aa','锦园停车场','abcd'),(28,'移车',NULL,1496337614,NULL,'移动车辆','vv','锦园停车场','渝212334'),(29,'移车',NULL,1496337614,NULL,'移动车辆','3F','锦园停车场','bbb'),(30,'移车',NULL,1496337615,NULL,'移动车辆','pbkjs','锦园停车场','abcd'),(31,'移车',NULL,1496337615,NULL,'移动车辆','aa','锦园停车场','沪SDCXCV'),(32,'登录','大超市2',1496337837,NULL,'用户登录',NULL,NULL,NULL);
+insert  into `log`(`logId`,`type`,`user`,`time`,`remark`,`content`,`sets`,`parking`,`license`) values (1,'登录','asdf',1495106540,'舍得坊','是打发色粉',NULL,NULL,NULL),(2,'出车',NULL,1496144808,NULL,'出车',NULL,NULL,NULL),(3,'停车',NULL,1496145324,NULL,'停车',NULL,NULL,NULL),(6,'移车',NULL,1496147164,NULL,'移动车辆','aa','锦园停车场','京212312'),(7,'出车',NULL,1496248173,NULL,'出车',NULL,'锦园停车场','bbb'),(8,'登录','大超市2',1496276830,NULL,'用户登录',NULL,NULL,NULL),(9,'移车',NULL,1496278394,NULL,'移动车辆','pbkjs','锦园停车场','bbb'),(10,'移车',NULL,1496281735,NULL,'移动车辆','aa','锦园停车场','京212312'),(11,'移车',NULL,1496281754,NULL,'移动车辆','aa','锦园停车场','bbb'),(12,'移车',NULL,1496281754,NULL,'移动车辆','pbkjs','锦园停车场','京212312'),(13,'移车',NULL,1499281754,NULL,'移动车辆','aa','锦园停车场','bbb'),(14,'登录','大超市2',1496317865,NULL,'用户登录',NULL,NULL,NULL),(15,'停车',NULL,1496333857,NULL,'停车',NULL,'锦园停车场','abcd'),(16,'停车',NULL,1496333860,NULL,'停车',NULL,'锦园停车场','渝212334'),(17,'出车',NULL,1496333866,NULL,'出车',NULL,'锦园停车场','abcd'),(18,'出车',NULL,1496333867,NULL,'出车',NULL,'锦园停车场','渝212334'),(19,'停车',NULL,1496333875,NULL,'停车',NULL,'锦园停车场','abcd'),(20,'停车',NULL,1496333878,NULL,'停车',NULL,'锦园停车场','渝212334'),(21,'移车',NULL,1496334127,NULL,'移动车辆','3F','锦园停车场','沪SDCXCV'),(22,'移车',NULL,1496334137,NULL,'移动车辆','3F','锦园停车场','渝212334'),(23,'移车',NULL,1496334150,NULL,'移动车辆','3F','锦园停车场','京A2SSSS'),(24,'移车',NULL,1496337083,NULL,'移动车辆','3F','锦园停车场','渝212334'),(25,'移车',NULL,1496337087,NULL,'移动车辆','pbkjs','锦园停车场','bbb'),(26,'移车',NULL,1496337088,NULL,'移动车辆','aa','锦园停车场','京212312'),(27,'移车',NULL,1496337093,NULL,'移动车辆','aa','锦园停车场','abcd'),(28,'移车',NULL,1496337614,NULL,'移动车辆','vv','锦园停车场','渝212334'),(29,'移车',NULL,1496337614,NULL,'移动车辆','3F','锦园停车场','bbb'),(30,'移车',NULL,1496337615,NULL,'移动车辆','pbkjs','锦园停车场','abcd'),(31,'移车',NULL,1496337615,NULL,'移动车辆','aa','锦园停车场','沪SDCXCV'),(32,'登录','大超市2',1496337837,NULL,'用户登录',NULL,NULL,NULL),(33,'登录','大超市2',1496375820,NULL,'用户登录',NULL,NULL,NULL);
 
 /*Table structure for table `parking` */
 
@@ -70,6 +70,20 @@ CREATE TABLE `parkingset` (
 /*Data for the table `parkingset` */
 
 insert  into `parkingset`(`name`,`parkingId`,`available`,`curVehicle`,`lastRecordTime`,`setId`,`weight`) values ('aa','1','true','沪SDCXCV',15345345,3,NULL),('pbkjs','1','true','abcd',1496148770,4,NULL),('3F','1','true','bbb',1496148930,6,NULL),('vv','1','true','渝212334',1496337609,7,NULL);
+
+/*Table structure for table `scenedata` */
+
+DROP TABLE IF EXISTS `scenedata`;
+
+CREATE TABLE `scenedata` (
+  `parkingId` int(20) NOT NULL,
+  `data` varchar(5000) DEFAULT NULL,
+  PRIMARY KEY (`parkingId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/*Data for the table `scenedata` */
+
+insert  into `scenedata`(`parkingId`,`data`) values (1,'123');
 
 /*Table structure for table `user` */
 

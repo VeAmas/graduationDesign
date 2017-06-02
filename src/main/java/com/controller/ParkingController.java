@@ -13,13 +13,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.controller.test.SortByAge;
 import com.model.Log;
 import com.model.LogQuery;
 import com.model.Parking;
 import com.model.ParkingQuery;
 import com.model.ParkingSet;
 import com.model.ParkingSetQuery;
+import com.model.SceneData;
 import com.model.Vehicle;
 import com.model.VehicleQuery;
 import com.serviceImpl.LogDaoImpl;
@@ -94,6 +94,21 @@ public class ParkingController {
     @RequestMapping(value = "/deleteParking", method = RequestMethod.POST)  
     public Boolean deleteParking(@RequestBody String parkingId) {      	
         return parkingDao.deleteParking(parkingId);  
+    }
+    
+    @RequestMapping(value = "/addSceneData", method = RequestMethod.POST)  
+    public Boolean addSceneData(@RequestBody SceneData sd) {      	
+        return parkingDao.addSceneData(sd);  
+    }
+
+    @RequestMapping(value = "/updateSceneData", method = RequestMethod.POST)  
+    public Boolean updateSceneData(@RequestBody SceneData sd) {      	
+        return parkingDao.updateSceneData(sd);  
+    }
+
+    @RequestMapping(value = "/getSceneData", method = RequestMethod.POST)  
+    public SceneData getSceneData(@RequestBody String parkingId) {      	
+        return parkingDao.getSceneData(parkingId);  
     }
 
     @RequestMapping(value = "/getReportVehicle", method = RequestMethod.POST)  
@@ -295,5 +310,6 @@ public class ParkingController {
         	 return -1;
 		}
 	}
+	
     
 }

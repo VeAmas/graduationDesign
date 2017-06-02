@@ -409,7 +409,9 @@ var Scene = function () {
             scope.saveData.push(item);
         });
 
-        localStorage.setItem('saveData', JSON.stringify(scope.saveData));
+        root3D.$http.post('/parking/updateSceneData', {parkingId:parkingId, data: JSON.stringify(scope.saveData)}).then(function(res){
+        	
+        });
 
         console.clear();
         scope.saveData.forEach(function (v) {
@@ -418,52 +420,57 @@ var Scene = function () {
     };
 
     this.loadScene = function () {
-        scope.saveData = JSON.parse(localStorage.getItem('saveData'));
-        if (scope.saveData && scope.saveData.length > 0) {
-            scope.saveData.forEach(function (v) {
-                var m = v.type;
-                scope.model.cur.geo = scope.model[m].geo.clone();
-                scope.model.cur.mat = scope.model[m].mat.clone();  
-                scope.model.cur.option = scope.model[m].option;
-                scope.model.cur.height = scope.model[m].height;
+    	root3D.$http.post('/parking/getSceneData', root3D.parkingId).then(function(res){
+    		if (res.body){
+    			scope.saveData = res.body;
+    			if (scope.saveData && scope.saveData.length > 0) {
+    	            scope.saveData.forEach(function (v) {
+    	                var m = v.type;
+    	                scope.model.cur.geo = scope.model[m].geo.clone();
+    	                scope.model.cur.mat = scope.model[m].mat.clone();  
+    	                scope.model.cur.option = scope.model[m].option;
+    	                scope.model.cur.height = scope.model[m].height;
 
 
-                var mat = scope.model.cur.mat.clone();
-                mat.roughness = 1;
-                mat.metalness = 0;
-                var mesh  = new THREE.Mesh(scope.model.cur.geo, mat);
-                mesh.position.set(v.position.x, v.position.y, v.position.z);
-                mesh.targetType = ['cube'];
-                mesh.castShadow = true;
-                mesh.receiveShadow = true;
-                mesh.occupiedArray = [];
-                v.occupiedArray.forEach(function (a) {
-                    scope.meshs.floors[a.floor.x][a.floor.z].mesh.occupied = true;
-                    mesh.occupiedArray.push(scope.meshs.floors[a.floor.x][a.floor.z].mesh);
-                });
-                mesh.objType = m;
-                mesh.typeId = v.id;
-                mesh.rotation.set(v.rotation.x, v.rotation.y, v.rotation.z);
-                mesh.size = scope.model[m].size;
-                
-                scope.scene.add(mesh);
-                scope.model.modify = null;
-                scope.state.changeStateTo("selectObject");
+    	                var mat = scope.model.cur.mat.clone();
+    	                mat.roughness = 1;
+    	                mat.metalness = 0;
+    	                var mesh  = new THREE.Mesh(scope.model.cur.geo, mat);
+    	                mesh.position.set(v.position.x, v.position.y, v.position.z);
+    	                mesh.targetType = ['cube'];
+    	                mesh.castShadow = true;
+    	                mesh.receiveShadow = true;
+    	                mesh.occupiedArray = [];
+    	                v.occupiedArray.forEach(function (a) {
+    	                    scope.meshs.floors[a.floor.x][a.floor.z].mesh.occupied = true;
+    	                    mesh.occupiedArray.push(scope.meshs.floors[a.floor.x][a.floor.z].mesh);
+    	                });
+    	                mesh.objType = m;
+    	                mesh.typeId = v.id;
+    	                mesh.rotation.set(v.rotation.x, v.rotation.y, v.rotation.z);
+    	                mesh.size = scope.model[m].size;
+    	                
+    	                scope.scene.add(mesh);
+    	                scope.model.modify = null;
+    	                scope.state.changeStateTo("selectObject");
 
-                scope.meshs.meshList.push(mesh);
+    	                scope.meshs.meshList.push(mesh);
 
 
-                if (m === 'parkingSet') {
-                    var nameTag = new THREE.Mesh(scope.model.cur.geo, new THREE.MeshBasicMaterial( {map: scene.model.canvasTextureList[v.id], side:THREE.DoubleSide, transparent: true} ));
-                    mesh.add(nameTag);
-                    root3D.setList.forEach(function (v) {
-                        if (v.name === mesh.typeId) {                            
-                            Vue.set(v, 'added', true);
-                        }
-                    });
-                }
-            });
-        }
+    	                if (m === 'parkingSet') {
+    	                    var nameTag = new THREE.Mesh(scope.model.cur.geo, new THREE.MeshBasicMaterial( {map: scene.model.canvasTextureList[v.id], side:THREE.DoubleSide, transparent: true} ));
+    	                    mesh.add(nameTag);
+    	                    root3D.setList.forEach(function (v) {
+    	                        if (v.name === mesh.typeId) {                            
+    	                            Vue.set(v, 'added', true);
+    	                        }
+    	                    });
+    	                }
+    	            });
+    	        }
+    		}
+    	})
+        
     };
 
     this.state = {
