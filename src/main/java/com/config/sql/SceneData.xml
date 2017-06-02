@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="SceneData">
+	<resultMap id="SceneDataResult" type="com.model.SceneData">
+		<id property="parkingId" jdbcType="VARCHAR" column="parkingId"/>		
+		<result property="data" jdbcType="VARCHAR" column="data"/>
+	</resultMap>
+	  
+	<select id="getDataByParkingId" parameterType="com.model.SceneData" resultMap="SceneDataResult">
+		SELECT * FROM SceneData where parkingId = #{parkingId}
+	</select>
+	<update id="updateData" parameterType="com.model.SceneData">
+		update SceneData set data = #{data} where parkingId = #{parkingId};
+	</update>
+	<insert id="addSceneData" parameterType="com.model.SceneData">
+		insert into SceneData (parkingId,data) values(#{parkingId},#{data});		
+	</insert>
+	
+</mapper>
+
