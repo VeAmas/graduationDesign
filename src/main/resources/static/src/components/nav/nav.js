@@ -23,7 +23,7 @@ Vue.component('epNav',{
 			</ul>
 			<hr />
 			<div class="version">
-				<span class="icon glyphicon glyphicon-fire"></span>&nbsp;Version<span>&nbsp;0.0.1</span>
+				<span class="icon glyphicon glyphicon-fire"></span>&nbsp;Version<span>&nbsp;1.0.1</span>
 			</div>
 		</div>
 	</section>

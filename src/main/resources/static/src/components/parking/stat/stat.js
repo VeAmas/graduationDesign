@@ -29,7 +29,7 @@ const parking_stat = {
 					        <tr>
 					          <th>停车场名称</th>
 					          <th>泊位数量</th>
-					          <th>占用数量</th>
+					          <th>车辆数量</th>
 					          <th>泊位一览</th>	
 					          <th>车辆一览</th>				          
 					          <th>3D显示</th>
@@ -235,6 +235,8 @@ const parking_stat = {
 				if (res.body) {
 					_this_.parkingList = res.body;
 				}
+			},function(err){
+				location = '/src/index.html'
 			})
 		}
 	},

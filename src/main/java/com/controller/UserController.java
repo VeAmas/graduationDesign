@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.poi.ss.usermodel.Workbook;
 import org.jeecgframework.poi.excel.ExcelExportUtil;
@@ -40,7 +41,7 @@ public class UserController {
 	LogDaoImpl logDao;	
 	
     @RequestMapping(value = "/login", method = RequestMethod.POST)  
-    public Boolean login(@RequestBody String many) {
+    public Boolean login(HttpSession httpSession, @RequestBody String many) {
     	JSONObject jo = JSONObject.fromObject(many);
     	
     	String userName = jo.getString("many");
@@ -55,6 +56,8 @@ public class UserController {
     		l.setType("登录");
     		l.setUser(u.getName());
     		logDao.addLog(l);
+    		
+    		httpSession.setAttribute("LoginUser",u);
     		
 			return true;
 		}
@@ -86,7 +89,7 @@ public class UserController {
     }
     
     @RequestMapping(value = "/queryUser", method = RequestMethod.POST)  
-    public ArrayList<User> queryUser(@RequestBody UserQuery uq) {    	
+    public ArrayList<User> queryUser(HttpSession httpSession, @RequestBody UserQuery uq) {    	
  	   if (uq.getCurPage() != null && uq.getItemsPrePage() != null) {
  		   uq.setCurPage(uq.getCurPage() * uq.getItemsPrePage());
 	   } else if (uq.getCurPage() == null && uq.getItemsPrePage() == null) {
@@ -94,6 +97,18 @@ public class UserController {
 		   uq.setItemsPrePage(10000);
 	   }   	
     	return userDao.queryUser(uq);
+    }   
+    
+    @RequestMapping(value = "/getCurUser", method = RequestMethod.POST)  
+    public User getCurUser(HttpSession httpSession) {    	
+   	
+    	return (User) httpSession.getAttribute("LoginUser");
+    }   
+    
+    @RequestMapping(value = "/logOut", method = RequestMethod.POST)  
+    public Boolean logOut(HttpSession httpSession) {    	
+    	httpSession.setAttribute("LoginUser",null);
+    	return null;
     }   
     
     @RequestMapping(value = "/getUserNum", method = RequestMethod.POST)  

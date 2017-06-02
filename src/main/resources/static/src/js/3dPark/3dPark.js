@@ -41,20 +41,7 @@ const s3dPark = {
 				normal:true,
 				selected:false
 			},
-			setList: [{
-			    name: '3D',
-			    id: '1568413'
-			}, {
-			    name: '4F',
-			    id: '25438648'
-			}, {
-			    name: '3E',
-			    id: '152483'
-			}, {
-			    name: '3F',
-			    id: '483645836'
-			},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'},{ name: '3F',id: '483645836'}
-			],
+			setList: [],
 			model: [{
 				type: 'building1',
 				name: '房子1',
@@ -109,9 +96,19 @@ const s3dPark = {
 	created(){
 	},
 	mounted(){
-		window.scene = new Scene();
-		window.scene.load();
-		window.root3D = this;
+		window.root3D = this
+		var _this =this;
 		this.parkingId = this.$route.query.parkingId;
+		this.$http.post('/parkingSet/queryParkingSet', {parkingId: this.parkingId}).then(function(v){
+			_this.setList = v.body;;
+			window.scene = new Scene();
+			window.scene.load();
+			setTimeout(function(){
+				_this.setList.forEach(function(v){
+					if (v.curVehicle)
+					window.scene.addBus(v.name, v.curVehicle)
+				})
+			},5000)
+		})
 	}
 };

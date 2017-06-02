@@ -4,6 +4,7 @@
 
 #header .container {
   width: 100%;
+  z-index: 10;
   height: 45px;
   position: absolute;
   left: 0;
@@ -12,14 +13,16 @@
 
 #header .container .left {
   float: left;
+  margin-left: -10px;
 }
 
 #header .container .left .logo {
-  width: 120px;
+  width: 210px;
   height: 45px;
-  background-color: #f10;
   display: inline-block;
   vertical-align: middle;
+  background: url(/src/img/logo_white.png) no-repeat;
+  background-size: 100% 95%;
 }
 
 #header .container .right {

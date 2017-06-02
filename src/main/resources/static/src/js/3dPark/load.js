@@ -86,19 +86,7 @@ Scene.prototype.load = function() {
     var parkingSetMat = new THREE.MeshBasicMaterial({transparent: true, map: new THREE.TextureLoader().load('js/3dPark/img/parkingSet.png')});
 
     var canvasTextureList = {};
-    var setList = [{
-        name: '3D',
-        id: '1568413'
-    }, {
-        name: '4F',
-        id: '25438648'
-    }, {
-        name: '3E',
-        id: '152483'
-    }, {
-        name: '3F',
-        id: '483645836'
-    }];
+    var setList = root3D.setList;
     setList.forEach(function (v) {
         var canvas = document.createElement('canvas');
         var context = canvas.getContext('2d');

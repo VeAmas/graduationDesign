@@ -334,6 +334,8 @@ const vehicle_stat = {
 				if (res.body) {
 					_this_.vehicleList = res.body;					
 				}
+			},function(err){
+				location = '/src/index.html'
 			})
 		}
 		

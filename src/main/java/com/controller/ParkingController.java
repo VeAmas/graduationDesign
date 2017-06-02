@@ -7,6 +7,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -49,7 +51,7 @@ public class ParkingController {
 	ParkingSetController psc ;
 	
     @RequestMapping(value = "/queryParking", method = RequestMethod.POST)  
-    public ArrayList<Parking> queryParking(@RequestBody ParkingQuery pq) {  
+    public ArrayList<Parking> queryParking(HttpSession httpSession, @RequestBody ParkingQuery pq) {  
 	if (pq.getCurPage() != null && pq.getItemsPrePage() != null) {
 		pq.setCurPage(pq.getCurPage() * pq.getItemsPrePage());
 	} else if (pq.getCurPage() == null && pq.getItemsPrePage() == null) {
@@ -96,14 +98,15 @@ public class ParkingController {
         return parkingDao.deleteParking(parkingId);  
     }
     
-    @RequestMapping(value = "/addSceneData", method = RequestMethod.POST)  
-    public Boolean addSceneData(@RequestBody SceneData sd) {      	
-        return parkingDao.addSceneData(sd);  
-    }
 
     @RequestMapping(value = "/updateSceneData", method = RequestMethod.POST)  
-    public Boolean updateSceneData(@RequestBody SceneData sd) {      	
-        return parkingDao.updateSceneData(sd);  
+    public Boolean updateSceneData(@RequestBody SceneData sd) {  
+    	SceneData s = parkingDao.getSceneData(sd.getParkingId());
+    	if(s == null) {     	
+            return parkingDao.addSceneData(sd);      		
+    	} else {
+            return parkingDao.updateSceneData(sd);      		
+    	}
     }
 
     @RequestMapping(value = "/getSceneData", method = RequestMethod.POST)  

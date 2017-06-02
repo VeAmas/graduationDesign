@@ -3,6 +3,8 @@ package com.controller;
 import java.util.ArrayList;
 import java.util.Date;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,7 +41,7 @@ public class VehicleController {
 	LogDaoImpl logDao;
 
    @RequestMapping(value = "/queryVehicle", method = RequestMethod.POST)  
-   public ArrayList<Vehicle> queryVehicle(@RequestBody VehicleQuery vq) {  
+   public ArrayList<Vehicle> queryVehicle(HttpSession httpSession, @RequestBody VehicleQuery vq) {  
 	   if (vq.getCurPage() != null && vq.getItemsPrePage() != null) {
 		   vq.setCurPage(vq.getCurPage() * vq.getItemsPrePage());
 	   } else if (vq.getCurPage() == null && vq.getItemsPrePage() == null) {

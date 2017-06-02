@@ -20,31 +20,40 @@ Vue.component("list-menu",{
 			"required":true
 		}
 	},
+	watch: {
+		data: function (val, oldVal) {
+			this.getItems();
+			this.items[0].isActive = true;
+		}
+	},
 	mounted(){
 		$(this.$el).find("ul").niceScroll({
 			grabcursorenabled: false
 		});
 		// console.log(this.$el).
+		
 	},
+	  data(){
+	      return{items:[]}
+	  },
 	methods:{
 		click(v){
 			this.$parent.$emit("select",v.name);
-			for(var i = 0;i<this.items.length;i++){
-//				this.$set(this.items[i],"name","sdf");
-//				console.log(this.items[i]);
-			}
-		}
-	},
-	computed:{
-		items(){
+
+			this.items.forEach(i=>{
+		          i.isActive = false;
+		      })
+		      v.isActive = true;
+		},
+		getItems(){
 			var list = [];
-			this.data.forEach(function (i) {
-				list.push({
-					name:i,
-					isActive:false
-				});
-			});
-			return list;			
-		}
+			this.data.forEach(i=> {
+	            list.push({
+	                name:i,
+	                isActive:false
+	            });
+	        });
+			this.items = list;
+	    }
 	}
 })

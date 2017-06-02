@@ -381,6 +381,8 @@ const user = {
 				if (res.body) {
 					_this_.userList = res.body;
 				}
+			},function(err){
+				location = '/src/index.html'
 			})
 		}
 	},

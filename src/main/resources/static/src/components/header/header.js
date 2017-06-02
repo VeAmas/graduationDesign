@@ -12,17 +12,17 @@ Vue.component("ep-header",{
 						杭州市公交管理有限公司
 					</div>
 					<div class="user">
-						<div class="avatar"><img src="img/avatar-default.png"></div>
-						<span>陈恒涛</span>
+						<div class="avatar"><img src="img/avatar-amas.jpg"></div>
+						<span v-text='curUser.name'></span>
 						<span class="glyphicon glyphicon-menu-down arrow"></span>
 						<div class="sub-menu">
 							<ul>
-								<li>姓名：<span>陈恒涛</span></li>
-								<li>职位：<span>管理员</span></li>
-								<li>联系电话：<span>15988141526</span></li>
+								<li>姓名：<span v-text='curUser.name'></span></li>
+								<li>职位：<span v-text='curUser.userType'>管理员</span></li>
+								<li>联系电话：<span v-text='curUser.cellPhone'>15988141526</span></li>
 								<li>密码：<span><a @click="passwordModify.toModal">修改</a></span></li>
 								<li>头像：<span><a @click="avatarModify.toModal">修改</a></span></li>
-								<li><button class="btn btn-block">登出</button></li>
+								<li><button class="btn btn-block" @click="logOut()">登出</button></li>
 							</ul>
 						</div>
 					</div>
@@ -58,7 +58,15 @@ Vue.component("ep-header",{
 			avatarModify:{
 				isShow:false
 			},
+			curUser: {}
 		};
+	},
+	methods: {
+		logOut: function(){
+			this.$http.post('/user/logOut').then(function(v){
+				location = '/src/index.html'				
+			})
+		}
 	},
 	created(){
 		var scope = this;
@@ -78,6 +86,17 @@ Vue.component("ep-header",{
 			scope.avatarModify.isShow = false;
 		};	
 		
+	},
+	mounted(){
+		var _this = this;
+		this.$http.post('/user/getCurUser').then(function(res){
+			if(!res.body){
+				location = '/src/index.html'				
+			}
+			_this.curUser = res.body;
+		},function(err){
+			location = '/src/index.html'
+		})
 	}
 });
 

@@ -2,6 +2,8 @@ package com.controller;
 
 import java.util.ArrayList;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,7 +41,7 @@ public class ParkingSetController {
 	
 
     @RequestMapping(value = "/queryParkingSet", method = RequestMethod.POST)  
-    public ArrayList<ParkingSet> queryParkingSet(@RequestBody ParkingSetQuery psq) {  
+    public ArrayList<ParkingSet> queryParkingSet(HttpSession httpSession, @RequestBody ParkingSetQuery psq) {  
 	if (psq.getCurPage() != null && psq.getItemsPrePage() != null) {
 		psq.setCurPage(psq.getCurPage() * psq.getItemsPrePage());
 	} else if (psq.getCurPage() == null && psq.getItemsPrePage() == null) {

@@ -35,7 +35,7 @@ const report = {
 		<div id="right">
 			<div class="panel">
 				<div class="panel-head">
-					用户列表					
+					统计报表				
 				</div>
 				<div class="panel-body">
 					<div id='echarts'></div>
@@ -105,6 +105,8 @@ const report = {
 					        }
 					    ]
 					};
+					_this.myChart.dispose();
+					_this.myChart = echarts.init(document.getElementById('echarts'));
 					_this.myChart.setOption(option); 
 				})
 			} else {

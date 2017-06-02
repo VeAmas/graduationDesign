@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Document</title>
+	<title>博莱宁公交泊位管理系统</title>
 	<link rel="stylesheet" href="css/sass/index.css">
 	<link rel="stylesheet" href="plugin/bootstrap/dist/css/bootstrap.css">
 </head>
@@ -21,12 +21,12 @@
 					<input class="form-control" type="text" id="username" placeholder="Enter you username" v-model = 'userName'>	
 				</div>
 				<div class="form-group">
-					<button class="submit btn btn-primary btn-block" @click = 'getUser'>Next</button>					
+					<button class="submit btn btn-primary btn-block" @click = 'getUser'>继续</button>					
 				</div>
 			</div>
 			<div class="form panel panel-default" v-else>
 				<div class="avatar">
-					<img :src="user.photo" >
+					<img :src="user.photo" style='width:100%;    border-radius: 100%;'>
 				</div>
 
 				<label class = 'text-center container' v-text='user.name'></label>		
@@ -36,11 +36,11 @@
 					<input class="form-control" type="password" id="password" placeholder="Enter you password" v-model = 'password'>	
 				</div>
 				<div class="form-group">
-					<button class="submit btn btn-primary btn-block" @click = 'login'>Next</button>					
+					<button class="submit btn btn-primary btn-block" @click = 'login'>登录</button>					
 				</div>
 			</div>
 			<div class="footer text-center">
-				Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta laudantium nisi ea ad accusantium non ut consequatur dolorem, similique eaque.
+				当使用本站时，代表您已接受了本站使用条款和隐私条款。版权所有，保留一切权利。</br> 赞助商：上海赢科投资有限公司。 蒙ICP备06004630号
 			</div>
 		</div>
 		<div class="video">

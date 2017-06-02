@@ -2,6 +2,8 @@ package com.controller;
 
 import java.util.ArrayList;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +21,7 @@ public class LogController {
 	LogDaoImpl logDao;
 	
 	@RequestMapping(value = "/queryLog", method = RequestMethod.POST)  
-    public ArrayList<Log> queryLog(@RequestBody LogQuery lq) {  
+    public ArrayList<Log> queryLog(HttpSession httpSession, @RequestBody LogQuery lq) {  
 		if (lq.getCurPage() != null && lq.getItemsPrePage() != null) {
 			lq.setCurPage(lq.getCurPage() * lq.getItemsPrePage());
 		} else if (lq.getCurPage() == null && lq.getItemsPrePage() == null) {

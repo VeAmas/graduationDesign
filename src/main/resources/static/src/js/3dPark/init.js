@@ -244,7 +244,7 @@ var Scene = function () {
         }
     };
 
-    this.addBus = function (setId) {
+    this.addBus = function (setId, name) {
         var set;
         for (var i in scope.meshs.meshList) {
             if (scope.meshs.meshList[i].objType === 'parkingSet' && scope.meshs.meshList[i].typeId === setId) {
@@ -269,6 +269,24 @@ var Scene = function () {
         bus.position.copy(set.position);
         bus.position.add(dir.multiplyScalar(4 * scope.setting.system.matrix.size));
         set.bus = bus;
+        if (name) {
+        	var canvas = document.createElement('canvas');
+            var context = canvas.getContext('2d');
+            canvas.width = 256;
+            canvas.height = 64;
+            context.fillStyle = "rgba(0,0,0,0.5)";
+            context.fillRect(0,0,256,64);
+            context.font = "Bold 48px Arial";
+            context.textAlign='center';
+            context.fillStyle = "rgba(255,255,255,1)";
+            context.fillText(name, 128, 42);
+            var texture = new THREE.Texture(canvas);
+            texture.needsUpdate = true;
+            var t = new THREE.Sprite(new THREE.SpriteMaterial({map:texture}))
+            t.position.y = 4
+            t.scale.set(4,1,1)
+        	bus.add(t)
+        }
 
         var start = bus.position.clone();
         var end = set.position.clone().add(dir.multiplyScalar(0.5 / 4));
@@ -409,7 +427,7 @@ var Scene = function () {
             scope.saveData.push(item);
         });
 
-        root3D.$http.post('/parking/updateSceneData', {parkingId:parkingId, data: JSON.stringify(scope.saveData)}).then(function(res){
+        root3D.$http.post('/parking/updateSceneData', {parkingId:root3D.parkingId, data: JSON.stringify(scope.saveData)}).then(function(res){
         	
         });
 
@@ -422,7 +440,7 @@ var Scene = function () {
     this.loadScene = function () {
     	root3D.$http.post('/parking/getSceneData', root3D.parkingId).then(function(res){
     		if (res.body){
-    			scope.saveData = res.body;
+    			scope.saveData = JSON.parse(res.body.data);
     			if (scope.saveData && scope.saveData.length > 0) {
     	            scope.saveData.forEach(function (v) {
     	                var m = v.type;

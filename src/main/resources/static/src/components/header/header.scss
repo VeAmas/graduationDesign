@@ -3,18 +3,21 @@ $header-height : 45px;
 	width: 100%;
 	.container{
 		width: 100%;
+  		z-index: 10;
 		height: $header-height;
 		position: absolute;
 		left: 0;
 		top: 0;
 		.left{
-			float: left;
+			float: left;    
+			margin-left: -10px;
 			.logo{
-				width: 120px;
+				width: 210px;
 				height: $header-height;
-				background-color: #f10;
 				display: inline-block;
 				vertical-align: middle;
+				background: url(/src/img/logo_white.png) no-repeat;
+				background-size: 100% 95%;
 			}
 			
 		}

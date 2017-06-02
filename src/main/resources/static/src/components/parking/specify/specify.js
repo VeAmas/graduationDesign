@@ -235,8 +235,8 @@ const parking_specify = {
 				__this.obj = [{}].concat(res.body);
 				__this.obj.specifyVehicle = set.curVehicle
 				__this.isShow = true;
-			}, function (err) {
-				console.error(err);
+			},function(err){
+				location = '/src/index.html'
 			})
 		};
 		this.parkingSetSpecify.clear = function () {
